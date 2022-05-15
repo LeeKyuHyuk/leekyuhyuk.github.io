@@ -1,0 +1,9 @@
+---
+title: 'COSMOCAMPUS 2013.11'
+date: '2013-11-05 00:47:01'
+category: Ordinary-Life
+---
+
+![COSMOCAMPUS 2013.11](/assets/image/2013-11-06-COSMOCAMPUS-2013-11/KyuHyuk_COSMOCAMPUS_2013_11.jpg)
+
+ⓒ COSMOCAMPUS 2013.11
