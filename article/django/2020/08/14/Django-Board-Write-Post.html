@@ -1,0 +1,552 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><meta property="og:image" content="https://kyuhyuk.kr/thumbnail.png"/><title>[Django] 게시판 구현 하기 (1) - 글 작성 &amp; 글 목록 출력</title><meta name="author" content="KyuHyuk Lee"/><meta name="generator" content="KyuHyuk Lee"/><meta name="description" content=" Django로 게시판을 만들기 전에, 우선 Django 환경을 설정하겠습니다. 가상환경 생성하기 Python 가상환경(virtualenv)을 생성한 뒤, Django를 설치할 것입니다. 가상환경을 사용하면, Python 프로젝트를 진행할 때 독립적인 환경을 만들어 줄 수 있습니다. 예"/><meta itemProp="url" content="https://kyuhyuk.kr/article/django/2020/08/14/Django-Board-Write-Post"/><meta itemProp="headline" content="[Django] 게시판 구현 하기 (1) - 글 작성 &amp; 글 목록 출력"/><meta property="og:type" content="article"/><meta property="og:url" content="https://kyuhyuk.kr/article/django/2020/08/14/Django-Board-Write-Post"/><meta property="og:title" content="[Django] 게시판 구현 하기 (1) - 글 작성 &amp; 글 목록 출력"/><meta property="og:description" content=" Django로 게시판을 만들기 전에, 우선 Django 환경을 설정하겠습니다. 가상환경 생성하기 Python 가상환경(virtualenv)을 생성한 뒤, Django를 설치할 것입니다. 가상환경을 사용하면, Python 프로젝트를 진행할 때 독립적인 환경을 만들어 줄 수 있습니다. 예"/><meta property="og:site_name" content="KyuHyuk Blog"/><meta property="og:locale" content="ko_KR"/><meta name="next-head-count" content="15"/><link rel="preload" href="/_next/static/css/4e0666c6da09e1ee.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4e0666c6da09e1ee.css" data-n-g=""/><link rel="preload" href="/_next/static/css/c2a527101433f11d.css" as="style"/><link rel="stylesheet" href="/_next/static/css/c2a527101433f11d.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-a87821de553db91d.js" defer=""></script><script src="/_next/static/chunks/main-fc7d2f0e2098927e.js" defer=""></script><script src="/_next/static/chunks/pages/_app-2774ecbb7f55613d.js" defer=""></script><script src="/_next/static/chunks/869-82e19047d92f6e30.js" defer=""></script><script src="/_next/static/chunks/895-531271280742d591.js" defer=""></script><script src="/_next/static/chunks/pages/article/%5Bcategory%5D/%5Byear%5D/%5Bmonth%5D/%5Bday%5D/%5Bslug%5D-e1207b3501068a48.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_buildManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_ssgManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><header class="c-opBYf"><a href="https://kyuhyuk.kr"><div class="c-bHyrwK"><div class="c-uBnvQ">Kh.</div><div class="c-hehuMV">KyuHyuk Blog</div></div></a><ul class="c-bjkCdF"><li><a href="https://github.com/LeeKyuHyuk" class="c-hAoZGi"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></a></li><li><a href="https://linkedin.com/in/leekyuhyuk" class="c-hAoZGi"><span role="img" aria-label="linkedin" class="anticon anticon-linkedin"><svg viewBox="64 64 896 896" focusable="false" data-icon="linkedin" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1168.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg></span></a></li><li><a href="mailto:lee@kyuhyuk.kr" class="c-hAoZGi"><span role="img" aria-label="mail" class="anticon anticon-mail"><svg viewBox="64 64 896 896" focusable="false" data-icon="mail" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-80.8 108.9L531.7 514.4c-7.8 6.1-18.7 6.1-26.5 0L189.6 268.9A7.2 7.2 0 01194 256h648.8a7.2 7.2 0 014.4 12.9z"></path></svg></span></a></li></ul></header><main class="c-jfcKOQ"><article><h1 class="c-fxvkZv"><a href="https://kyuhyuk.kr/article/django/2020/08/14/Django-Board-Write-Post">[Django] 게시판 구현 하기 (1) - 글 작성 &amp; 글 목록 출력</a></h1><a href="https://kyuhyuk.kr/category/Django" class="c-iosjjB">Django</a><time dateTime="2020-08-14 15:38:56" class="c-jYwCTI">Aug 15, 2020 12:38:56 AM</time><div id="post" class="c-dIcdES"><p>Django로 게시판을 만들기 전에, 우선 Django 환경을 설정하겠습니다.</p>
+<h1>가상환경 생성하기</h1>
+<p>Python 가상환경(virtualenv)을 생성한 뒤, Django를 설치할 것입니다.<br>
+가상환경을 사용하면, Python 프로젝트를 진행할 때 독립적인 환경을 만들어 줄 수 있습니다.<br>
+예를 들어, A라는 환경에서 개발할 때와 B라는 환경에서 개발할 때의 Python 및 라이브러리 버전이 다를 수
+있습니다. 가상환경을 통하여 독립된 환경을 만들고, Python 및 라이브러리 버전에 대해 걱정을 할 필요가
+없게 됩니다.</p>
+<p>가상환경을 생성하기 전에, <code>Board</code>라는 폴더를 생성합니다.<br>
+우리가 만들 게시판의 소스코드가 저장될 폴더입니다.</p>
+<pre><code>C:\Users\leekyuhyuk&gt;mkdir Board
+C:\Users\leekyuhyuk&gt;cd Board
+C:\Users\leekyuhyuk\Board&gt;
+</code></pre>
+<p><code>python -m venv 가상환경_이름</code> 명령어로 가상환경을 생성합니다.<br>
+저는 가상환경 이름을 '<code>venv</code>'로 지정하였습니다.</p>
+<pre><code>C:\Users\leekyuhyuk\Board&gt;python -m venv venv
+</code></pre>
+<p><code>가상환경_이름\Scripts\activate</code> 명령어로 '<code>venv</code>' 가상환경에 진입합니다.</p>
+<pre><code>C:\Users\leekyuhyuk\Board&gt;venv\Scripts\activate
+(venv) C:\Users\leekyuhyuk\Board&gt;
+</code></pre>
+<p>위와 같이 <code>(venv)</code>(가상환경 이름)이 앞에 출력되면 진입된 것입니다.<br>
+만약, 가상환경에서 벗어나려면 <code>deactivate</code> 명령을 실행하면 됩니다.</p>
+<p><strong>위와 같이 '명령 프롬프트'에서 가상환경을 설정하는 방법보다 더 쉬운 방법이 있습니다.</strong><br>
+<strong>'PyCharm'을 사용하면 간단하게 할 수 있습니다.</strong></p>
+<p>'PyCharm'에서 'New Project'를 클릭합니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_1.png" alt="PyCharm - New Project"></p>
+<p>'Location'을 <code>C:\Users\&lt;사용자명&gt;\PycharmProjects\&lt;프로젝트명&gt;</code>으로 설정하고, 'Create a main.py
+welcome script'는 해제합니다.<br>
+'Python Interpreter: New Virtualenv Environment'가 보일 것입니다. 이것을 통하여 위에서 작업한 가상환
+경을 간단하게 생성할 수 있습니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_2.png" alt="PyCharm - New Project"></p>
+<p>프로젝트가 생성되고, 'Terminal'을 클릭하면 아래와 같이 <code>(venv)</code>가 앞에 떠 있는것을 볼 수 있습니다.
+이것이 의미하는 것은 성공적으로 가상환경 <code>venv</code>가 생성되었고, <code>venv</code> 가상환경에 진입했다는 것을 말합
+니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_3.png" alt="PyCharm - Terminal"></p>
+<h1>Django 설치하기</h1>
+<p>가상환경에서 <code>pip install django</code>를 실행하여 'Django'를 설치합니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_4.png" alt="Django Install"></p>
+<h1>프로젝트 생성하고 Application 구성하기</h1>
+<p><code>django-admin startproject 프로젝트명</code>으로 프로젝트를 생성합니다.<br>
+<code>django-admin startproject Board</code>로 'Board' 프로젝트를 생성하겠습니다.<br>
+프로젝트를 생성하면, 프로젝트명('Board') 폴더가 아래와 같이 생성됩니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_5.png" alt="Create Project"></p>
+<p>'Board'에 대한 Application을 구성해봅시다. 하나의 프로젝트에는 여러 개의 Application으로 구성됩니다.
+우리가 만드는 게시판 프로젝트는 한 개의 Application만 만들어서 진행해보도록 하겠습니다.</p>
+<p><code>manage.py</code>가 있는 <code>Board</code> 폴더로 이동한 뒤, <code>python manage.py startapp board_app</code> 명령어를 통해
+'board_app' Application을 만듭니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_6.png" alt="Create Application"></p>
+<p>Application을 생성했다면, <code>Board</code> 폴더에 있는 <code>settings.py</code>를 수정해야합니다.<br>
+<code>INSTALLED_APPS</code>에 다음과 같이 <code>board_app</code>을 추가합니다.</p>
+<pre><code class="language-python">INSTALLED_APPS = [
+    <span class="hljs-string">&#x27;django.contrib.admin&#x27;</span>,
+    <span class="hljs-string">&#x27;django.contrib.auth&#x27;</span>,
+    <span class="hljs-string">&#x27;django.contrib.contenttypes&#x27;</span>,
+    <span class="hljs-string">&#x27;django.contrib.sessions&#x27;</span>,
+    <span class="hljs-string">&#x27;django.contrib.messages&#x27;</span>,
+    <span class="hljs-string">&#x27;django.contrib.staticfiles&#x27;</span>,
+    <span class="hljs-string">&#x27;board_app&#x27;</span>,
+]
+</code></pre>
+<p>만약 또 다른 Application을 생성했다면, <code>INSTALLED_APPS</code>에 위와 같이 꼭 추가를 해주어야합니다.</p>
+<p>기본적인 프로젝트 설정은 끝났습니다.</p>
+<h1>Hello, world!</h1>
+<p>게시판을 만들기 전에, 'Hello, world!'를 출력해봅시다.</p>
+<p><code>Board/Board/urls.py</code>를 아래와 같이 수정하여, ''에 접속했을 때 <code>board_app</code> Application의 <code>urls.py</code>
+파일로 처리를 넘겨주게 합니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path, include
+
+urlpatterns = [
+    path(<span class="hljs-string">&#x27;&#x27;</span>, include(<span class="hljs-string">&#x27;board_app.urls&#x27;</span>)),
+    path(<span class="hljs-string">&#x27;admin/&#x27;</span>, admin.site.urls),
+]
+</code></pre>
+<p><code>board_app</code> 폴더에 <code>urls.py</code>를 생성하여 아래와 같이 입력합니다.<br>
+특정 URL로 접근하면 화면을 같은 경로에 있는 <code>views.py</code>가 처리하여 출력합니다.<br>
+''에 접속하면, <code>views.index</code>가 처리를 하는 내용의 코드입니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
+<span class="hljs-keyword">from</span> . <span class="hljs-keyword">import</span> views
+
+urlpatterns = [
+    path(<span class="hljs-string">&#x27;&#x27;</span>, views.index)
+]
+</code></pre>
+<p>마지막으로 <code>board_app</code> 폴더에 있는 <code>views.py</code>를 수정해봅시다.<br>
+방금 위에서 ''에 접속하면, <code>views.index</code>가 처리한다고 했죠? 그 부분을 구현하는 코드 입니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> django.http <span class="hljs-keyword">import</span> HttpResponse
+
+<span class="hljs-comment"># Create your views here.</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):
+    <span class="hljs-keyword">return</span> HttpResponse(<span class="hljs-string">&quot;Hello, world!&quot;</span>)
+</code></pre>
+<p><code>python manage.py runserver 8080</code>를 실행하고, <a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a>에 접속
+하여 아래와 같이 'Hello, world!'가 출력되는지 확인해봅시다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_7.png" alt="Hello, world!"></p>
+<h1>Bootstrap 추가하기</h1>
+<p>본격적으로 게시판을 만들어보겠습니다.<br>
+빠르고 간편하게 게시판을 디자인하기 위해 Bootstrap를 추가해보겠습니다.</p>
+<p><a href="https://getbootstrap.com/docs/4.5/getting-started/download">Download Bootstrap v4.5</a> 페이지에 접속
+하여, 'Compiled CSS and JS'를 다운로드 합니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_8.png" alt="Download Bootstrap"></p>
+<p><code>Board</code>에 <code>static</code> 폴더를 만들고, 아래와 같은 구조로 <code>static</code> 폴더에 <code>bootstrap</code> 폴더를 넣습니다.</p>
+<pre><code>Board
+├── Board
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── board_app
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── migrations
+│   │   └── __init__.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── db.sqlite3
+├── manage.py
+└── static
+    └── bootstrap
+        ├── css
+        │   ├── bootstrap-grid.css
+        │   ├── bootstrap-grid.css.map
+        │   ├── bootstrap-grid.min.css
+        │   ├── bootstrap-grid.min.css.map
+        │   ├── bootstrap-reboot.css
+        │   ├── bootstrap-reboot.css.map
+        │   ├── bootstrap-reboot.min.css
+        │   ├── bootstrap-reboot.min.css.map
+        │   ├── bootstrap.css
+        │   ├── bootstrap.css.map
+        │   ├── bootstrap.min.css
+        │   └── bootstrap.min.css.map
+        └── js
+            ├── bootstrap.bundle.js
+            ├── bootstrap.bundle.js.map
+            ├── bootstrap.bundle.min.js
+            ├── bootstrap.bundle.min.js.map
+            ├── bootstrap.js
+            ├── bootstrap.js.map
+            ├── bootstrap.min.js
+            └── bootstrap.min.js.map
+</code></pre>
+<p><code>Board/Board</code>에 있는 <code>settings.py</code>에 <code>import os</code>를 추가해주고, 아래와 같이 <code>STATIC_DIR</code>와
+<code>STATICFILES_DIRS</code>를 추가하여 <code>static</code> 폴더와 연결합니다.</p>
+<pre><code class="language-python">STATIC_DIR = os.path.join(BASE_DIR, <span class="hljs-string">&#x27;static&#x27;</span>)
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+</code></pre>
+<h1>HTML Template 사용하기</h1>
+<p><code>Board</code> 폴더에 <code>templates</code> 폴더를 만들고, <code>list.html</code> 파일을 아래와 같이 만듭니다.</p>
+<pre><code class="language-html">{% raw %}{% load static %}
+<span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;ko&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>게시판 - 목록<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{% static &#x27;bootstrap/css/bootstrap.min.css&#x27; %}&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;navbar navbar-dark bg-dark shadow-sm mb-3&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;container d-flex justify-content-between&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;navbar-brand d-flex align-items-center&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>게시판<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;container&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">table</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;table&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">thead</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;thead-light&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">tr</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;text-center&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">th</span> <span class="hljs-attr">scope</span>=<span class="hljs-string">&quot;col&quot;</span>&gt;</span>#<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">th</span> <span class="hljs-attr">scope</span>=<span class="hljs-string">&quot;col&quot;</span>&gt;</span>제목<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">th</span> <span class="hljs-attr">scope</span>=<span class="hljs-string">&quot;col&quot;</span>&gt;</span>작성자<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">th</span> <span class="hljs-attr">scope</span>=<span class="hljs-string">&quot;col&quot;</span>&gt;</span>작성일<span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">thead</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">tbody</span>&gt;</span>
+          {% for board in boards %}
+          <span class="hljs-tag">&lt;<span class="hljs-name">tr</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;text-center&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">th</span> <span class="hljs-attr">scope</span>=<span class="hljs-string">&quot;row&quot;</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ board.id }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/post/{{ board.id }}&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ board.title }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ board.author }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ board.created_date | date:&quot;Y-m-d h:i&quot; }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+          {% endfor %}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">tbody</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;row&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-auto mr-auto&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-auto&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn btn-primary&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/post&quot;</span> <span class="hljs-attr">role</span>=<span class="hljs-string">&quot;button&quot;</span>&gt;</span>글쓰기<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;{% static &#x27;bootstrap/js/bootstrap.min.js&#x27; %}&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+{% endraw %}
+</code></pre>
+<p><code>Board/Board</code>에 있는 <code>settings.py</code>에 <code>TEMPLATE_DIR</code>를 추가하여 <code>templates</code> 폴더와 연결합니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path
+
+<span class="hljs-comment"># Build paths inside the project like this: BASE_DIR / &#x27;subdir&#x27;.</span>
+BASE_DIR = Path(__file__).resolve(strict=<span class="hljs-literal">True</span>).parent.parent
+TEMPLATE_DIR = os.path.join(BASE_DIR, <span class="hljs-string">&#x27;templates&#x27;</span>)
+</code></pre>
+<p>위에서 추가한 <code>TEMPLATE_DIR</code> 변수를 <code>settings.py</code>의 <code>TEMPLATES</code>에 있는 <code>DIRS</code>키의 값으로 넣습니다.</p>
+<pre><code class="language-python">TEMPLATES = [
+    {
+        <span class="hljs-string">&#x27;BACKEND&#x27;</span>: <span class="hljs-string">&#x27;django.template.backends.django.DjangoTemplates&#x27;</span>,
+        <span class="hljs-string">&#x27;DIRS&#x27;</span>: [
+            TEMPLATE_DIR,
+        ],
+        <span class="hljs-string">&#x27;APP_DIRS&#x27;</span>: <span class="hljs-literal">True</span>,
+        <span class="hljs-string">&#x27;OPTIONS&#x27;</span>: {
+            <span class="hljs-string">&#x27;context_processors&#x27;</span>: [
+                <span class="hljs-string">&#x27;django.template.context_processors.debug&#x27;</span>,
+                <span class="hljs-string">&#x27;django.template.context_processors.request&#x27;</span>,
+                <span class="hljs-string">&#x27;django.contrib.auth.context_processors.auth&#x27;</span>,
+                <span class="hljs-string">&#x27;django.contrib.messages.context_processors.messages&#x27;</span>,
+            ],
+        },
+    },
+]
+</code></pre>
+<p><code>views.py</code>에서 <code>templates</code> 폴더 안에 있는 Template 파일을 불러와서 출력해봅시다.<br>
+<code>board_app</code> 폴더에 있는 <code>views.py</code>에 있는 <code>index</code> 함수를 아래와 같이 수정합니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render
+
+<span class="hljs-comment"># Create your views here.</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):
+    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&#x27;list.html&#x27;</span>)
+</code></pre>
+<p><code>python manage.py runserver 8080</code>를 실행시켜 아래와 같이 출력되는지 확인해봅시다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_9.png" alt="Board List Template"></p>
+<p>'글쓰기' 버튼을 누르면, <code>/post</code>로 이동이 됩니다. 글쓰기 Template도 아래와 같이 작성해봅시다. 파일명
+은 <code>post.html</code>으로 <code>templates</code> 폴더에 저장합니다.</p>
+<pre><code class="language-html">{% raw %}{% load static %}
+<span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;ko&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>게시판 - 글쓰기<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{% static &#x27;bootstrap/css/bootstrap.min.css&#x27; %}&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;navbar navbar-dark bg-dark shadow-sm mb-3&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;container d-flex justify-content-between&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;navbar-brand d-flex align-items-center&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>게시판<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;container&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/post&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span>
+        {% csrf_token %}
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-group row&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;inputTitle&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-2 col-form-label&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>제목<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-10&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;title&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-control&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;inputTitle&quot;</span> /&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-group row&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;inputAuthor&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-2 col-form-label&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>작성자<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-10&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;author&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-control&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;inputAuthor&quot;</span> /&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-group row&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;inputContent&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-2 col-form-label&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>내용<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-10&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;content&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-control&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;inputContent&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;row&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-auto mr-auto&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-auto&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn btn-primary&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">role</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;글쓰기&quot;</span> /&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;{% static &#x27;bootstrap/js/bootstrap.min.js&#x27; %}&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+{% endraw %}
+</code></pre>
+<p><code>board_app</code>의 <code>views.py</code>에 <code>post()</code> 함수를 추가합니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">request</span>):
+    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&#x27;post.html&#x27;</span>)
+</code></pre>
+<p><code>board_app</code>의 <code>urls.py</code>에 <code>path('post', views.post)</code>를 추가하여 <code>http://127.0.0.1/post</code>에 접속되었을
+때, <code>views.py</code>에 있는 <code>post()</code> 함수가 작동하도록 작성합니다.</p>
+<pre><code class="language-python">urlpatterns = [
+    path(<span class="hljs-string">&#x27;&#x27;</span>, views.index),
+    path(<span class="hljs-string">&#x27;post&#x27;</span>, views.post)
+]
+</code></pre>
+<p><code>python manage.py runserver 8080</code>를 실행시켜 '글쓰기' 버튼을 눌렀을 때 아래와 같이 출력되는지 확인해
+봅시다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_10.png" alt="Board Post Template"></p>
+<h1>게시물 작성 구현하기</h1>
+<p>이 프로젝트에서는 SQLite를 사용하여, 게시판을 구현해보겠습니다.</p>
+<p>각 Application 폴더에 있는 <code>models.py</code> 파일은 테이블에 대해 정의하는 파일입니다.<br>
+<code>board_app</code>에 있는 <code>models.py</code>를 아래와 같이 작성합니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> django.db <span class="hljs-keyword">import</span> models
+
+<span class="hljs-comment"># Create your models here.</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Board</span>(models.Model):
+    author = models.CharField(max_length=<span class="hljs-number">10</span>, null=<span class="hljs-literal">False</span>)
+    title = models.CharField(max_length=<span class="hljs-number">100</span>, null=<span class="hljs-literal">False</span>)
+    content = models.TextField(null=<span class="hljs-literal">False</span>)
+    created_date = models.DateTimeField(auto_now_add=<span class="hljs-literal">True</span>)
+    modified_date = models.DateTimeField(auto_now=<span class="hljs-literal">True</span>)
+</code></pre>
+<ul>
+<li><code>author</code> : 작성자 이름이 저장되는 필드입니다.
+<ul>
+<li>최대 길이를 10으로 제한하였습니다.</li>
+<li><code>null</code> 값이 저장될 수 없습니다.</li>
+</ul>
+</li>
+<li><code>title</code> : 글 제목이 저장되는 필드입니다.
+<ul>
+<li>최대 길이를 100으로 제한하였습니다.</li>
+<li><code>null</code> 값이 저장될 수 없습니다.</li>
+</ul>
+</li>
+<li><code>content</code> : 내용이 저장되는 필드입니다.
+<ul>
+<li>앞의 <code>author</code>, <code>title</code>과 다르게
+<a href="https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.TextField"><code>TextField</code></a>로
+되어있어 많은 Text를 써넣을 수 있습니다.</li>
+<li><code>null</code> 값이 저장될 수 없습니다.</li>
+</ul>
+</li>
+<li><code>created_date</code> : 게시물이 생성된 시간이 저장되는 필드입니다.
+(<a href="https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.DateField.auto_now_add"><code>auto_now_add=True</code></a>)</li>
+<li><code>modified_date</code> : 게시물이 수정된 시간이 저장되는 필드입니다.
+(<a href="https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.DateField.auto_now"><code>auto_now=True</code></a>)</li>
+</ul>
+<p><code>models.py</code>를 수정했으면, Django 서버에 적용해 줘야 합니다.<br>
+<code>manage.py</code> 파일이 있는 위치에서 <code>python manage.py makemigrations</code> 명령을 실행합니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_11.png" alt="makemigrations"></p>
+<p>위의 명령어는 'Migration'을 하는 명령어입니다. 'Migration'은 데이터베이스에 전달할 설계도 같은 역할
+을 합니다.<br>
+실제로 테이블을 만들려면 <code>python manage.py migrate</code> 명령을 실행해야 합니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_12.png" alt="migrate"></p>
+<p>제대로 테이블이 생성되었는지 확인하기 위해 <code>python manage.py dbshell</code> 명령어를 통하여 데이터베이스에
+접근합니다. 그리고 <code>.tables</code> 명령어로 데이터베이스에 있는 테이블들을 조회해봅시다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_13.png" alt="Database Tables"></p>
+<p>'board<em>app_board'라는 테이블이 존재한다면, 성공적으로 테이블이 생성된 것입니다.<br>
+데이터베이스에 생성되는 테이블의 이름은 '[프로젝트 이름]</em>[모델 이름]' 규칙으로 생성됩니다.<br>
+'board_app_board'는 'board_app' 프로젝트에 있는 'board' 모델의 테이블이라고 해석하면 됩니다.</p>
+<p><code>PRAGMA table_info(board_app_board);</code> 명령어로 우리가 설정한 필드들이 잘 설정되었는지 확인해봅시다
+.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_14.png" alt="Table Info"></p>
+<p>위와 같이 출력되는데 아래와 같이 해석하면 됩니다.</p>
+<pre><code>순서 | 이름 | 형태 | notnull 여부 | pk 여부
+</code></pre>
+<p>이 순서로 보면 우리가 설정한 필드들이 잘 설정되었다는 걸 확인할 수 있습니다.</p>
+<p>이제 테이블을 생성했으니, 데이터를 넣어봅시다.<br>
+<code>post.html</code>을 보면 아래와 같이 되어있습니다.</p>
+<pre><code class="language-html">{% raw %}
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;container&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/post&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;post&quot;</span>&gt;</span>
+    {% csrf_token %}
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-group row&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;inputTitle&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-2 col-form-label&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>제목<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-10&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;title&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-control&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;inputTitle&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-group row&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;inputAuthor&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-2 col-form-label&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>작성자<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-10&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;author&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-control&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;inputAuthor&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-group row&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;inputContent&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-2 col-form-label&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>내용<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-sm-10&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;content&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-control&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;inputContent&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;row&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-auto mr-auto&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;col-auto&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn btn-primary&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">role</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;글쓰기&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+{% endraw %}
+</code></pre>
+<p><code>&lt;form&gt;</code> 태그를 보면, 아래의 <code>/post</code>로 POST 방식을 통하여 <code>&lt;input&gt;</code>에 있는 내용을 전달하게 되어있습
+니다.<br>
+우리는 <code>views.py</code>에서 아까 만든 <code>post()</code> 함수를 수정해 주면 됩니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> django.http <span class="hljs-keyword">import</span> HttpResponseRedirect
+<span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render
+<span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> *
+
+<span class="hljs-comment"># Create your views here.</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):
+    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&#x27;list.html&#x27;</span>)
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">request</span>):
+    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:
+        author = request.POST[<span class="hljs-string">&#x27;author&#x27;</span>]
+        title = request.POST[<span class="hljs-string">&#x27;title&#x27;</span>]
+        content = request.POST[<span class="hljs-string">&#x27;content&#x27;</span>]
+        board = Board(author=author, title=title, content=content)
+        board.save()
+        <span class="hljs-keyword">return</span> HttpResponseRedirect(<span class="hljs-string">&#x27;/&#x27;</span>)
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&#x27;post.html&#x27;</span>)
+</code></pre>
+<p><code>post()</code> 함수에 'POST' 요청이 들어오면 실행할 코드를 넣어주었습니다.<br>
+<code>request.POST[]</code>에는 <code>&lt;input&gt;</code>에 있는 <code>name</code> 속성의 값을 넣어, 변수에 입력한 내용의 값이 저장되도록
+하였습니다.<br>
+<code>python manage.py runserver 8080</code>를 실행시켜 '글쓰기' 버튼을 눌러 글을 하나 작성해봅시다. 테이블에데
+이터가 생성되었는지 확인하기 위해 <code>python manage.py dbshell</code> 명령어를 통하여 데이터베이스에 접근합니
+다. 그리고, <code>SELECT * FROM board_app_board;</code> 명령어로 <code>board_app_board</code>의 내용을 확인합니다. 아래와
+같이 잘 저장된 것을 확인할 수 있습니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_15.png" alt="Database Check"></p>
+<p>그런데 이상한 점이 있습니다. <code>created_date</code>와 <code>modified_date</code> 필드의 시간이 컴퓨터 시간과 다르게 저
+장되어 있습니다.<br>
+그 이유는 <code>Board</code> 폴더에 있는 <code>settings.py</code>의 <code>TIME_ZONE</code>가 <code>UTC</code>로 설정되어 있어서 그렇습니다.
+<code>TIME_ZONE</code>를 <code>Asia/Seoul</code>로 변경하고, <code>USE_TZ</code>를 <code>False</code>로 변경하여 다시 글을 써봅시다.<br>
+아래와 같이 시간이 제대로 적용되어 저장되는 걸 확인할 수 있습니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_16.png" alt="Database Check"></p>
+<p><code>post()</code> 함수를 보면 <code>HttpResponseRedirect()</code> 함수를 사용하여, 글 작성이 완료되면 다시 메인 페이지의
+URL로 돌아가게 해주고 있습니다.<br>
+지금은 <code>HttpResponseRedirect('/')</code>와 같이 URL을 직접 입력하고 있습니다. 더 쉬운 방법으로 접근하기 위
+해 <code>urls.py</code>를 아래와 같이 수정합니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> path
+<span class="hljs-keyword">from</span> . <span class="hljs-keyword">import</span> views
+
+urlpatterns = [
+    path(<span class="hljs-string">&#x27;&#x27;</span>, views.index, name=<span class="hljs-string">&#x27;index&#x27;</span>),
+    path(<span class="hljs-string">&#x27;post&#x27;</span>, views.post, name=<span class="hljs-string">&#x27;post&#x27;</span>)
+]
+</code></pre>
+<p>위의 코드를 보면 <code>name</code>을 추가하였습니다. 이제 URL 대신 <code>name</code>을 이용하여 접근할 수 있습니다.<br>
+<code>views.py</code>의 <code>HttpResponseRedirect('/')</code>를 <code>HttpResponseRedirect(reverse('index'))</code>로 수정합니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> django.http <span class="hljs-keyword">import</span> HttpResponseRedirect
+<span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> reverse
+
+<span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> *
+
+<span class="hljs-comment"># Create your views here.</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):
+    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&#x27;list.html&#x27;</span>)
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">request</span>):
+    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:
+        author = request.POST[<span class="hljs-string">&#x27;author&#x27;</span>]
+        title = request.POST[<span class="hljs-string">&#x27;title&#x27;</span>]
+        content = request.POST[<span class="hljs-string">&#x27;content&#x27;</span>]
+        board = Board(author=author, title=title, content=content)
+        board.save()
+        <span class="hljs-keyword">return</span> HttpResponseRedirect(reverse(<span class="hljs-string">&#x27;index&#x27;</span>))
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&#x27;post.html&#x27;</span>)
+</code></pre>
+<h1>게시물 목록 구현하기</h1>
+<p>위의 과정을 통해 게시물이 SQLite에 저장되는 것을 확인하였습니다.<br>
+이제 저장된 데이터를 목록에 출력하는 것을 구현해보겠습니다.</p>
+<p><code>board_app</code>에 있는 <code>views.py</code>의 <code>index()</code>를 아래와 같이 수정합니다.</p>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> django.http <span class="hljs-keyword">import</span> HttpResponseRedirect
+<span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render
+<span class="hljs-keyword">from</span> django.urls <span class="hljs-keyword">import</span> reverse
+
+<span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> *
+
+<span class="hljs-comment"># Create your views here.</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(<span class="hljs-params">request</span>):
+    boards = {<span class="hljs-string">&#x27;boards&#x27;</span>: Board.objects.<span class="hljs-built_in">all</span>()}
+    <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&#x27;list.html&#x27;</span>, boards)
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">post</span>(<span class="hljs-params">request</span>):
+    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:
+        author = request.POST[<span class="hljs-string">&#x27;author&#x27;</span>]
+        title = request.POST[<span class="hljs-string">&#x27;title&#x27;</span>]
+        content = request.POST[<span class="hljs-string">&#x27;content&#x27;</span>]
+        board = Board(author=author, title=title, content=content)
+        board.save()
+        <span class="hljs-keyword">return</span> HttpResponseRedirect(reverse(<span class="hljs-string">&#x27;index&#x27;</span>))
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> render(request, <span class="hljs-string">&#x27;post.html&#x27;</span>)
+</code></pre>
+<p>위에 코드를 보면, <code>Board</code> 모델에 접근하고, <code>objects</code>에 접근한 후에 <code>all()</code> 함수를 통해 모든 데이터를
+가져와 <code>boards</code> 딕셔너리의 <code>boards</code> 키에 할당합니다.<br>
+그리고 <code>boards</code> 딕셔너리를 <code>render()</code> 함수를 통해 전달합니다.<br>
+이렇게 전달한 데이터는 <code>list.html</code>에서 받아 출력하게 되는데, 출력하는 부분은 아래와 같습니다.</p>
+<pre><code class="language-html">{% raw %}{% for board in boards %}
+<span class="hljs-tag">&lt;<span class="hljs-name">tr</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;text-center&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">th</span> <span class="hljs-attr">scope</span>=<span class="hljs-string">&quot;row&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ board.id }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">th</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;/post/{{ board.id }}&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ board.title }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ board.author }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ board.created_date | date:&quot;Y-m-d h:i&quot; }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span>
+{% endfor %}{% endraw %}
+</code></pre>
+<p><code>{% raw %}{% for board in boards %}{% endraw %}</code>를 통해 <code>boards</code> 키의 요소를 <code>board</code> 변수로 가져옵니
+다. (Python에서 사용한 <code>for</code> 반복문과 같습니다.)<br>
+그리고 <code>{% raw %}{{ board.id }}{% endraw %}</code>, <code>{% raw %}{{ board.title }}{% endraw %}</code>,
+<code>{% raw %}{{ board.author }}{% endraw %}</code>로 <code>board</code> 변수에서 <code>id</code>, <code>title</code>, <code>author</code> 값에 접근하여출
+력합니다.</p>
+<blockquote>
+<p><code>{% raw %}{{ board.created_date | date:&quot;Y-m-d h:i&quot; }}{% endraw %}</code>은 <code>datetime</code> 타입의 데이터
+(<code>created_date</code>)를 <code>date:&quot;Y-m-d h:i&quot;</code> 형식에 맞추어 출력해 줍니다.<br>
+<a href="https://docs.djangoproject.com/en/3.1/ref/templates/builtins/#date">https://docs.djangoproject.com/en/3.1/ref/templates/builtins/#date</a>를
+참고해주세요.</p>
+</blockquote>
+<p><code>python manage.py runserver 8080</code>를 실행시켜 아래와 같이 목록이 잘 출력되는지 확인합니다.<br>
+<img src="/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_17.png" alt="Board List"></p>
+<p><strong>Source Code :</strong>
+<a href="https://github.com/LeeKyuHyuk/Django-Board-Example/tree/ac52195cc570091d601904a09c444548e58eac66">github.com/LeeKyuHyuk/Django-Board-Example</a></p>
+</div></article></main><footer class="c-cpkrrK"><div class="c-fiqONv">© <!-- -->2022<!-- --></div><div class="c-bHyrwK"><div class="c-iUFgVP">Kh.</div><div class="c-cshSRb">KyuHyuk Lee</div></div></footer></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"excerpt":" Django로 게시판을 만들기 전에, 우선 Django 환경을 설정하겠습니다. 가상환경 생성하기 Python 가상환경(virtualenv)을 생성한 뒤, Django를 설치할 것입니다. 가상환경을 사용하면, Python 프로젝트를 진행할 때 독립적인 환경을 만들어 줄 수 있습니다. 예","url":"/article/django/2020/08/14/Django-Board-Write-Post","frontmatter":{"title":"[Django] 게시판 구현 하기 (1) - 글 작성 \u0026 글 목록 출력","date":"2020-08-14 15:38:56","category":"Django"},"content":"\r\nDjango로 게시판을 만들기 전에, 우선 Django 환경을 설정하겠습니다.\r\n\r\n# 가상환경 생성하기\r\n\r\nPython 가상환경(virtualenv)을 생성한 뒤, Django를 설치할 것입니다.  \r\n가상환경을 사용하면, Python 프로젝트를 진행할 때 독립적인 환경을 만들어 줄 수 있습니다.  \r\n예를 들어, A라는 환경에서 개발할 때와 B라는 환경에서 개발할 때의 Python 및 라이브러리 버전이 다를 수\r\n있습니다. 가상환경을 통하여 독립된 환경을 만들고, Python 및 라이브러리 버전에 대해 걱정을 할 필요가\r\n없게 됩니다.\r\n\r\n가상환경을 생성하기 전에, `Board`라는 폴더를 생성합니다.  \r\n우리가 만들 게시판의 소스코드가 저장될 폴더입니다.\r\n\r\n```\r\nC:\\Users\\leekyuhyuk\u003emkdir Board\r\nC:\\Users\\leekyuhyuk\u003ecd Board\r\nC:\\Users\\leekyuhyuk\\Board\u003e\r\n```\r\n\r\n`python -m venv 가상환경_이름` 명령어로 가상환경을 생성합니다.  \r\n저는 가상환경 이름을 '`venv`'로 지정하였습니다.\r\n\r\n```\r\nC:\\Users\\leekyuhyuk\\Board\u003epython -m venv venv\r\n```\r\n\r\n`가상환경_이름\\Scripts\\activate` 명령어로 '`venv`' 가상환경에 진입합니다.\r\n\r\n```\r\nC:\\Users\\leekyuhyuk\\Board\u003evenv\\Scripts\\activate\r\n(venv) C:\\Users\\leekyuhyuk\\Board\u003e\r\n```\r\n\r\n위와 같이 `(venv)`(가상환경 이름)이 앞에 출력되면 진입된 것입니다.  \r\n만약, 가상환경에서 벗어나려면 `deactivate` 명령을 실행하면 됩니다.\r\n\r\n**위와 같이 '명령 프롬프트'에서 가상환경을 설정하는 방법보다 더 쉬운 방법이 있습니다.**  \r\n**'PyCharm'을 사용하면 간단하게 할 수 있습니다.**\r\n\r\n'PyCharm'에서 'New Project'를 클릭합니다.  \r\n![PyCharm - New Project](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_1.png)\r\n\r\n'Location'을 `C:\\Users\\\u003c사용자명\u003e\\PycharmProjects\\\u003c프로젝트명\u003e`으로 설정하고, 'Create a main.py\r\nwelcome script'는 해제합니다.  \r\n'Python Interpreter: New Virtualenv Environment'가 보일 것입니다. 이것을 통하여 위에서 작업한 가상환\r\n경을 간단하게 생성할 수 있습니다.  \r\n![PyCharm - New Project](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_2.png)\r\n\r\n프로젝트가 생성되고, 'Terminal'을 클릭하면 아래와 같이 `(venv)`가 앞에 떠 있는것을 볼 수 있습니다.\r\n이것이 의미하는 것은 성공적으로 가상환경 `venv`가 생성되었고, `venv` 가상환경에 진입했다는 것을 말합\r\n니다.  \r\n![PyCharm - Terminal](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_3.png)\r\n\r\n# Django 설치하기\r\n\r\n가상환경에서 `pip install django`를 실행하여 'Django'를 설치합니다.  \r\n![Django Install](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_4.png)\r\n\r\n# 프로젝트 생성하고 Application 구성하기\r\n\r\n`django-admin startproject 프로젝트명`으로 프로젝트를 생성합니다.  \r\n`django-admin startproject Board`로 'Board' 프로젝트를 생성하겠습니다.  \r\n프로젝트를 생성하면, 프로젝트명('Board') 폴더가 아래와 같이 생성됩니다.  \r\n![Create Project](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_5.png)\r\n\r\n'Board'에 대한 Application을 구성해봅시다. 하나의 프로젝트에는 여러 개의 Application으로 구성됩니다.\r\n우리가 만드는 게시판 프로젝트는 한 개의 Application만 만들어서 진행해보도록 하겠습니다.\r\n\r\n`manage.py`가 있는 `Board` 폴더로 이동한 뒤, `python manage.py startapp board_app` 명령어를 통해\r\n'board_app' Application을 만듭니다.  \r\n![Create Application](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_6.png)\r\n\r\nApplication을 생성했다면, `Board` 폴더에 있는 `settings.py`를 수정해야합니다.  \r\n`INSTALLED_APPS`에 다음과 같이 `board_app`을 추가합니다.\r\n\r\n```python\r\nINSTALLED_APPS = [\r\n    'django.contrib.admin',\r\n    'django.contrib.auth',\r\n    'django.contrib.contenttypes',\r\n    'django.contrib.sessions',\r\n    'django.contrib.messages',\r\n    'django.contrib.staticfiles',\r\n    'board_app',\r\n]\r\n```\r\n\r\n만약 또 다른 Application을 생성했다면, `INSTALLED_APPS`에 위와 같이 꼭 추가를 해주어야합니다.\r\n\r\n기본적인 프로젝트 설정은 끝났습니다.\r\n\r\n# Hello, world!\r\n\r\n게시판을 만들기 전에, 'Hello, world!'를 출력해봅시다.\r\n\r\n`Board/Board/urls.py`를 아래와 같이 수정하여, ''에 접속했을 때 `board_app` Application의 `urls.py`\r\n파일로 처리를 넘겨주게 합니다.\r\n\r\n```python\r\nfrom django.contrib import admin\r\nfrom django.urls import path, include\r\n\r\nurlpatterns = [\r\n    path('', include('board_app.urls')),\r\n    path('admin/', admin.site.urls),\r\n]\r\n```\r\n\r\n`board_app` 폴더에 `urls.py`를 생성하여 아래와 같이 입력합니다.  \r\n특정 URL로 접근하면 화면을 같은 경로에 있는 `views.py`가 처리하여 출력합니다.  \r\n''에 접속하면, `views.index`가 처리를 하는 내용의 코드입니다.\r\n\r\n```python\r\nfrom django.urls import path\r\nfrom . import views\r\n\r\nurlpatterns = [\r\n    path('', views.index)\r\n]\r\n```\r\n\r\n마지막으로 `board_app` 폴더에 있는 `views.py`를 수정해봅시다.  \r\n방금 위에서 ''에 접속하면, `views.index`가 처리한다고 했죠? 그 부분을 구현하는 코드 입니다.\r\n\r\n```python\r\nfrom django.http import HttpResponse\r\n\r\n# Create your views here.\r\ndef index(request):\r\n    return HttpResponse(\"Hello, world!\")\r\n```\r\n\r\n`python manage.py runserver 8080`를 실행하고, [http://127.0.0.1:8080](http://127.0.0.1:8080)에 접속\r\n하여 아래와 같이 'Hello, world!'가 출력되는지 확인해봅시다.  \r\n![Hello, world!](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_7.png)\r\n\r\n# Bootstrap 추가하기\r\n\r\n본격적으로 게시판을 만들어보겠습니다.  \r\n빠르고 간편하게 게시판을 디자인하기 위해 Bootstrap를 추가해보겠습니다.\r\n\r\n[Download Bootstrap v4.5](https://getbootstrap.com/docs/4.5/getting-started/download) 페이지에 접속\r\n하여, 'Compiled CSS and JS'를 다운로드 합니다.  \r\n![Download Bootstrap](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_8.png)\r\n\r\n`Board`에 `static` 폴더를 만들고, 아래와 같은 구조로 `static` 폴더에 `bootstrap` 폴더를 넣습니다.\r\n\r\n```\r\nBoard\r\n├── Board\r\n│   ├── __init__.py\r\n│   ├── asgi.py\r\n│   ├── settings.py\r\n│   ├── urls.py\r\n│   └── wsgi.py\r\n├── board_app\r\n│   ├── __init__.py\r\n│   ├── admin.py\r\n│   ├── apps.py\r\n│   ├── migrations\r\n│   │   └── __init__.py\r\n│   ├── models.py\r\n│   ├── tests.py\r\n│   ├── urls.py\r\n│   └── views.py\r\n├── db.sqlite3\r\n├── manage.py\r\n└── static\r\n    └── bootstrap\r\n        ├── css\r\n        │   ├── bootstrap-grid.css\r\n        │   ├── bootstrap-grid.css.map\r\n        │   ├── bootstrap-grid.min.css\r\n        │   ├── bootstrap-grid.min.css.map\r\n        │   ├── bootstrap-reboot.css\r\n        │   ├── bootstrap-reboot.css.map\r\n        │   ├── bootstrap-reboot.min.css\r\n        │   ├── bootstrap-reboot.min.css.map\r\n        │   ├── bootstrap.css\r\n        │   ├── bootstrap.css.map\r\n        │   ├── bootstrap.min.css\r\n        │   └── bootstrap.min.css.map\r\n        └── js\r\n            ├── bootstrap.bundle.js\r\n            ├── bootstrap.bundle.js.map\r\n            ├── bootstrap.bundle.min.js\r\n            ├── bootstrap.bundle.min.js.map\r\n            ├── bootstrap.js\r\n            ├── bootstrap.js.map\r\n            ├── bootstrap.min.js\r\n            └── bootstrap.min.js.map\r\n```\r\n\r\n`Board/Board`에 있는 `settings.py`에 `import os`를 추가해주고, 아래와 같이 `STATIC_DIR`와\r\n`STATICFILES_DIRS`를 추가하여 `static` 폴더와 연결합니다.\r\n\r\n```python\r\nSTATIC_DIR = os.path.join(BASE_DIR, 'static')\r\nSTATICFILES_DIRS = [\r\n    STATIC_DIR,\r\n]\r\n```\r\n\r\n# HTML Template 사용하기\r\n\r\n`Board` 폴더에 `templates` 폴더를 만들고, `list.html` 파일을 아래와 같이 만듭니다.\r\n\r\n```html\r\n{% raw %}{% load static %}\r\n\u003c!DOCTYPE html\u003e\r\n\u003chtml lang=\"ko\"\u003e\r\n  \u003chead\u003e\r\n    \u003cmeta charset=\"UTF-8\" /\u003e\r\n    \u003ctitle\u003e게시판 - 목록\u003c/title\u003e\r\n    \u003clink rel=\"stylesheet\" href=\"{% static 'bootstrap/css/bootstrap.min.css' %}\" /\u003e\r\n  \u003c/head\u003e\r\n  \u003cbody\u003e\r\n    \u003cheader\u003e\r\n      \u003cdiv class=\"navbar navbar-dark bg-dark shadow-sm mb-3\"\u003e\r\n        \u003cdiv class=\"container d-flex justify-content-between\"\u003e\r\n          \u003ca href=\"/\" class=\"navbar-brand d-flex align-items-center\"\u003e\r\n            \u003cstrong\u003e게시판\u003c/strong\u003e\r\n          \u003c/a\u003e\r\n        \u003c/div\u003e\r\n      \u003c/div\u003e\r\n    \u003c/header\u003e\r\n    \u003cdiv class=\"container\"\u003e\r\n      \u003ctable class=\"table\"\u003e\r\n        \u003cthead class=\"thead-light\"\u003e\r\n          \u003ctr class=\"text-center\"\u003e\r\n            \u003cth scope=\"col\"\u003e#\u003c/th\u003e\r\n            \u003cth scope=\"col\"\u003e제목\u003c/th\u003e\r\n            \u003cth scope=\"col\"\u003e작성자\u003c/th\u003e\r\n            \u003cth scope=\"col\"\u003e작성일\u003c/th\u003e\r\n          \u003c/tr\u003e\r\n        \u003c/thead\u003e\r\n        \u003ctbody\u003e\r\n          {% for board in boards %}\r\n          \u003ctr class=\"text-center\"\u003e\r\n            \u003cth scope=\"row\"\u003e\r\n              \u003cspan\u003e{{ board.id }}\u003c/span\u003e\r\n            \u003c/th\u003e\r\n            \u003ctd\u003e\r\n              \u003ca href=\"/post/{{ board.id }}\"\u003e\r\n                \u003cspan\u003e{{ board.title }}\u003c/span\u003e\r\n              \u003c/a\u003e\r\n            \u003c/td\u003e\r\n            \u003ctd\u003e\r\n              \u003cspan\u003e{{ board.author }}\u003c/span\u003e\r\n            \u003c/td\u003e\r\n            \u003ctd\u003e\r\n              \u003cspan\u003e{{ board.created_date | date:\"Y-m-d h:i\" }}\u003c/span\u003e\r\n            \u003c/td\u003e\r\n          \u003c/tr\u003e\r\n          {% endfor %}\r\n        \u003c/tbody\u003e\r\n      \u003c/table\u003e\r\n      \u003cdiv class=\"row\"\u003e\r\n        \u003cdiv class=\"col-auto mr-auto\"\u003e\u003c/div\u003e\r\n        \u003cdiv class=\"col-auto\"\u003e\r\n          \u003ca class=\"btn btn-primary\" href=\"/post\" role=\"button\"\u003e글쓰기\u003c/a\u003e\r\n        \u003c/div\u003e\r\n      \u003c/div\u003e\r\n    \u003c/div\u003e\r\n    \u003cscript src=\"{% static 'bootstrap/js/bootstrap.min.js' %}\"\u003e\u003c/script\u003e\r\n  \u003c/body\u003e\r\n\u003c/html\u003e\r\n{% endraw %}\r\n```\r\n\r\n`Board/Board`에 있는 `settings.py`에 `TEMPLATE_DIR`를 추가하여 `templates` 폴더와 연결합니다.\r\n\r\n```python\r\nimport os\r\nfrom pathlib import Path\r\n\r\n# Build paths inside the project like this: BASE_DIR / 'subdir'.\r\nBASE_DIR = Path(__file__).resolve(strict=True).parent.parent\r\nTEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')\r\n```\r\n\r\n위에서 추가한 `TEMPLATE_DIR` 변수를 `settings.py`의 `TEMPLATES`에 있는 `DIRS`키의 값으로 넣습니다.\r\n\r\n```python\r\nTEMPLATES = [\r\n    {\r\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\r\n        'DIRS': [\r\n            TEMPLATE_DIR,\r\n        ],\r\n        'APP_DIRS': True,\r\n        'OPTIONS': {\r\n            'context_processors': [\r\n                'django.template.context_processors.debug',\r\n                'django.template.context_processors.request',\r\n                'django.contrib.auth.context_processors.auth',\r\n                'django.contrib.messages.context_processors.messages',\r\n            ],\r\n        },\r\n    },\r\n]\r\n```\r\n\r\n`views.py`에서 `templates` 폴더 안에 있는 Template 파일을 불러와서 출력해봅시다.  \r\n`board_app` 폴더에 있는 `views.py`에 있는 `index` 함수를 아래와 같이 수정합니다.\r\n\r\n```python\r\nfrom django.shortcuts import render\r\n\r\n# Create your views here.\r\ndef index(request):\r\n    return render(request, 'list.html')\r\n```\r\n\r\n`python manage.py runserver 8080`를 실행시켜 아래와 같이 출력되는지 확인해봅시다.  \r\n![Board List Template](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_9.png)\r\n\r\n'글쓰기' 버튼을 누르면, `/post`로 이동이 됩니다. 글쓰기 Template도 아래와 같이 작성해봅시다. 파일명\r\n은 `post.html`으로 `templates` 폴더에 저장합니다.\r\n\r\n```html\r\n{% raw %}{% load static %}\r\n\u003c!DOCTYPE html\u003e\r\n\u003chtml lang=\"ko\"\u003e\r\n  \u003chead\u003e\r\n    \u003cmeta charset=\"UTF-8\" /\u003e\r\n    \u003ctitle\u003e게시판 - 글쓰기\u003c/title\u003e\r\n    \u003clink rel=\"stylesheet\" href=\"{% static 'bootstrap/css/bootstrap.min.css' %}\" /\u003e\r\n  \u003c/head\u003e\r\n  \u003cbody\u003e\r\n    \u003cheader\u003e\r\n      \u003cdiv class=\"navbar navbar-dark bg-dark shadow-sm mb-3\"\u003e\r\n        \u003cdiv class=\"container d-flex justify-content-between\"\u003e\r\n          \u003ca href=\"/\" class=\"navbar-brand d-flex align-items-center\"\u003e\r\n            \u003cstrong\u003e게시판\u003c/strong\u003e\r\n          \u003c/a\u003e\r\n        \u003c/div\u003e\r\n      \u003c/div\u003e\r\n    \u003c/header\u003e\r\n    \u003cdiv class=\"container\"\u003e\r\n      \u003cform action=\"/post\" method=\"post\"\u003e\r\n        {% csrf_token %}\r\n        \u003cdiv class=\"form-group row\"\u003e\r\n          \u003clabel for=\"inputTitle\" class=\"col-sm-2 col-form-label\"\u003e\u003cstrong\u003e제목\u003c/strong\u003e\u003c/label\u003e\r\n          \u003cdiv class=\"col-sm-10\"\u003e\r\n            \u003cinput type=\"text\" name=\"title\" class=\"form-control\" id=\"inputTitle\" /\u003e\r\n          \u003c/div\u003e\r\n        \u003c/div\u003e\r\n        \u003cdiv class=\"form-group row\"\u003e\r\n          \u003clabel for=\"inputAuthor\" class=\"col-sm-2 col-form-label\"\u003e\u003cstrong\u003e작성자\u003c/strong\u003e\u003c/label\u003e\r\n          \u003cdiv class=\"col-sm-10\"\u003e\r\n            \u003cinput type=\"text\" name=\"author\" class=\"form-control\" id=\"inputAuthor\" /\u003e\r\n          \u003c/div\u003e\r\n        \u003c/div\u003e\r\n        \u003cdiv class=\"form-group row\"\u003e\r\n          \u003clabel for=\"inputContent\" class=\"col-sm-2 col-form-label\"\u003e\u003cstrong\u003e내용\u003c/strong\u003e\u003c/label\u003e\r\n          \u003cdiv class=\"col-sm-10\"\u003e\r\n            \u003ctextarea type=\"text\" name=\"content\" class=\"form-control\" id=\"inputContent\"\u003e\u003c/textarea\u003e\r\n          \u003c/div\u003e\r\n        \u003c/div\u003e\r\n        \u003cdiv class=\"row\"\u003e\r\n          \u003cdiv class=\"col-auto mr-auto\"\u003e\u003c/div\u003e\r\n          \u003cdiv class=\"col-auto\"\u003e\r\n            \u003cinput class=\"btn btn-primary\" type=\"submit\" role=\"button\" value=\"글쓰기\" /\u003e\r\n          \u003c/div\u003e\r\n        \u003c/div\u003e\r\n      \u003c/form\u003e\r\n    \u003c/div\u003e\r\n    \u003cscript src=\"{% static 'bootstrap/js/bootstrap.min.js' %}\"\u003e\u003c/script\u003e\r\n  \u003c/body\u003e\r\n\u003c/html\u003e\r\n{% endraw %}\r\n```\r\n\r\n`board_app`의 `views.py`에 `post()` 함수를 추가합니다.\r\n\r\n```python\r\ndef post(request):\r\n    return render(request, 'post.html')\r\n```\r\n\r\n`board_app`의 `urls.py`에 `path('post', views.post)`를 추가하여 `http://127.0.0.1/post`에 접속되었을\r\n때, `views.py`에 있는 `post()` 함수가 작동하도록 작성합니다.\r\n\r\n```python\r\nurlpatterns = [\r\n    path('', views.index),\r\n    path('post', views.post)\r\n]\r\n```\r\n\r\n`python manage.py runserver 8080`를 실행시켜 '글쓰기' 버튼을 눌렀을 때 아래와 같이 출력되는지 확인해\r\n봅시다.  \r\n![Board Post Template](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_10.png)\r\n\r\n# 게시물 작성 구현하기\r\n\r\n이 프로젝트에서는 SQLite를 사용하여, 게시판을 구현해보겠습니다.\r\n\r\n각 Application 폴더에 있는 `models.py` 파일은 테이블에 대해 정의하는 파일입니다.  \r\n`board_app`에 있는 `models.py`를 아래와 같이 작성합니다.\r\n\r\n```python\r\nfrom django.db import models\r\n\r\n# Create your models here.\r\nclass Board(models.Model):\r\n    author = models.CharField(max_length=10, null=False)\r\n    title = models.CharField(max_length=100, null=False)\r\n    content = models.TextField(null=False)\r\n    created_date = models.DateTimeField(auto_now_add=True)\r\n    modified_date = models.DateTimeField(auto_now=True)\r\n```\r\n\r\n- `author` : 작성자 이름이 저장되는 필드입니다.\r\n  - 최대 길이를 10으로 제한하였습니다.\r\n  - `null` 값이 저장될 수 없습니다.\r\n- `title` : 글 제목이 저장되는 필드입니다.\r\n  - 최대 길이를 100으로 제한하였습니다.\r\n  - `null` 값이 저장될 수 없습니다.\r\n- `content` : 내용이 저장되는 필드입니다.\r\n  - 앞의 `author`, `title`과 다르게\r\n    [`TextField`](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.TextField)로\r\n    되어있어 많은 Text를 써넣을 수 있습니다.\r\n  - `null` 값이 저장될 수 없습니다.\r\n- `created_date` : 게시물이 생성된 시간이 저장되는 필드입니다.\r\n  ([`auto_now_add=True`](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.DateField.auto_now_add))\r\n- `modified_date` : 게시물이 수정된 시간이 저장되는 필드입니다.\r\n  ([`auto_now=True`](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.DateField.auto_now))\r\n\r\n`models.py`를 수정했으면, Django 서버에 적용해 줘야 합니다.  \r\n`manage.py` 파일이 있는 위치에서 `python manage.py makemigrations` 명령을 실행합니다.  \r\n![makemigrations](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_11.png)\r\n\r\n위의 명령어는 'Migration'을 하는 명령어입니다. 'Migration'은 데이터베이스에 전달할 설계도 같은 역할\r\n을 합니다.  \r\n실제로 테이블을 만들려면 `python manage.py migrate` 명령을 실행해야 합니다.  \r\n![migrate](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_12.png)\r\n\r\n제대로 테이블이 생성되었는지 확인하기 위해 `python manage.py dbshell` 명령어를 통하여 데이터베이스에\r\n접근합니다. 그리고 `.tables` 명령어로 데이터베이스에 있는 테이블들을 조회해봅시다.  \r\n![Database Tables](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_13.png)\r\n\r\n'board*app_board'라는 테이블이 존재한다면, 성공적으로 테이블이 생성된 것입니다.  \r\n데이터베이스에 생성되는 테이블의 이름은 '[프로젝트 이름]*[모델 이름]' 규칙으로 생성됩니다.  \r\n'board_app_board'는 'board_app' 프로젝트에 있는 'board' 모델의 테이블이라고 해석하면 됩니다.\r\n\r\n`PRAGMA table_info(board_app_board);` 명령어로 우리가 설정한 필드들이 잘 설정되었는지 확인해봅시다\r\n.  \r\n![Table Info](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_14.png)\r\n\r\n위와 같이 출력되는데 아래와 같이 해석하면 됩니다.\r\n\r\n```\r\n순서 | 이름 | 형태 | notnull 여부 | pk 여부\r\n```\r\n\r\n이 순서로 보면 우리가 설정한 필드들이 잘 설정되었다는 걸 확인할 수 있습니다.\r\n\r\n이제 테이블을 생성했으니, 데이터를 넣어봅시다.  \r\n`post.html`을 보면 아래와 같이 되어있습니다.\r\n\r\n```html\r\n{% raw %}\r\n\u003cdiv class=\"container\"\u003e\r\n  \u003cform action=\"/post\" method=\"post\"\u003e\r\n    {% csrf_token %}\r\n    \u003cdiv class=\"form-group row\"\u003e\r\n      \u003clabel for=\"inputTitle\" class=\"col-sm-2 col-form-label\"\u003e\u003cstrong\u003e제목\u003c/strong\u003e\u003c/label\u003e\r\n      \u003cdiv class=\"col-sm-10\"\u003e\r\n        \u003cinput type=\"text\" name=\"title\" class=\"form-control\" id=\"inputTitle\" /\u003e\r\n      \u003c/div\u003e\r\n    \u003c/div\u003e\r\n    \u003cdiv class=\"form-group row\"\u003e\r\n      \u003clabel for=\"inputAuthor\" class=\"col-sm-2 col-form-label\"\u003e\u003cstrong\u003e작성자\u003c/strong\u003e\u003c/label\u003e\r\n      \u003cdiv class=\"col-sm-10\"\u003e\r\n        \u003cinput type=\"text\" name=\"author\" class=\"form-control\" id=\"inputAuthor\" /\u003e\r\n      \u003c/div\u003e\r\n    \u003c/div\u003e\r\n    \u003cdiv class=\"form-group row\"\u003e\r\n      \u003clabel for=\"inputContent\" class=\"col-sm-2 col-form-label\"\u003e\u003cstrong\u003e내용\u003c/strong\u003e\u003c/label\u003e\r\n      \u003cdiv class=\"col-sm-10\"\u003e\r\n        \u003ctextarea type=\"text\" name=\"content\" class=\"form-control\" id=\"inputContent\"\u003e\u003c/textarea\u003e\r\n      \u003c/div\u003e\r\n    \u003c/div\u003e\r\n    \u003cdiv class=\"row\"\u003e\r\n      \u003cdiv class=\"col-auto mr-auto\"\u003e\u003c/div\u003e\r\n      \u003cdiv class=\"col-auto\"\u003e\r\n        \u003cinput class=\"btn btn-primary\" type=\"submit\" role=\"button\" value=\"글쓰기\" /\u003e\r\n      \u003c/div\u003e\r\n    \u003c/div\u003e\r\n  \u003c/form\u003e\r\n\u003c/div\u003e\r\n{% endraw %}\r\n```\r\n\r\n`\u003cform\u003e` 태그를 보면, 아래의 `/post`로 POST 방식을 통하여 `\u003cinput\u003e`에 있는 내용을 전달하게 되어있습\r\n니다.  \r\n우리는 `views.py`에서 아까 만든 `post()` 함수를 수정해 주면 됩니다.\r\n\r\n```python\r\nfrom django.http import HttpResponseRedirect\r\nfrom django.shortcuts import render\r\nfrom .models import *\r\n\r\n# Create your views here.\r\ndef index(request):\r\n    return render(request, 'list.html')\r\n\r\ndef post(request):\r\n    if request.method == \"POST\":\r\n        author = request.POST['author']\r\n        title = request.POST['title']\r\n        content = request.POST['content']\r\n        board = Board(author=author, title=title, content=content)\r\n        board.save()\r\n        return HttpResponseRedirect('/')\r\n    else:\r\n        return render(request, 'post.html')\r\n```\r\n\r\n`post()` 함수에 'POST' 요청이 들어오면 실행할 코드를 넣어주었습니다.  \r\n`request.POST[]`에는 `\u003cinput\u003e`에 있는 `name` 속성의 값을 넣어, 변수에 입력한 내용의 값이 저장되도록\r\n하였습니다.  \r\n`python manage.py runserver 8080`를 실행시켜 '글쓰기' 버튼을 눌러 글을 하나 작성해봅시다. 테이블에데\r\n이터가 생성되었는지 확인하기 위해 `python manage.py dbshell` 명령어를 통하여 데이터베이스에 접근합니\r\n다. 그리고, `SELECT * FROM board_app_board;` 명령어로 `board_app_board`의 내용을 확인합니다. 아래와\r\n같이 잘 저장된 것을 확인할 수 있습니다.  \r\n![Database Check](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_15.png)\r\n\r\n그런데 이상한 점이 있습니다. `created_date`와 `modified_date` 필드의 시간이 컴퓨터 시간과 다르게 저\r\n장되어 있습니다.  \r\n그 이유는 `Board` 폴더에 있는 `settings.py`의 `TIME_ZONE`가 `UTC`로 설정되어 있어서 그렇습니다.\r\n`TIME_ZONE`를 `Asia/Seoul`로 변경하고, `USE_TZ`를 `False`로 변경하여 다시 글을 써봅시다.  \r\n아래와 같이 시간이 제대로 적용되어 저장되는 걸 확인할 수 있습니다.  \r\n![Database Check](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_16.png)\r\n\r\n`post()` 함수를 보면 `HttpResponseRedirect()` 함수를 사용하여, 글 작성이 완료되면 다시 메인 페이지의\r\nURL로 돌아가게 해주고 있습니다.  \r\n지금은 `HttpResponseRedirect('/')`와 같이 URL을 직접 입력하고 있습니다. 더 쉬운 방법으로 접근하기 위\r\n해 `urls.py`를 아래와 같이 수정합니다.\r\n\r\n```python\r\nfrom django.urls import path\r\nfrom . import views\r\n\r\nurlpatterns = [\r\n    path('', views.index, name='index'),\r\n    path('post', views.post, name='post')\r\n]\r\n```\r\n\r\n위의 코드를 보면 `name`을 추가하였습니다. 이제 URL 대신 `name`을 이용하여 접근할 수 있습니다.  \r\n`views.py`의 `HttpResponseRedirect('/')`를 `HttpResponseRedirect(reverse('index'))`로 수정합니다.\r\n\r\n```python\r\nfrom django.http import HttpResponseRedirect\r\nfrom django.shortcuts import render\r\nfrom django.urls import reverse\r\n\r\nfrom .models import *\r\n\r\n# Create your views here.\r\ndef index(request):\r\n    return render(request, 'list.html')\r\n\r\ndef post(request):\r\n    if request.method == \"POST\":\r\n        author = request.POST['author']\r\n        title = request.POST['title']\r\n        content = request.POST['content']\r\n        board = Board(author=author, title=title, content=content)\r\n        board.save()\r\n        return HttpResponseRedirect(reverse('index'))\r\n    else:\r\n        return render(request, 'post.html')\r\n```\r\n\r\n# 게시물 목록 구현하기\r\n\r\n위의 과정을 통해 게시물이 SQLite에 저장되는 것을 확인하였습니다.  \r\n이제 저장된 데이터를 목록에 출력하는 것을 구현해보겠습니다.\r\n\r\n`board_app`에 있는 `views.py`의 `index()`를 아래와 같이 수정합니다.\r\n\r\n```python\r\nfrom django.http import HttpResponseRedirect\r\nfrom django.shortcuts import render\r\nfrom django.urls import reverse\r\n\r\nfrom .models import *\r\n\r\n# Create your views here.\r\ndef index(request):\r\n    boards = {'boards': Board.objects.all()}\r\n    return render(request, 'list.html', boards)\r\n\r\ndef post(request):\r\n    if request.method == \"POST\":\r\n        author = request.POST['author']\r\n        title = request.POST['title']\r\n        content = request.POST['content']\r\n        board = Board(author=author, title=title, content=content)\r\n        board.save()\r\n        return HttpResponseRedirect(reverse('index'))\r\n    else:\r\n        return render(request, 'post.html')\r\n```\r\n\r\n위에 코드를 보면, `Board` 모델에 접근하고, `objects`에 접근한 후에 `all()` 함수를 통해 모든 데이터를\r\n가져와 `boards` 딕셔너리의 `boards` 키에 할당합니다.  \r\n그리고 `boards` 딕셔너리를 `render()` 함수를 통해 전달합니다.  \r\n이렇게 전달한 데이터는 `list.html`에서 받아 출력하게 되는데, 출력하는 부분은 아래와 같습니다.\r\n\r\n```html\r\n{% raw %}{% for board in boards %}\r\n\u003ctr class=\"text-center\"\u003e\r\n  \u003cth scope=\"row\"\u003e\r\n    \u003cspan\u003e{{ board.id }}\u003c/span\u003e\r\n  \u003c/th\u003e\r\n  \u003ctd\u003e\r\n    \u003ca href=\"/post/{{ board.id }}\"\u003e\r\n      \u003cspan\u003e{{ board.title }}\u003c/span\u003e\r\n    \u003c/a\u003e\r\n  \u003c/td\u003e\r\n  \u003ctd\u003e\r\n    \u003cspan\u003e{{ board.author }}\u003c/span\u003e\r\n  \u003c/td\u003e\r\n  \u003ctd\u003e\r\n    \u003cspan\u003e{{ board.created_date | date:\"Y-m-d h:i\" }}\u003c/span\u003e\r\n  \u003c/td\u003e\r\n\u003c/tr\u003e\r\n{% endfor %}{% endraw %}\r\n```\r\n\r\n`{% raw %}{% for board in boards %}{% endraw %}`를 통해 `boards` 키의 요소를 `board` 변수로 가져옵니\r\n다. (Python에서 사용한 `for` 반복문과 같습니다.)  \r\n그리고 `{% raw %}{{ board.id }}{% endraw %}`, `{% raw %}{{ board.title }}{% endraw %}`,\r\n`{% raw %}{{ board.author }}{% endraw %}`로 `board` 변수에서 `id`, `title`, `author` 값에 접근하여출\r\n력합니다.\r\n\r\n\u003e `{% raw %}{{ board.created_date | date:\"Y-m-d h:i\" }}{% endraw %}`은 `datetime` 타입의 데이터\r\n\u003e (`created_date`)를 `date:\"Y-m-d h:i\"` 형식에 맞추어 출력해 줍니다.  \r\n\u003e [https://docs.djangoproject.com/en/3.1/ref/templates/builtins/#date](https://docs.djangoproject.com/en/3.1/ref/templates/builtins/#date)를\r\n\u003e 참고해주세요.\r\n\r\n`python manage.py runserver 8080`를 실행시켜 아래와 같이 목록이 잘 출력되는지 확인합니다.  \r\n![Board List](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_17.png)\r\n\r\n**Source Code :**\r\n[github.com/LeeKyuHyuk/Django-Board-Example](https://github.com/LeeKyuHyuk/Django-Board-Example/tree/ac52195cc570091d601904a09c444548e58eac66)\r\n"},"__N_SSG":true},"page":"/article/[category]/[year]/[month]/[day]/[slug]","query":{"category":"django","year":"2020","month":"08","day":"14","slug":"Django-Board-Write-Post"},"buildId":"Dsgna1Ug9ERZ37IDpNGla","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

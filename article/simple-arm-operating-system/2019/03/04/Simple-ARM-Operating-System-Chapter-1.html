@@ -1,0 +1,124 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><meta property="og:image" content="https://kyuhyuk.kr/thumbnail.png"/><title>Chapter 1: Cross Compiler를 빌드하고, 빌드환경을 구축해보자!</title><meta name="author" content="KyuHyuk Lee"/><meta name="generator" content="KyuHyuk Lee"/><meta name="description" content=" Build Cross Compiler 크로스 컴파일러(Cross Compiler)는 컴파일러가 실행되는 플랫폼이 아닌 다른 플랫폼에서 실행 가능한 코 드를 생성할 수 있는 컴파일러이다. 크로스 컴파일러 툴은 임베디드 시스템 혹은 여러 플랫폼에서 실행파일을 생성하는데 사용된다. 이것은운"/><meta itemProp="url" content="https://kyuhyuk.kr/article/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-1"/><meta itemProp="headline" content="Chapter 1: Cross Compiler를 빌드하고, 빌드환경을 구축해보자!"/><meta property="og:type" content="article"/><meta property="og:url" content="https://kyuhyuk.kr/article/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-1"/><meta property="og:title" content="Chapter 1: Cross Compiler를 빌드하고, 빌드환경을 구축해보자!"/><meta property="og:description" content=" Build Cross Compiler 크로스 컴파일러(Cross Compiler)는 컴파일러가 실행되는 플랫폼이 아닌 다른 플랫폼에서 실행 가능한 코 드를 생성할 수 있는 컴파일러이다. 크로스 컴파일러 툴은 임베디드 시스템 혹은 여러 플랫폼에서 실행파일을 생성하는데 사용된다. 이것은운"/><meta property="og:site_name" content="KyuHyuk Blog"/><meta property="og:locale" content="ko_KR"/><meta name="next-head-count" content="15"/><link rel="preload" href="/_next/static/css/4e0666c6da09e1ee.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4e0666c6da09e1ee.css" data-n-g=""/><link rel="preload" href="/_next/static/css/c2a527101433f11d.css" as="style"/><link rel="stylesheet" href="/_next/static/css/c2a527101433f11d.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-a87821de553db91d.js" defer=""></script><script src="/_next/static/chunks/main-fc7d2f0e2098927e.js" defer=""></script><script src="/_next/static/chunks/pages/_app-2774ecbb7f55613d.js" defer=""></script><script src="/_next/static/chunks/869-82e19047d92f6e30.js" defer=""></script><script src="/_next/static/chunks/895-531271280742d591.js" defer=""></script><script src="/_next/static/chunks/pages/article/%5Bcategory%5D/%5Byear%5D/%5Bmonth%5D/%5Bday%5D/%5Bslug%5D-e1207b3501068a48.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_buildManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_ssgManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><header class="c-opBYf"><a href="https://kyuhyuk.kr"><div class="c-bHyrwK"><div class="c-uBnvQ">Kh.</div><div class="c-hehuMV">KyuHyuk Blog</div></div></a><ul class="c-bjkCdF"><li><a href="https://github.com/LeeKyuHyuk" class="c-hAoZGi"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></a></li><li><a href="https://linkedin.com/in/leekyuhyuk" class="c-hAoZGi"><span role="img" aria-label="linkedin" class="anticon anticon-linkedin"><svg viewBox="64 64 896 896" focusable="false" data-icon="linkedin" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1168.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg></span></a></li><li><a href="mailto:lee@kyuhyuk.kr" class="c-hAoZGi"><span role="img" aria-label="mail" class="anticon anticon-mail"><svg viewBox="64 64 896 896" focusable="false" data-icon="mail" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-80.8 108.9L531.7 514.4c-7.8 6.1-18.7 6.1-26.5 0L189.6 268.9A7.2 7.2 0 01194 256h648.8a7.2 7.2 0 014.4 12.9z"></path></svg></span></a></li></ul></header><main class="c-jfcKOQ"><article><h1 class="c-fxvkZv"><a href="https://kyuhyuk.kr/article/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-1">Chapter 1: Cross Compiler를 빌드하고, 빌드환경을 구축해보자!</a></h1><a href="https://kyuhyuk.kr/category/Simple-ARM-Operating-System" class="c-iosjjB">Simple ARM Operating System</a><time dateTime="2019-03-04 23:07:01" class="c-jYwCTI">Mar 05, 2019 08:07:01 AM</time><div id="post" class="c-dIcdES"><h3>Build Cross Compiler</h3>
+<blockquote>
+<p>크로스 컴파일러(Cross Compiler)는 컴파일러가 실행되는 플랫폼이 아닌 다른 플랫폼에서 실행 가능한 코
+드를 생성할 수 있는 컴파일러이다.<br>
+크로스 컴파일러 툴은 임베디드 시스템 혹은 여러 플랫폼에서 실행파일을 생성하는데 사용된다. 이것은운
+영 체제를 지원하지 않는 마이크로컨트롤러와 같이 컴파일이 실현 불가능한 플랫폼에 컴파일하는데 사용
+된다.<br>
+이것은 시스템이 사용하는데 하나 이상의 플랫폼을 쓰는 반가상화에 이 도구를 사용하는 것이 더 일반적
+이게 되었다.<br>
+<a href="https://ko.wikipedia.org/wiki/%ED%81%AC%EB%A1%9C%EC%8A%A4%20%EC%BB%B4%ED%8C%8C%EC%9D%BC%EB%9F%AC">Wikipedia - 크로스 컴파일러</a></p>
+</blockquote>
+<p><img src="/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-1/2019-03-04-Simple-ARM-Operating-System-Chapter-1_1.png" alt="GNU GCC Cross Compiler"><br>
+Picture Source :
+<em><a href="https://preshing.com/20141119/how-to-build-a-gcc-cross-compiler">Preshing on Programming - How to Build a GCC Cross-Compiler </a></em></p>
+<h3>Step 1. Download Source code</h3>
+<pre><code>$ wget https://ftp.gnu.org/gnu/binutils/binutils-2.31.1.tar.xz
+$ wget https://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz
+$ wget https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.1.tar.xz
+$ wget https://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.xz
+$ wget https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
+</code></pre>
+<h3>Step 2. Build GNU Binutils</h3>
+<blockquote>
+<p>GNU 바이너리 유틸리티(GNU Binary Utilities) 또는 GNU Binutils는 여러 종류의 오브젝트 파일 형식들을
+조작하기 위한 프로그래밍 도구 모음이다.<br>
+<a href="https://ko.wikipedia.org/wiki/GNU_%EB%B0%94%EC%9D%B4%EB%84%88%EB%A6%AC_%EC%9C%A0%ED%8B%B8%EB%A6%AC%ED%8B%B0">Wikipedia - GNU 바이너리 유틸리티</a></p>
+</blockquote>
+<pre><code>$ tar xvJf binutils-2.31.1.tar.xz
+$ cd binutils-2.31.1
+$ ./configure \
+  --prefix=/home/leekyuhyuk/workspace/tools \
+  --target=arm-none-eabi \
+  --disable-libssp \
+  --disable-libstdcxx-pch \
+  --disable-libunwind-exceptions \
+  --disable-linker-build-id \
+  --disable-multilib \
+  --disable-nls \
+  --disable-shared \
+  --disable-threads \
+  --disable-werror \
+  --enable-__cxa_atexit \
+  --enable-checking=release \
+  --enable-clocale=gnu \
+  --enable-default-pie \
+  --enable-default-ssp \
+  --enable-gnu-indirect-function \
+  --enable-gnu-unique-object \
+  --enable-install-libiberty \
+  --enable-libmpx \
+  --enable-lto \
+  --enable-plugin \
+  --with-gnu-ld \
+  --with-linker-hash-style=gnu \
+  --with-system-zlib
+$ make configure-host
+$ make LDFLAGS=&quot;-all-static&quot;
+$ make install
+$ cd ..
+</code></pre>
+<ul>
+<li><code>--target</code>: 컴파일해서 만들어진 바이너리가 만들어내는 바이너리가 실행되는 시스템</li>
+<li><code>--prefix</code> : PREFIX에 binutils를 설치합니다.
+<ul>
+<li>원하는 경로를 입력하면 됩니다. 저는 <code>/home/leekyuhyuk/workspace/tools</code>로 입력하였습니다.</li>
+</ul>
+</li>
+<li><code>--disable-shared</code> : Static Library로 빌드합니다.</li>
+<li><code>--disable-nls</code> : 모든 메세지를 영어로 출력합니다.</li>
+</ul>
+<h3>Step 3. Build GNU GCC</h3>
+<pre><code>$ tar xvJf gcc-8.2.0.tar.xz
+$ cd gcc-8.2.0
+$ tar xvJf ../gmp-6.1.2.tar.xz
+$ mv gmp-6.1.2 gmp
+$ tar xvJf ../mpfr-4.0.1.tar.xz
+$ mv mpfr-4.0.1 mpfr
+$ tar xvzf ../mpc-1.1.0.tar.gz
+$ mv mpc-1.1.0 mpc
+$ ./configure \
+  --prefix=/home/leekyuhyuk/workspace/tools \
+  --target=arm-none-eabi \
+  --disable-libssp \
+  --disable-libstdcxx-pch \
+  --disable-libunwind-exceptions \
+  --disable-linker-build-id \
+  --disable-multilib \
+  --disable-shared \
+  --disable-threads \
+  --disable-werror \
+  --enable-__cxa_atexit \
+  --enable-checking=release \
+  --enable-clocale=gnu \
+  --enable-default-pie \
+  --enable-default-ssp \
+  --enable-gnu-indirect-function \
+  --enable-gnu-unique-object \
+  --enable-install-libiberty \
+  --enable-languages=c \
+  --enable-libmpx \
+  --enable-lto \
+  --enable-plugin \
+  --with-cpu=arm1176jzf-s \
+  --with-float=hard \
+  --with-gnu-ld \
+  --with-linker-hash-style=gnu \
+  --with-newlib \
+  --with-sysroot=/home/leekyuhyuk/workspace/tools/arm-none-eabi \
+  --with-system-zlib
+$ make configure-host
+$ make all-gcc all-target-libgcc
+$ make install-gcc install-target-libgcc
+$ cd ..
+</code></pre>
+<ul>
+<li><code>--enable-languages</code> : Compiler나 Runtime Library들이 어떤걸로 빌드되어야 할지 설정합니다.</li>
+<li><code>--with-system-zlib</code> : GCC가 내부 복사본이 아닌 Host에 있는 zlib Library로 Link하도록 설정합니다.</li>
+<li><code>--with-cpu</code> : Compiler가 어떤 CPU를 대상으로 코드를 만들어낼지 설정합니다.
+<ul>
+<li>Raspberry Pi Zero는 'arm1176jzf-s'로 설정합니다.</li>
+</ul>
+</li>
+</ul>
+</div></article></main><footer class="c-cpkrrK"><div class="c-fiqONv">© <!-- -->2022<!-- --></div><div class="c-bHyrwK"><div class="c-iUFgVP">Kh.</div><div class="c-cshSRb">KyuHyuk Lee</div></div></footer></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"excerpt":" Build Cross Compiler 크로스 컴파일러(Cross Compiler)는 컴파일러가 실행되는 플랫폼이 아닌 다른 플랫폼에서 실행 가능한 코 드를 생성할 수 있는 컴파일러이다. 크로스 컴파일러 툴은 임베디드 시스템 혹은 여러 플랫폼에서 실행파일을 생성하는데 사용된다. 이것은운","url":"/article/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-1","frontmatter":{"title":"Chapter 1: Cross Compiler를 빌드하고, 빌드환경을 구축해보자!","date":"2019-03-04 23:07:01","category":"Simple-ARM-Operating-System"},"content":"\n### Build Cross Compiler\n\n\u003e 크로스 컴파일러(Cross Compiler)는 컴파일러가 실행되는 플랫폼이 아닌 다른 플랫폼에서 실행 가능한 코\n\u003e 드를 생성할 수 있는 컴파일러이다.  \n\u003e 크로스 컴파일러 툴은 임베디드 시스템 혹은 여러 플랫폼에서 실행파일을 생성하는데 사용된다. 이것은운\n\u003e 영 체제를 지원하지 않는 마이크로컨트롤러와 같이 컴파일이 실현 불가능한 플랫폼에 컴파일하는데 사용\n\u003e 된다.  \n\u003e 이것은 시스템이 사용하는데 하나 이상의 플랫폼을 쓰는 반가상화에 이 도구를 사용하는 것이 더 일반적\n\u003e 이게 되었다.  \n\u003e [Wikipedia - 크로스 컴파일러](https://ko.wikipedia.org/wiki/크로스%20컴파일러)\n\n![GNU GCC Cross Compiler](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-1/2019-03-04-Simple-ARM-Operating-System-Chapter-1_1.png)  \nPicture Source :\n_[Preshing on Programming - How to Build a GCC Cross-Compiler ](https://preshing.com/20141119/how-to-build-a-gcc-cross-compiler)_\n\n### Step 1. Download Source code\n\n```\n$ wget https://ftp.gnu.org/gnu/binutils/binutils-2.31.1.tar.xz\n$ wget https://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz\n$ wget https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.1.tar.xz\n$ wget https://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.xz\n$ wget https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz\n```\n\n### Step 2. Build GNU Binutils\n\n\u003e GNU 바이너리 유틸리티(GNU Binary Utilities) 또는 GNU Binutils는 여러 종류의 오브젝트 파일 형식들을\n\u003e 조작하기 위한 프로그래밍 도구 모음이다.  \n\u003e [Wikipedia - GNU 바이너리 유틸리티](https://ko.wikipedia.org/wiki/GNU_바이너리_유틸리티)\n\n```\n$ tar xvJf binutils-2.31.1.tar.xz\n$ cd binutils-2.31.1\n$ ./configure \\\n  --prefix=/home/leekyuhyuk/workspace/tools \\\n  --target=arm-none-eabi \\\n  --disable-libssp \\\n  --disable-libstdcxx-pch \\\n  --disable-libunwind-exceptions \\\n  --disable-linker-build-id \\\n  --disable-multilib \\\n  --disable-nls \\\n  --disable-shared \\\n  --disable-threads \\\n  --disable-werror \\\n  --enable-__cxa_atexit \\\n  --enable-checking=release \\\n  --enable-clocale=gnu \\\n  --enable-default-pie \\\n  --enable-default-ssp \\\n  --enable-gnu-indirect-function \\\n  --enable-gnu-unique-object \\\n  --enable-install-libiberty \\\n  --enable-libmpx \\\n  --enable-lto \\\n  --enable-plugin \\\n  --with-gnu-ld \\\n  --with-linker-hash-style=gnu \\\n  --with-system-zlib\n$ make configure-host\n$ make LDFLAGS=\"-all-static\"\n$ make install\n$ cd ..\n```\n\n- `--target`: 컴파일해서 만들어진 바이너리가 만들어내는 바이너리가 실행되는 시스템\n- `--prefix` : PREFIX에 binutils를 설치합니다.\n  - 원하는 경로를 입력하면 됩니다. 저는 `/home/leekyuhyuk/workspace/tools`로 입력하였습니다.\n- `--disable-shared` : Static Library로 빌드합니다.\n- `--disable-nls` : 모든 메세지를 영어로 출력합니다.\n\n### Step 3. Build GNU GCC\n\n```\n$ tar xvJf gcc-8.2.0.tar.xz\n$ cd gcc-8.2.0\n$ tar xvJf ../gmp-6.1.2.tar.xz\n$ mv gmp-6.1.2 gmp\n$ tar xvJf ../mpfr-4.0.1.tar.xz\n$ mv mpfr-4.0.1 mpfr\n$ tar xvzf ../mpc-1.1.0.tar.gz\n$ mv mpc-1.1.0 mpc\n$ ./configure \\\n  --prefix=/home/leekyuhyuk/workspace/tools \\\n  --target=arm-none-eabi \\\n  --disable-libssp \\\n  --disable-libstdcxx-pch \\\n  --disable-libunwind-exceptions \\\n  --disable-linker-build-id \\\n  --disable-multilib \\\n  --disable-shared \\\n  --disable-threads \\\n  --disable-werror \\\n  --enable-__cxa_atexit \\\n  --enable-checking=release \\\n  --enable-clocale=gnu \\\n  --enable-default-pie \\\n  --enable-default-ssp \\\n  --enable-gnu-indirect-function \\\n  --enable-gnu-unique-object \\\n  --enable-install-libiberty \\\n  --enable-languages=c \\\n  --enable-libmpx \\\n  --enable-lto \\\n  --enable-plugin \\\n  --with-cpu=arm1176jzf-s \\\n  --with-float=hard \\\n  --with-gnu-ld \\\n  --with-linker-hash-style=gnu \\\n  --with-newlib \\\n  --with-sysroot=/home/leekyuhyuk/workspace/tools/arm-none-eabi \\\n  --with-system-zlib\n$ make configure-host\n$ make all-gcc all-target-libgcc\n$ make install-gcc install-target-libgcc\n$ cd ..\n```\n\n- `--enable-languages` : Compiler나 Runtime Library들이 어떤걸로 빌드되어야 할지 설정합니다.\n- `--with-system-zlib` : GCC가 내부 복사본이 아닌 Host에 있는 zlib Library로 Link하도록 설정합니다.\n- `--with-cpu` : Compiler가 어떤 CPU를 대상으로 코드를 만들어낼지 설정합니다.\n  - Raspberry Pi Zero는 'arm1176jzf-s'로 설정합니다.\n"},"__N_SSG":true},"page":"/article/[category]/[year]/[month]/[day]/[slug]","query":{"category":"simple-arm-operating-system","year":"2019","month":"03","day":"04","slug":"Simple-ARM-Operating-System-Chapter-1"},"buildId":"Dsgna1Ug9ERZ37IDpNGla","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

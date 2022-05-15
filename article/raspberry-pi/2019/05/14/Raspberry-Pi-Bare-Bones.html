@@ -1,0 +1,497 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><meta property="og:image" content="https://kyuhyuk.kr/thumbnail.png"/><title>Raspberry Pi Bare Bones</title><meta name="author" content="KyuHyuk Lee"/><meta name="generator" content="KyuHyuk Lee"/><meta name="description" content=" Raspberry Pi의 운영 체제 개발에 대한 글입니다. 이 글은 테스트할 다른 하드웨어가 없기 때문에 Raspberry Pi Model B Rev 2에 맞춰져 작성되었습니다. 하지만 지금까지의 모델들은 Memory-Mapped I/O 위 치 이외에는 대부분 동일합니다. 이것은 최소"/><meta itemProp="url" content="https://kyuhyuk.kr/article/raspberry-pi/2019/05/14/Raspberry-Pi-Bare-Bones"/><meta itemProp="headline" content="Raspberry Pi Bare Bones"/><meta property="og:type" content="article"/><meta property="og:url" content="https://kyuhyuk.kr/article/raspberry-pi/2019/05/14/Raspberry-Pi-Bare-Bones"/><meta property="og:title" content="Raspberry Pi Bare Bones"/><meta property="og:description" content=" Raspberry Pi의 운영 체제 개발에 대한 글입니다. 이 글은 테스트할 다른 하드웨어가 없기 때문에 Raspberry Pi Model B Rev 2에 맞춰져 작성되었습니다. 하지만 지금까지의 모델들은 Memory-Mapped I/O 위 치 이외에는 대부분 동일합니다. 이것은 최소"/><meta property="og:site_name" content="KyuHyuk Blog"/><meta property="og:locale" content="ko_KR"/><meta name="next-head-count" content="15"/><link rel="preload" href="/_next/static/css/4e0666c6da09e1ee.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4e0666c6da09e1ee.css" data-n-g=""/><link rel="preload" href="/_next/static/css/c2a527101433f11d.css" as="style"/><link rel="stylesheet" href="/_next/static/css/c2a527101433f11d.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-a87821de553db91d.js" defer=""></script><script src="/_next/static/chunks/main-fc7d2f0e2098927e.js" defer=""></script><script src="/_next/static/chunks/pages/_app-2774ecbb7f55613d.js" defer=""></script><script src="/_next/static/chunks/869-82e19047d92f6e30.js" defer=""></script><script src="/_next/static/chunks/895-531271280742d591.js" defer=""></script><script src="/_next/static/chunks/pages/article/%5Bcategory%5D/%5Byear%5D/%5Bmonth%5D/%5Bday%5D/%5Bslug%5D-e1207b3501068a48.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_buildManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_ssgManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><header class="c-opBYf"><a href="https://kyuhyuk.kr"><div class="c-bHyrwK"><div class="c-uBnvQ">Kh.</div><div class="c-hehuMV">KyuHyuk Blog</div></div></a><ul class="c-bjkCdF"><li><a href="https://github.com/LeeKyuHyuk" class="c-hAoZGi"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></a></li><li><a href="https://linkedin.com/in/leekyuhyuk" class="c-hAoZGi"><span role="img" aria-label="linkedin" class="anticon anticon-linkedin"><svg viewBox="64 64 896 896" focusable="false" data-icon="linkedin" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1168.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg></span></a></li><li><a href="mailto:lee@kyuhyuk.kr" class="c-hAoZGi"><span role="img" aria-label="mail" class="anticon anticon-mail"><svg viewBox="64 64 896 896" focusable="false" data-icon="mail" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-80.8 108.9L531.7 514.4c-7.8 6.1-18.7 6.1-26.5 0L189.6 268.9A7.2 7.2 0 01194 256h648.8a7.2 7.2 0 014.4 12.9z"></path></svg></span></a></li></ul></header><main class="c-jfcKOQ"><article><h1 class="c-fxvkZv"><a href="https://kyuhyuk.kr/article/raspberry-pi/2019/05/14/Raspberry-Pi-Bare-Bones">Raspberry Pi Bare Bones</a></h1><a href="https://kyuhyuk.kr/category/Raspberry-Pi" class="c-iosjjB">Raspberry Pi</a><time dateTime="2019-05-14 19:39:57" class="c-jYwCTI">May 15, 2019 04:39:57 AM</time><div id="post" class="c-dIcdES"><p>Raspberry Pi의 운영 체제 개발에 대한 글입니다. 이 글은 테스트할 다른 하드웨어가 없기 때문에
+Raspberry Pi Model B Rev 2에 맞춰져 작성되었습니다. 하지만 지금까지의 모델들은 Memory-Mapped I/O 위
+치 이외에는 대부분 동일합니다. 이것은 최소한의 시스템을 만드는 방법의 예를 보여주지만, 프로젝트를 적
+절하게 구조화하는 방법의 예는 아닙니다.</p>
+<h1>Prepare</h1>
+<p>여러분은 이제 스스로 운영체제 개발을 시작하려고 합니다. 아마도 언젠가는 스스로 새로운 운영체제를 개
+발할 수도 있습니다. 이것은 Bootstrap 또는 Self-hosting으로 알려진 과정입니다. 우선은 기존 운영 체제
+에서 새 운영 체제를 컴파일 할 수 있는 시스템을 환경을 만들기만 하면 됩니다. 이 과정은
+<a href="https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F">Cross-Compile</a>으로 알려져 있으며 운영체제
+개발의 첫 번째 단계입니다.</p>
+<p>이 글에서는 운영체제 개발을 원활하게 할 수 있는 Linux와 같은 Unix 계열 운영체제를 사용합니다.
+Windows 사용자는 <a href="https://wiki.osdev.org/MinGW">MinGW</a> 또는 <a href="https://wiki.osdev.org/Cygwin">Cygwin</a>
+환경에서 진행할 수 있습니다.</p>
+<h1>Building a Cross-Compiler</h1>
+<blockquote>
+<p>Main article: <a href="https://wiki.osdev.org/GCC_Cross-Compiler">GCC Cross-Compiler</a>,
+<a href="https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F">Why do I need a Cross Compiler?</a></p>
+</blockquote>
+<p>우선해야 할 일은 <strong>arm-none-eabi</strong> 용 GCC Cross-Compiler를 준비하는 것입니다. 아직 운영체제를 만들기
+위해 컴파일러를 수정하지 않았기 때문에, arm-none-eabi라는 일반적인 타겟을 사용할 것입니다. 이 타겟은
+System V ABI를 대상으로 하는 Toolchain을 제공합니다. Cross-Compiler 없이 운영체제를 올바르게 컴파일
+할 수 없습니다.</p>
+<p>만약 64비트 커널이 필요하다면, aarch64-elf를 타겟으로 사용하면 됩니다. 동일한 System V ABI 인터페이
+스를 제공하지만 64비트 용입니다. elf를 사용하는 것은 필수가 아니지만 작업을 간편하게 해줍니다.</p>
+<h1>Overview</h1>
+<p>이제 여러분은 크로스 컴파일러를 가지고 있어야 합니다. 이 글은 간단한 운영체제를 만드는데 필요한 최소
+한의 방법을 제공하고 있습니다. 이는 프로젝트 구조에 대한 권장 구조로 사용되지는 않지만 최소한의 커널
+에 대한 예로서는 사용되고 있습니다. 이런 간단한 커널을 개발하는 경우에는 3개의 파일만 있으면 됩니다.</p>
+<ol>
+<li><code>boot.S</code> - 커널이 CPU 환경에서 동작할 수 있도록 만들어 주기 위한 커널의 진입점입니다.</li>
+<li><code>kernel.c</code> - 여러분이 만들게 될 커널 루틴입니다.</li>
+<li><code>linker.ld</code> - 위에 두 소스코드를 컴파일한 후 Linking 할 때 사용하게 될 Linker Script입니다.</li>
+</ol>
+<h1>Booting the Operating System</h1>
+<p>이제 <code>boot.S</code>라는 파일을 만들고 그 내용을 설명할 것입니다. 이 예제에서는 앞에서 빌드 한
+Cross-Compiler Toolchain의 일부인 GNU Assembler를 사용합니다. 이 어셈블러는 나머지 GNU Toolchain과
+잘 호환됩니다.</p>
+<h2>Raspberry Pi Model A, B, A+, B+, and Zero</h2>
+<pre><code class="language-assembly">// AArch32 mode
+
+// To keep this in the first portion of the binary.
+.section &quot;.text.boot&quot;
+
+// Make _start global.
+.globl _start
+
+.org 0x8000
+// Entry point for the kernel.
+// r15 -&gt; should begin execution at 0x8000.
+// r0 -&gt; 0x00000000
+// r1 -&gt; 0x00000C42
+// r2 -&gt; 0x00000100 - start of ATAGS
+// preserve these registers as argument for kernel_main
+_start:
+	// Setup the stack.
+	mov sp, #0x8000
+
+	// Clear out bss.
+	ldr r4, =__bss_start
+	ldr r9, =__bss_end
+	mov r5, #0
+	mov r6, #0
+	mov r7, #0
+	mov r8, #0
+	b       2f
+
+1:
+	// store multiple at r4.
+	stmia r4!, {r5-r8}
+
+	// If we are still below bss_end, loop.
+2:
+	cmp r4, r9
+	blo 1b
+
+	// Call kernel_main
+	ldr r3, =kernel_main
+	blx r3
+
+	// halt
+halt:
+	wfe
+	b halt
+</code></pre>
+<p>Linker Script에서 <code>.text.boot</code> 섹션을 사용하여 <code>boot.S</code>를 커널 이미지의 맨 처음에 배치합니다. 이 코
+드는 <code>kernel_main</code> 함수를 호출하기 전에 최소의 C 환경을 초기화합니다. 즉, 스택이 있고 BSS 세그먼트를
+0으로 만드는 것을 의미합니다. 이 코드는 <code>r0</code>~<code>r2</code>를 사용하지 않으므로 <code>kernel_main</code> 호출에 유효합니
+다.</p>
+<p>아래와 같이 <code>boot.S</code>를 assemble 할 수 있습니다:</p>
+<pre><code class="language-sh">arm-none-eabi-gcc -mcpu=arm1176jzf-s -fpic -ffreestanding -c boot.S -o boot.o
+</code></pre>
+<h2>Raspberry Pi 2</h2>
+<p>최신 버전의 Raspberry Pi를 사용하면 더 많은 작업을 수행할 수 있습니다. Raspberry Pi 2와 3에는 4개의
+코어가 있습니다. 부팅 할 때 모든 코어가 실행 중이며 동일한 부팅 코드를 실행합니다. 따라서 코어를 구
+별하고 그중 하나만 실행할 수 있게 하고 나머지는 무한 루프에 넣어야 합니다.</p>
+<pre><code class="language-assembly">// AArch32 mode
+
+// To keep this in the first portion of the binary.
+.section &quot;.text.boot&quot;
+
+// Make _start global.
+.globl _start
+
+.org 0x8000
+// Entry point for the kernel.
+// r15 -&gt; should begin execution at 0x8000.
+// r0 -&gt; 0x00000000
+// r1 -&gt; 0x00000C42
+// r2 -&gt; 0x00000100 - start of ATAGS
+// preserve these registers as argument for kernel_main
+_start:
+	// Shut off extra cores
+	mrc p15, 0, r5, c0, c0, 5
+	and r5, r5, #3
+	cmp r5, #0
+	bne halt
+
+	// Setup the stack.
+	ldr r5, =_start
+	mov sp, r5
+
+	// Clear out bss.
+	ldr r4, =__bss_start
+	ldr r9, =__bss_end
+	mov r5, #0
+	mov r6, #0
+	mov r7, #0
+	mov r8, #0
+	b       2f
+
+1:
+	// store multiple at r4.
+	stmia r4!, {r5-r8}
+
+	// If we are still below bss_end, loop.
+2:
+	cmp r4, r9
+	blo 1b
+
+	// Call kernel_main
+	ldr r3, =kernel_main
+	blx r3
+
+	// halt
+halt:
+	wfe
+	b halt
+</code></pre>
+<p>아래와 같이 <code>boot.S</code>를 assemble 할 수 있습니다:</p>
+<pre><code class="language-sh">arm-none-eabi-gcc -mcpu=cortex-a7 -fpic -ffreestanding -c boot.S -o boot.o
+</code></pre>
+<h2>Raspberry Pi 3</h2>
+<p>64비트 모드에서 부팅 코드는 <code>0x8000</code>이 아닌 <code>0x80000</code>에 로드됩니다.</p>
+<pre><code class="language-assembly">// AArch64 mode
+
+// To keep this in the first portion of the binary.
+.section &quot;.text.boot&quot;
+
+// Make _start global.
+.globl _start
+
+    .org 0x80000
+// Entry point for the kernel. Registers are not defined as in AArch32.
+_start:
+    // read cpu id, stop slave cores
+    mrs     x1, mpidr_el1
+    and     x1, x1, #3
+    cbz     x1, 2f
+    // cpu id &gt; 0, stop
+1:  wfe
+    b       1b
+2:  // cpu id == 0
+
+    // set stack before our code
+    ldr     x1, =_start
+    mov     sp, x1
+
+    // clear bss
+    ldr     x1, =__bss_start
+    ldr     w2, =__bss_size
+3:  cbz     w2, 4f
+    str     xzr, [x1], #8
+    sub     w2, w2, #1
+    cbnz    w2, 3b
+
+    // jump to C code, should not return
+4:  bl      kernel_main
+    // for failsafe, halt this core too
+    b 1b
+</code></pre>
+<p>코드를 다음과 같이 컴파일합니다:</p>
+<pre><code class="language-sh">aarch64-elf-gcc -ffreestanding -nostdinc -nostdlib -nostartfiles -c boot.S -o boot.o
+</code></pre>
+<h1>Implementing the Kernel</h1>
+<p>지금까지는 C와 같은 고급 언어를 사용할 수 있도록 프로세서를 설정하는 Bootstrap Assembly Stub를 작성
+했습니다. C++와 같은 다른 언어를 사용할 수도 있습니다.</p>
+<h2>Freestanding and Hosted Environments</h2>
+<p>일반적인 사용자 공간에서 C 또는 C++로 프로그래밍을 하는 경우에는 호스팅 환경(Hosted Environment)을
+사용했습니다. 호스팅 환경이란 C 표준 라이브러리 및 기타 기능이 있는 환경을 말합니다. 또는 독립적인
+(Freestanding) 환경이 있습니다. 이것은 우리가 여기서 사용하는 환경입니다. Freestanding은 C 표준 라이
+브러리가 없고, 우리가 제공하는 것만 사용할 수 있는 것을 의미합니다. 그러나 일부 헤더 파일은 실제로 C
+표준 라이브러리의 일부가 아니라 컴파일러에서 제공하는 헤더 파일입니다. 이러한 것들은 독립적인 C 소스
+코드에서도 사용할 수 있습니다. 이 경우 <code>&lt;stddef.h&gt;</code>를 사용하여 <code>size_t</code>와 <code>NULL</code> 및 <code>&lt;stdint.h&gt;</code>를
+가져와서 운영체제 개발에 매우 중요한 <code>intx_t</code> 및 <code>uintx_t</code> 자료형을 가져옵니다. 여기서 변수가 정확한
+크기인지 확인해야 합니다. (우리가 <code>uint16_t</code> 대신 <code>short</code>를 사용하고 <code>short</code>의 크기를 변경하면, 여기
+에 있는 VGA 드라이버가 깨질 것입니다!) 또한 <code>&lt;float.h&gt;</code>, <code>&lt;iso646.h&gt;</code>, <code>&lt;limits.h&gt;</code>, <code>&lt;stdarg.h&gt;</code> 헤
+더도 사용이 가능합니다. GCC는 실제로 몇 가지 헤더를 추가로 제공하지만 이들은 특별한 목적으로 사용됩
+니다.</p>
+<h2>Writing a kernel in C</h2>
+<p>다음은 C로 간단한 커널을 만드는 방법을 보여줍니다.</p>
+<pre><code class="language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stddef.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span>
+
+<span class="hljs-comment">// Memory-Mapped I/O output</span>
+<span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title function_">mmio_write</span><span class="hljs-params">(<span class="hljs-type">uint32_t</span> reg, <span class="hljs-type">uint32_t</span> data)</span>
+{
+	*(<span class="hljs-keyword">volatile</span> <span class="hljs-type">uint32_t</span>*)reg = data;
+}
+
+<span class="hljs-comment">// Memory-Mapped I/O input</span>
+<span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">uint32_t</span> <span class="hljs-title function_">mmio_read</span><span class="hljs-params">(<span class="hljs-type">uint32_t</span> reg)</span>
+{
+	<span class="hljs-keyword">return</span> *(<span class="hljs-keyword">volatile</span> <span class="hljs-type">uint32_t</span>*)reg;
+}
+
+<span class="hljs-comment">// Loop &lt;delay&gt; times in a way that the compiler won&#x27;t optimize away</span>
+<span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title function_">delay</span><span class="hljs-params">(<span class="hljs-type">int32_t</span> count)</span>
+{
+	<span class="hljs-keyword">asm</span> <span class="hljs-title function_">volatile</span><span class="hljs-params">(<span class="hljs-string">&quot;__delay_%=: subs %[count], %[count], #1; bne __delay_%=\n&quot;</span>
+		 : <span class="hljs-string">&quot;=r&quot;</span>(count): [count]<span class="hljs-string">&quot;0&quot;</span>(count) : <span class="hljs-string">&quot;cc&quot;</span>)</span>;
+}
+
+<span class="hljs-class"><span class="hljs-keyword">enum</span>
+{</span>
+    <span class="hljs-comment">// The GPIO registers base address.</span>
+    GPIO_BASE = <span class="hljs-number">0x3F200000</span>, <span class="hljs-comment">// for raspi2 &amp; 3, 0x20200000 for raspi1</span>
+
+    <span class="hljs-comment">// The offsets for reach register.</span>
+
+    <span class="hljs-comment">// Controls actuation of pull up/down to ALL GPIO pins.</span>
+    GPPUD = (GPIO_BASE + <span class="hljs-number">0x94</span>),
+
+    <span class="hljs-comment">// Controls actuation of pull up/down for specific GPIO pin.</span>
+    GPPUDCLK0 = (GPIO_BASE + <span class="hljs-number">0x98</span>),
+
+    <span class="hljs-comment">// The base address for UART.</span>
+    UART0_BASE = <span class="hljs-number">0x3F201000</span>, <span class="hljs-comment">// for raspi2 &amp; 3, 0x20201000 for raspi1</span>
+
+    <span class="hljs-comment">// The offsets for reach register for the UART.</span>
+    UART0_DR     = (UART0_BASE + <span class="hljs-number">0x00</span>),
+    UART0_RSRECR = (UART0_BASE + <span class="hljs-number">0x04</span>),
+    UART0_FR     = (UART0_BASE + <span class="hljs-number">0x18</span>),
+    UART0_ILPR   = (UART0_BASE + <span class="hljs-number">0x20</span>),
+    UART0_IBRD   = (UART0_BASE + <span class="hljs-number">0x24</span>),
+    UART0_FBRD   = (UART0_BASE + <span class="hljs-number">0x28</span>),
+    UART0_LCRH   = (UART0_BASE + <span class="hljs-number">0x2C</span>),
+    UART0_CR     = (UART0_BASE + <span class="hljs-number">0x30</span>),
+    UART0_IFLS   = (UART0_BASE + <span class="hljs-number">0x34</span>),
+    UART0_IMSC   = (UART0_BASE + <span class="hljs-number">0x38</span>),
+    UART0_RIS    = (UART0_BASE + <span class="hljs-number">0x3C</span>),
+    UART0_MIS    = (UART0_BASE + <span class="hljs-number">0x40</span>),
+    UART0_ICR    = (UART0_BASE + <span class="hljs-number">0x44</span>),
+    UART0_DMACR  = (UART0_BASE + <span class="hljs-number">0x48</span>),
+    UART0_ITCR   = (UART0_BASE + <span class="hljs-number">0x80</span>),
+    UART0_ITIP   = (UART0_BASE + <span class="hljs-number">0x84</span>),
+    UART0_ITOP   = (UART0_BASE + <span class="hljs-number">0x88</span>),
+    UART0_TDR    = (UART0_BASE + <span class="hljs-number">0x8C</span>),
+};
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">uart_init</span><span class="hljs-params">()</span>
+{
+	<span class="hljs-comment">// Disable UART0.</span>
+	mmio_write(UART0_CR, <span class="hljs-number">0x00000000</span>);
+	<span class="hljs-comment">// Setup the GPIO pin 14 &amp;&amp; 15.</span>
+
+	<span class="hljs-comment">// Disable pull up/down for all GPIO pins &amp; delay for 150 cycles.</span>
+	mmio_write(GPPUD, <span class="hljs-number">0x00000000</span>);
+	delay(<span class="hljs-number">150</span>);
+
+	<span class="hljs-comment">// Disable pull up/down for pin 14,15 &amp; delay for 150 cycles.</span>
+	mmio_write(GPPUDCLK0, (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">14</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">15</span>));
+	delay(<span class="hljs-number">150</span>);
+
+	<span class="hljs-comment">// Write 0 to GPPUDCLK0 to make it take effect.</span>
+	mmio_write(GPPUDCLK0, <span class="hljs-number">0x00000000</span>);
+
+	<span class="hljs-comment">// Clear pending interrupts.</span>
+	mmio_write(UART0_ICR, <span class="hljs-number">0x7FF</span>);
+
+	<span class="hljs-comment">// Set integer &amp; fractional part of baud rate.</span>
+	<span class="hljs-comment">// Divider = UART_CLOCK/(16 * Baud)</span>
+	<span class="hljs-comment">// Fraction part register = (Fractional part * 64) + 0.5</span>
+	<span class="hljs-comment">// UART_CLOCK = 3000000; Baud = 115200.</span>
+
+	<span class="hljs-comment">// Divider = 3000000 / (16 * 115200) = 1.627 = ~1.</span>
+	mmio_write(UART0_IBRD, <span class="hljs-number">1</span>);
+	<span class="hljs-comment">// Fractional part register = (.627 * 64) + 0.5 = 40.6 = ~40.</span>
+	mmio_write(UART0_FBRD, <span class="hljs-number">40</span>);
+
+	<span class="hljs-comment">// Enable FIFO &amp; 8 bit data transmissio (1 stop bit, no parity).</span>
+	mmio_write(UART0_LCRH, (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">4</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">5</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">6</span>));
+
+	<span class="hljs-comment">// Mask all interrupts.</span>
+	mmio_write(UART0_IMSC, (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">1</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">4</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">5</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">6</span>) |
+	                       (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">7</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">8</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">9</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">10</span>));
+
+	<span class="hljs-comment">// Enable UART0, receive &amp; transfer part of UART.</span>
+	mmio_write(UART0_CR, (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">0</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">8</span>) | (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">9</span>));
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">uart_putc</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> c)</span>
+{
+	<span class="hljs-comment">// Wait for UART to become ready to transmit.</span>
+	<span class="hljs-keyword">while</span> ( mmio_read(UART0_FR) &amp; (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">5</span>) ) { }
+	mmio_write(UART0_DR, c);
+}
+
+<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> <span class="hljs-title function_">uart_getc</span><span class="hljs-params">()</span>
+{
+    <span class="hljs-comment">// Wait for UART to have received something.</span>
+    <span class="hljs-keyword">while</span> ( mmio_read(UART0_FR) &amp; (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">4</span>) ) { }
+    <span class="hljs-keyword">return</span> mmio_read(UART0_DR);
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">uart_puts</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* str)</span>
+{
+	<span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; str[i] != <span class="hljs-string">&#x27;\0&#x27;</span>; i ++)
+		uart_putc((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)str[i]);
+}
+
+<span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(__cplusplus)</span>
+<span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> <span class="hljs-comment">/* Use C linkage for kernel_main. */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+<span class="hljs-type">void</span> <span class="hljs-title function_">kernel_main</span><span class="hljs-params">(<span class="hljs-type">uint32_t</span> r0, <span class="hljs-type">uint32_t</span> r1, <span class="hljs-type">uint32_t</span> atags)</span>
+{
+	<span class="hljs-comment">// Declare as unused</span>
+	(<span class="hljs-type">void</span>) r0;
+	(<span class="hljs-type">void</span>) r1;
+	(<span class="hljs-type">void</span>) atags;
+
+	uart_init();
+	uart_puts(<span class="hljs-string">&quot;Hello, kernel World!\r\n&quot;</span>);
+
+	<span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>)
+		uart_putc(uart_getc());
+}
+</code></pre>
+<p>GPU 부트로더는 <code>r0</code>~<code>r2</code>를 통해 커널에 인수(Argument)를 전달하고 <code>boot.S</code>는 이러한 3개의 레지스터를
+보존합니다. 이것들은 C 함수 호출에서 사용되는 3개의 인수입니다. <code>r0</code>은 Raspberry Pi가 부팅된 장치의
+코드를 포함합니다. 일반적으로 <code>0</code>이지만 실제 값은 보드의 펌웨어에 따라 다릅니다. <code>r1</code>은 'ARM Linux
+Machine Type'이 들어있으며, Raspberry Pi의 경우 BCM2708 CPU를 식별하는 <code>3138</code>(<code>0xC42</code>)입니다.
+<a href="https://www.arm.linux.org.uk/developer/machines/">여기에서</a> ARM Machine 유형의 전체 목록을 볼 수 있
+습니다. <code>r2</code>는 ATAG(ARM TAG)의 주소를 가지고 있습니다.</p>
+<p>GPIO와 UART의 주소는 Peripheral Base Address의 offset이며, Raspberry Pi 1은 <code>0x20000000</code>이고
+Raspberry Pi 2와 Raspberry Pi 3은 <code>0x3F000000</code>입니다. 레지스터 주소와 사용 방법은 BCM2835 설명서에서
+확인할 수 있습니다.</p>
+<p>다음과 같이 컴파일합니다:</p>
+<pre><code class="language-sh">arm-none-eabi-gcc -mcpu=arm1176jzf-s -fpic -ffreestanding -std=gnu99 -c kernel.c -o kernel.o -O2 -Wall -Wextra
+</code></pre>
+<p>64비트로는 다음과 같이 컴파일합니다:</p>
+<pre><code class="language-sh">aarch64-elf-gcc -ffreestanding -nostdinc -nostdlib -nostartfiles -c kernel.c -o kernel.o
+</code></pre>
+<p>위의 코드는 몇 가지 확장 기능을 사용하므로, C99의 GNU 버전으로 빌드 합니다.</p>
+<h1>Linking the Kernel</h1>
+<p>마지막으로 커널을 생성하기 위해 오브젝트 파일들을 Link 해야 합니다. 일반적인 프로그래밍을 할 때
+Toolchain은 프로그램을 Link 하기 위한 기본 스크립트를 제공합니다. 하지만 커널 개발에는 적합하지 않으
+며 사용자 정의된 Linker Script를 사용해야 합니다. 64비트 모드의 Linker Script는 시작 주소를 제외하고
+는 똑같습니다.</p>
+<pre><code>ENTRY(_start)
+
+SECTIONS
+{
+    /* Starts at LOADER_ADDR. */
+    . = 0x8000;
+    /* For AArch64, use . = 0x80000; */
+    __start = .;
+    __text_start = .;
+    .text :
+    {
+        KEEP(*(.text.boot))
+        *(.text)
+    }
+    . = ALIGN(4096); /* align to page size */
+    __text_end = .;
+
+    __rodata_start = .;
+    .rodata :
+    {
+        *(.rodata)
+    }
+    . = ALIGN(4096); /* align to page size */
+    __rodata_end = .;
+
+    __data_start = .;
+    .data :
+    {
+        *(.data)
+    }
+    . = ALIGN(4096); /* align to page size */
+    __data_end = .;
+
+    __bss_start = .;
+    .bss :
+    {
+        bss = .;
+        *(.bss)
+    }
+    . = ALIGN(4096); /* align to page size */
+    __bss_end = .;
+    __end = .;
+}
+</code></pre>
+<p><code>ENTRY(_start)</code>는 커널 이미지의 진입점을 선언합니다. 이 심볼은 <code>boot.S</code> 파일에서 선언되었습니다.</p>
+<p><code>SECTIONS</code>은 섹션을 선언합니다. 이것은 코드와 데이터의 비트가 어디로 갈지 결정하고 각 섹션의 크기를
+추적하는데 도움이 되는 몇 가지 심볼을 설정합니다.</p>
+<pre><code class="language-assembly">    . = 0x8000;
+    __start = .;
+</code></pre>
+<p>첫 번째 줄의 &quot;<code>.</code>&quot;은 현재 주소를 커널이 시작되는 <code>0x8000</code>(또는 <code>0x80000</code>)으로 설정하도록 Linker에 알
+리기 위해 현재 주소를 나타냅니다. Linker가 데이터를 추가하면 현재 주소가 자동으로 증가합니다. 두 번
+째 줄은 &quot;<code>__start</code>&quot; 심볼을 만들고 현재 주소로 설정합니다.</p>
+<p>이후 섹션은 Text(Code), Read-Only Data, Read-Write Data 그리고 BSS(0으로 초기화된 메모리)로 정의됩니
+다.</p>
+<pre><code class="language-assembly">    __text_start = .;
+    .text : {
+        KEEP(*(.text.boot))
+        *(.text)
+    }
+    . = ALIGN(4096); /* align to page size */
+    __text_end = .;
+</code></pre>
+<p>첫 번째 행은 섹션에 <code>__text_start</code> 심볼을 만듭니다. 두 번째 줄부터 다섯 번째 줄까지는 <code>.text</code> 섹션입
+니다. 3행과 4행은 파일의 어떤 섹션이 <code>.text</code> 섹션에 배치될지 선언합니다. 여기서는 &quot;<code>.text.boot</code>&quot;이
+먼저 배치되고 그 뒤에 일반적인 &quot;<code>.text</code>&quot;가 옵니다. &quot;<code>.text.boot</code>&quot;는 <code>boot.S</code>에서만 사용되며 커널 이
+미지의 시작 부분에서 끝납니다. &quot;<code>.text</code>&quot;는 나머지 코드 모두를 포함합니다. Linker에서 추가한 모든 데
+이터는 현재 주소(&quot;<code>.</code>&quot;)를 자동으로 증가시킵니다. 6행에서는 4096 바이트씩(Raspberry Pi에 대한 페이지
+크기) 정렬되도록 설정합니다. 그리고 마지막 7행에서는 <code>__text_end</code> 심볼을 만들어서 섹션이 끝나는 곳을
+알 수 있습니다.</p>
+<p><code>__text_start</code>와 <code>__text_end</code>는 무엇이고 페이지 정렬을 사용하는 이유는 무엇일까요? 심볼
+<code>__text_start</code>와 <code>__text_end</code>는 커널 소스에서 사용될 수 있으며, Linker는 올바른 주소를 바이너리에 저
+장합니다. 예를 들어 <code>__bss_start</code> 와 <code>__bss_end</code>는 <code>boot.S</code>에서 사용하고 있습니다. 원한다면 C에서
+<code>extern</code>으로 선언하여 사용할 수도 있습니다. 필요하진 않지만 모든 섹션을 페이지 크기에 맞게 정렬했습
+니다. 나중에 겹쳐서(한 페이지에 2개의 섹션) 처리할 필요 없이 Executable, Read-Only, Read-Write 권한
+을 사용하여 <a href="https://ko.wikipedia.org/wiki/%ED%8E%98%EC%9D%B4%EC%A7%80_%ED%85%8C%EC%9D%B4%EB%B8%94">페이지 테이블</a>에 매핑할 수 있습니다.</p>
+<pre><code class="language-assembly">    __end = .;
+</code></pre>
+<p>모든 섹션이 선언된 후 <code>__end</code> 심볼을 만듭니다. 런타임 중에 커널의 크기를 알고 싶다면 <code>__start</code>와
+<code>__end</code>를 사용하여 구할 수 있습니다.</p>
+<p>이러한 구성요소를 통해 실제로 최종적인 커널을 빌드 할 수 있습니다. Linker는 Link Process를 보다 잘
+할 수 있도록 Compiler를 Linker로 사용합니다. 커널이 C++로 작성되었다면, C++ 컴파일러를 사용해야 합니
+다.</p>
+<p>아래와 같이 커널을 빌드 합니다:</p>
+<pre><code class="language-sh">arm-none-eabi-gcc -T linker.ld -o myos.elf -ffreestanding -O2 -nostdlib boot.o kernel.o
+arm-none-eabi-objcopy myos.elf -O binary kernel7.img
+</code></pre>
+<p>64비트용으로는 다음과 같이 합니다:</p>
+<pre><code class="language-sh">aarch64-elf-ld -nostdlib -nostartfiles boot.o kernel.o -T link.ld -o myos.elf
+aarch64-elf-objcopy myos.elf -O binary kernel8.img
+</code></pre>
+<h1>Booting the Kernel</h1>
+<p>이제 여러분이 만든 커널을 부팅해보겠습니다.</p>
+<h2>Testing your operating system (Real Hardware)</h2>
+<p>Raspbian 이미지가 기록된 SD카드가 있다면, 이미 부팅 파티션과 필요한 파일이 있다는 것입니다.</p>
+<p>SD카드에서 첫 번째 파티션을 마운트 하면 아래와 같은 파일들이 있을 것입니다.</p>
+<pre><code>bootcode.bin  fixup.dat     kernel.img            start.elf
+cmdline.txt   fixup_cd.dat  kernel_cutdown.img    start_cd.elf
+config.txt    issue.txt     kernel_emergency.img
+</code></pre>
+<p>만약 Raspbian 이미지가 없으면, FAT32 파티션을 만들고
+<a href="https://github.com/raspberrypi/firmware/tree/master/boot">공식 저장소에서 펌웨어 파일을 다운로드</a>
+할 수 있습니다. 3개의 파일만 필요합니다.</p>
+<ul>
+<li><code>bootcode.bin</code>: 이 파일이 제일 먼저 로드되고, GPU에서 실행되는 파일입니다.</li>
+<li><code>fixup.dat</code>: 이 데이터 파일에는 중요한 하드웨어 관련 정보가 들어있습니다.</li>
+<li><code>start.elf</code>: Raspberry Pi 펌웨어입니다. (IBM PC의 BIOS와 동일합니다) 이것 또한 GPU에서 실행됩니다.</li>
+</ul>
+<p>Raspberry Pi의 전원이 켜지면 ARM CPU가 중지되고 GPU가 실행됩니다. GPU는 ROM에서 부트로더를 로드하고
+실행합니다. 그리고 SD카드를 찾아 <code>bootcode.bin</code>을 로드합니다. bootcode는 <code>config.txt</code>와
+<code>cmdline.txt</code>를 처리하는 <code>start.elf</code> 펌웨어를 로드합니다. <code>start.elf</code>는 <code>kernel*.img</code>를 로드하고 해
+당 커널 이미지를 실행하는 ARM CPU가 실행됩니다.</p>
+<p>ARM 모드 간을 전환하려면 <code>kernel.img</code> 파일의 이름을 변경해야 합니다. <code>kernel7.img</code>로 이름을 바꾸면
+AArch32 모드 (ARMv7)에서 실행됩니다. AArch64 모드(ARMv8)의 경우 <code>kernel8.img</code>로 이름을 변경해야 합니
+다.</p>
+<p>이제 원래 있던 <code>kernel.img</code>를 자신이 만든 커널 파일로 교체하고, SD카드를 Raspberry Pi에 꽂아 전원을
+켭니다. Minicom에서는 다음을 보여주게 됩니다.</p>
+<pre><code>Hello, kernel World!
+</code></pre>
+<h2>Testing your operating system (QEMU)</h2>
+<p>QEMU는 Raspberry Pi 2 에뮬레이팅을 지원합니다. Machine type를 &quot;raspi2&quot;로 사용하면 됩니다.<br>
+QEMU를 사용하면 일반적으로 커널을 바이너리로 objcopy 할 필요가 없습니다. QEMU는 ELF 커널도 지원합니
+다.</p>
+<pre><code class="language-sh">qemu-system-arm -m 256 -M raspi2 -serial stdio -kernel kernel.elf
+</code></pre>
+<blockquote>
+<p>원문 : <a href="https://wiki.osdev.org/Raspberry_Pi_Bare_Bones">OSDev Wiki - Raspberry Pi Bare Bones</a></p>
+</blockquote>
+</div></article></main><footer class="c-cpkrrK"><div class="c-fiqONv">© <!-- -->2022<!-- --></div><div class="c-bHyrwK"><div class="c-iUFgVP">Kh.</div><div class="c-cshSRb">KyuHyuk Lee</div></div></footer></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"excerpt":" Raspberry Pi의 운영 체제 개발에 대한 글입니다. 이 글은 테스트할 다른 하드웨어가 없기 때문에 Raspberry Pi Model B Rev 2에 맞춰져 작성되었습니다. 하지만 지금까지의 모델들은 Memory-Mapped I/O 위 치 이외에는 대부분 동일합니다. 이것은 최소","url":"/article/raspberry-pi/2019/05/14/Raspberry-Pi-Bare-Bones","frontmatter":{"title":"Raspberry Pi Bare Bones","date":"2019-05-14 19:39:57","category":"Raspberry-Pi"},"content":"\nRaspberry Pi의 운영 체제 개발에 대한 글입니다. 이 글은 테스트할 다른 하드웨어가 없기 때문에\nRaspberry Pi Model B Rev 2에 맞춰져 작성되었습니다. 하지만 지금까지의 모델들은 Memory-Mapped I/O 위\n치 이외에는 대부분 동일합니다. 이것은 최소한의 시스템을 만드는 방법의 예를 보여주지만, 프로젝트를 적\n절하게 구조화하는 방법의 예는 아닙니다.\n\n# Prepare\n\n여러분은 이제 스스로 운영체제 개발을 시작하려고 합니다. 아마도 언젠가는 스스로 새로운 운영체제를 개\n발할 수도 있습니다. 이것은 Bootstrap 또는 Self-hosting으로 알려진 과정입니다. 우선은 기존 운영 체제\n에서 새 운영 체제를 컴파일 할 수 있는 시스템을 환경을 만들기만 하면 됩니다. 이 과정은\n[Cross-Compile](https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F)으로 알려져 있으며 운영체제\n개발의 첫 번째 단계입니다.\n\n이 글에서는 운영체제 개발을 원활하게 할 수 있는 Linux와 같은 Unix 계열 운영체제를 사용합니다.\nWindows 사용자는 [MinGW](https://wiki.osdev.org/MinGW) 또는 [Cygwin](https://wiki.osdev.org/Cygwin)\n환경에서 진행할 수 있습니다.\n\n# Building a Cross-Compiler\n\n\u003e Main article: [GCC Cross-Compiler](https://wiki.osdev.org/GCC_Cross-Compiler),\n\u003e [Why do I need a Cross Compiler?](https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F)\n\n우선해야 할 일은 **arm-none-eabi** 용 GCC Cross-Compiler를 준비하는 것입니다. 아직 운영체제를 만들기\n위해 컴파일러를 수정하지 않았기 때문에, arm-none-eabi라는 일반적인 타겟을 사용할 것입니다. 이 타겟은\nSystem V ABI를 대상으로 하는 Toolchain을 제공합니다. Cross-Compiler 없이 운영체제를 올바르게 컴파일\n할 수 없습니다.\n\n만약 64비트 커널이 필요하다면, aarch64-elf를 타겟으로 사용하면 됩니다. 동일한 System V ABI 인터페이\n스를 제공하지만 64비트 용입니다. elf를 사용하는 것은 필수가 아니지만 작업을 간편하게 해줍니다.\n\n# Overview\n\n이제 여러분은 크로스 컴파일러를 가지고 있어야 합니다. 이 글은 간단한 운영체제를 만드는데 필요한 최소\n한의 방법을 제공하고 있습니다. 이는 프로젝트 구조에 대한 권장 구조로 사용되지는 않지만 최소한의 커널\n에 대한 예로서는 사용되고 있습니다. 이런 간단한 커널을 개발하는 경우에는 3개의 파일만 있으면 됩니다.\n\n1. `boot.S` - 커널이 CPU 환경에서 동작할 수 있도록 만들어 주기 위한 커널의 진입점입니다.\n2. `kernel.c` - 여러분이 만들게 될 커널 루틴입니다.\n3. `linker.ld` - 위에 두 소스코드를 컴파일한 후 Linking 할 때 사용하게 될 Linker Script입니다.\n\n# Booting the Operating System\n\n이제 `boot.S`라는 파일을 만들고 그 내용을 설명할 것입니다. 이 예제에서는 앞에서 빌드 한\nCross-Compiler Toolchain의 일부인 GNU Assembler를 사용합니다. 이 어셈블러는 나머지 GNU Toolchain과\n잘 호환됩니다.\n\n## Raspberry Pi Model A, B, A+, B+, and Zero\n\n```assembly\n// AArch32 mode\n\n// To keep this in the first portion of the binary.\n.section \".text.boot\"\n\n// Make _start global.\n.globl _start\n\n.org 0x8000\n// Entry point for the kernel.\n// r15 -\u003e should begin execution at 0x8000.\n// r0 -\u003e 0x00000000\n// r1 -\u003e 0x00000C42\n// r2 -\u003e 0x00000100 - start of ATAGS\n// preserve these registers as argument for kernel_main\n_start:\n\t// Setup the stack.\n\tmov sp, #0x8000\n\n\t// Clear out bss.\n\tldr r4, =__bss_start\n\tldr r9, =__bss_end\n\tmov r5, #0\n\tmov r6, #0\n\tmov r7, #0\n\tmov r8, #0\n\tb       2f\n\n1:\n\t// store multiple at r4.\n\tstmia r4!, {r5-r8}\n\n\t// If we are still below bss_end, loop.\n2:\n\tcmp r4, r9\n\tblo 1b\n\n\t// Call kernel_main\n\tldr r3, =kernel_main\n\tblx r3\n\n\t// halt\nhalt:\n\twfe\n\tb halt\n```\n\nLinker Script에서 `.text.boot` 섹션을 사용하여 `boot.S`를 커널 이미지의 맨 처음에 배치합니다. 이 코\n드는 `kernel_main` 함수를 호출하기 전에 최소의 C 환경을 초기화합니다. 즉, 스택이 있고 BSS 세그먼트를\n0으로 만드는 것을 의미합니다. 이 코드는 `r0`~`r2`를 사용하지 않으므로 `kernel_main` 호출에 유효합니\n다.\n\n아래와 같이 `boot.S`를 assemble 할 수 있습니다:\n\n```sh\narm-none-eabi-gcc -mcpu=arm1176jzf-s -fpic -ffreestanding -c boot.S -o boot.o\n```\n\n## Raspberry Pi 2\n\n최신 버전의 Raspberry Pi를 사용하면 더 많은 작업을 수행할 수 있습니다. Raspberry Pi 2와 3에는 4개의\n코어가 있습니다. 부팅 할 때 모든 코어가 실행 중이며 동일한 부팅 코드를 실행합니다. 따라서 코어를 구\n별하고 그중 하나만 실행할 수 있게 하고 나머지는 무한 루프에 넣어야 합니다.\n\n```assembly\n// AArch32 mode\n\n// To keep this in the first portion of the binary.\n.section \".text.boot\"\n\n// Make _start global.\n.globl _start\n\n.org 0x8000\n// Entry point for the kernel.\n// r15 -\u003e should begin execution at 0x8000.\n// r0 -\u003e 0x00000000\n// r1 -\u003e 0x00000C42\n// r2 -\u003e 0x00000100 - start of ATAGS\n// preserve these registers as argument for kernel_main\n_start:\n\t// Shut off extra cores\n\tmrc p15, 0, r5, c0, c0, 5\n\tand r5, r5, #3\n\tcmp r5, #0\n\tbne halt\n\n\t// Setup the stack.\n\tldr r5, =_start\n\tmov sp, r5\n\n\t// Clear out bss.\n\tldr r4, =__bss_start\n\tldr r9, =__bss_end\n\tmov r5, #0\n\tmov r6, #0\n\tmov r7, #0\n\tmov r8, #0\n\tb       2f\n\n1:\n\t// store multiple at r4.\n\tstmia r4!, {r5-r8}\n\n\t// If we are still below bss_end, loop.\n2:\n\tcmp r4, r9\n\tblo 1b\n\n\t// Call kernel_main\n\tldr r3, =kernel_main\n\tblx r3\n\n\t// halt\nhalt:\n\twfe\n\tb halt\n```\n\n아래와 같이 `boot.S`를 assemble 할 수 있습니다:\n\n```sh\narm-none-eabi-gcc -mcpu=cortex-a7 -fpic -ffreestanding -c boot.S -o boot.o\n```\n\n## Raspberry Pi 3\n\n64비트 모드에서 부팅 코드는 `0x8000`이 아닌 `0x80000`에 로드됩니다.\n\n```assembly\n// AArch64 mode\n\n// To keep this in the first portion of the binary.\n.section \".text.boot\"\n\n// Make _start global.\n.globl _start\n\n    .org 0x80000\n// Entry point for the kernel. Registers are not defined as in AArch32.\n_start:\n    // read cpu id, stop slave cores\n    mrs     x1, mpidr_el1\n    and     x1, x1, #3\n    cbz     x1, 2f\n    // cpu id \u003e 0, stop\n1:  wfe\n    b       1b\n2:  // cpu id == 0\n\n    // set stack before our code\n    ldr     x1, =_start\n    mov     sp, x1\n\n    // clear bss\n    ldr     x1, =__bss_start\n    ldr     w2, =__bss_size\n3:  cbz     w2, 4f\n    str     xzr, [x1], #8\n    sub     w2, w2, #1\n    cbnz    w2, 3b\n\n    // jump to C code, should not return\n4:  bl      kernel_main\n    // for failsafe, halt this core too\n    b 1b\n```\n\n코드를 다음과 같이 컴파일합니다:\n\n```sh\naarch64-elf-gcc -ffreestanding -nostdinc -nostdlib -nostartfiles -c boot.S -o boot.o\n```\n\n# Implementing the Kernel\n\n지금까지는 C와 같은 고급 언어를 사용할 수 있도록 프로세서를 설정하는 Bootstrap Assembly Stub를 작성\n했습니다. C++와 같은 다른 언어를 사용할 수도 있습니다.\n\n## Freestanding and Hosted Environments\n\n일반적인 사용자 공간에서 C 또는 C++로 프로그래밍을 하는 경우에는 호스팅 환경(Hosted Environment)을\n사용했습니다. 호스팅 환경이란 C 표준 라이브러리 및 기타 기능이 있는 환경을 말합니다. 또는 독립적인\n(Freestanding) 환경이 있습니다. 이것은 우리가 여기서 사용하는 환경입니다. Freestanding은 C 표준 라이\n브러리가 없고, 우리가 제공하는 것만 사용할 수 있는 것을 의미합니다. 그러나 일부 헤더 파일은 실제로 C\n표준 라이브러리의 일부가 아니라 컴파일러에서 제공하는 헤더 파일입니다. 이러한 것들은 독립적인 C 소스\n코드에서도 사용할 수 있습니다. 이 경우 `\u003cstddef.h\u003e`를 사용하여 `size_t`와 `NULL` 및 `\u003cstdint.h\u003e`를\n가져와서 운영체제 개발에 매우 중요한 `intx_t` 및 `uintx_t` 자료형을 가져옵니다. 여기서 변수가 정확한\n크기인지 확인해야 합니다. (우리가 `uint16_t` 대신 `short`를 사용하고 `short`의 크기를 변경하면, 여기\n에 있는 VGA 드라이버가 깨질 것입니다!) 또한 `\u003cfloat.h\u003e`, `\u003ciso646.h\u003e`, `\u003climits.h\u003e`, `\u003cstdarg.h\u003e` 헤\n더도 사용이 가능합니다. GCC는 실제로 몇 가지 헤더를 추가로 제공하지만 이들은 특별한 목적으로 사용됩\n니다.\n\n## Writing a kernel in C\n\n다음은 C로 간단한 커널을 만드는 방법을 보여줍니다.\n\n```c\n#include \u003cstddef.h\u003e\n#include \u003cstdint.h\u003e\n\n// Memory-Mapped I/O output\nstatic inline void mmio_write(uint32_t reg, uint32_t data)\n{\n\t*(volatile uint32_t*)reg = data;\n}\n\n// Memory-Mapped I/O input\nstatic inline uint32_t mmio_read(uint32_t reg)\n{\n\treturn *(volatile uint32_t*)reg;\n}\n\n// Loop \u003cdelay\u003e times in a way that the compiler won't optimize away\nstatic inline void delay(int32_t count)\n{\n\tasm volatile(\"__delay_%=: subs %[count], %[count], #1; bne __delay_%=\\n\"\n\t\t : \"=r\"(count): [count]\"0\"(count) : \"cc\");\n}\n\nenum\n{\n    // The GPIO registers base address.\n    GPIO_BASE = 0x3F200000, // for raspi2 \u0026 3, 0x20200000 for raspi1\n\n    // The offsets for reach register.\n\n    // Controls actuation of pull up/down to ALL GPIO pins.\n    GPPUD = (GPIO_BASE + 0x94),\n\n    // Controls actuation of pull up/down for specific GPIO pin.\n    GPPUDCLK0 = (GPIO_BASE + 0x98),\n\n    // The base address for UART.\n    UART0_BASE = 0x3F201000, // for raspi2 \u0026 3, 0x20201000 for raspi1\n\n    // The offsets for reach register for the UART.\n    UART0_DR     = (UART0_BASE + 0x00),\n    UART0_RSRECR = (UART0_BASE + 0x04),\n    UART0_FR     = (UART0_BASE + 0x18),\n    UART0_ILPR   = (UART0_BASE + 0x20),\n    UART0_IBRD   = (UART0_BASE + 0x24),\n    UART0_FBRD   = (UART0_BASE + 0x28),\n    UART0_LCRH   = (UART0_BASE + 0x2C),\n    UART0_CR     = (UART0_BASE + 0x30),\n    UART0_IFLS   = (UART0_BASE + 0x34),\n    UART0_IMSC   = (UART0_BASE + 0x38),\n    UART0_RIS    = (UART0_BASE + 0x3C),\n    UART0_MIS    = (UART0_BASE + 0x40),\n    UART0_ICR    = (UART0_BASE + 0x44),\n    UART0_DMACR  = (UART0_BASE + 0x48),\n    UART0_ITCR   = (UART0_BASE + 0x80),\n    UART0_ITIP   = (UART0_BASE + 0x84),\n    UART0_ITOP   = (UART0_BASE + 0x88),\n    UART0_TDR    = (UART0_BASE + 0x8C),\n};\n\nvoid uart_init()\n{\n\t// Disable UART0.\n\tmmio_write(UART0_CR, 0x00000000);\n\t// Setup the GPIO pin 14 \u0026\u0026 15.\n\n\t// Disable pull up/down for all GPIO pins \u0026 delay for 150 cycles.\n\tmmio_write(GPPUD, 0x00000000);\n\tdelay(150);\n\n\t// Disable pull up/down for pin 14,15 \u0026 delay for 150 cycles.\n\tmmio_write(GPPUDCLK0, (1 \u003c\u003c 14) | (1 \u003c\u003c 15));\n\tdelay(150);\n\n\t// Write 0 to GPPUDCLK0 to make it take effect.\n\tmmio_write(GPPUDCLK0, 0x00000000);\n\n\t// Clear pending interrupts.\n\tmmio_write(UART0_ICR, 0x7FF);\n\n\t// Set integer \u0026 fractional part of baud rate.\n\t// Divider = UART_CLOCK/(16 * Baud)\n\t// Fraction part register = (Fractional part * 64) + 0.5\n\t// UART_CLOCK = 3000000; Baud = 115200.\n\n\t// Divider = 3000000 / (16 * 115200) = 1.627 = ~1.\n\tmmio_write(UART0_IBRD, 1);\n\t// Fractional part register = (.627 * 64) + 0.5 = 40.6 = ~40.\n\tmmio_write(UART0_FBRD, 40);\n\n\t// Enable FIFO \u0026 8 bit data transmissio (1 stop bit, no parity).\n\tmmio_write(UART0_LCRH, (1 \u003c\u003c 4) | (1 \u003c\u003c 5) | (1 \u003c\u003c 6));\n\n\t// Mask all interrupts.\n\tmmio_write(UART0_IMSC, (1 \u003c\u003c 1) | (1 \u003c\u003c 4) | (1 \u003c\u003c 5) | (1 \u003c\u003c 6) |\n\t                       (1 \u003c\u003c 7) | (1 \u003c\u003c 8) | (1 \u003c\u003c 9) | (1 \u003c\u003c 10));\n\n\t// Enable UART0, receive \u0026 transfer part of UART.\n\tmmio_write(UART0_CR, (1 \u003c\u003c 0) | (1 \u003c\u003c 8) | (1 \u003c\u003c 9));\n}\n\nvoid uart_putc(unsigned char c)\n{\n\t// Wait for UART to become ready to transmit.\n\twhile ( mmio_read(UART0_FR) \u0026 (1 \u003c\u003c 5) ) { }\n\tmmio_write(UART0_DR, c);\n}\n\nunsigned char uart_getc()\n{\n    // Wait for UART to have received something.\n    while ( mmio_read(UART0_FR) \u0026 (1 \u003c\u003c 4) ) { }\n    return mmio_read(UART0_DR);\n}\n\nvoid uart_puts(const char* str)\n{\n\tfor (size_t i = 0; str[i] != '\\0'; i ++)\n\t\tuart_putc((unsigned char)str[i]);\n}\n\n#if defined(__cplusplus)\nextern \"C\" /* Use C linkage for kernel_main. */\n#endif\nvoid kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)\n{\n\t// Declare as unused\n\t(void) r0;\n\t(void) r1;\n\t(void) atags;\n\n\tuart_init();\n\tuart_puts(\"Hello, kernel World!\\r\\n\");\n\n\twhile (1)\n\t\tuart_putc(uart_getc());\n}\n```\n\nGPU 부트로더는 `r0`~`r2`를 통해 커널에 인수(Argument)를 전달하고 `boot.S`는 이러한 3개의 레지스터를\n보존합니다. 이것들은 C 함수 호출에서 사용되는 3개의 인수입니다. `r0`은 Raspberry Pi가 부팅된 장치의\n코드를 포함합니다. 일반적으로 `0`이지만 실제 값은 보드의 펌웨어에 따라 다릅니다. `r1`은 'ARM Linux\nMachine Type'이 들어있으며, Raspberry Pi의 경우 BCM2708 CPU를 식별하는 `3138`(`0xC42`)입니다.\n[여기에서](https://www.arm.linux.org.uk/developer/machines/) ARM Machine 유형의 전체 목록을 볼 수 있\n습니다. `r2`는 ATAG(ARM TAG)의 주소를 가지고 있습니다.\n\nGPIO와 UART의 주소는 Peripheral Base Address의 offset이며, Raspberry Pi 1은 `0x20000000`이고\nRaspberry Pi 2와 Raspberry Pi 3은 `0x3F000000`입니다. 레지스터 주소와 사용 방법은 BCM2835 설명서에서\n확인할 수 있습니다.\n\n다음과 같이 컴파일합니다:\n\n```sh\narm-none-eabi-gcc -mcpu=arm1176jzf-s -fpic -ffreestanding -std=gnu99 -c kernel.c -o kernel.o -O2 -Wall -Wextra\n```\n\n64비트로는 다음과 같이 컴파일합니다:\n\n```sh\naarch64-elf-gcc -ffreestanding -nostdinc -nostdlib -nostartfiles -c kernel.c -o kernel.o\n```\n\n위의 코드는 몇 가지 확장 기능을 사용하므로, C99의 GNU 버전으로 빌드 합니다.\n\n# Linking the Kernel\n\n마지막으로 커널을 생성하기 위해 오브젝트 파일들을 Link 해야 합니다. 일반적인 프로그래밍을 할 때\nToolchain은 프로그램을 Link 하기 위한 기본 스크립트를 제공합니다. 하지만 커널 개발에는 적합하지 않으\n며 사용자 정의된 Linker Script를 사용해야 합니다. 64비트 모드의 Linker Script는 시작 주소를 제외하고\n는 똑같습니다.\n\n```\nENTRY(_start)\n\nSECTIONS\n{\n    /* Starts at LOADER_ADDR. */\n    . = 0x8000;\n    /* For AArch64, use . = 0x80000; */\n    __start = .;\n    __text_start = .;\n    .text :\n    {\n        KEEP(*(.text.boot))\n        *(.text)\n    }\n    . = ALIGN(4096); /* align to page size */\n    __text_end = .;\n\n    __rodata_start = .;\n    .rodata :\n    {\n        *(.rodata)\n    }\n    . = ALIGN(4096); /* align to page size */\n    __rodata_end = .;\n\n    __data_start = .;\n    .data :\n    {\n        *(.data)\n    }\n    . = ALIGN(4096); /* align to page size */\n    __data_end = .;\n\n    __bss_start = .;\n    .bss :\n    {\n        bss = .;\n        *(.bss)\n    }\n    . = ALIGN(4096); /* align to page size */\n    __bss_end = .;\n    __end = .;\n}\n```\n\n`ENTRY(_start)`는 커널 이미지의 진입점을 선언합니다. 이 심볼은 `boot.S` 파일에서 선언되었습니다.\n\n`SECTIONS`은 섹션을 선언합니다. 이것은 코드와 데이터의 비트가 어디로 갈지 결정하고 각 섹션의 크기를\n추적하는데 도움이 되는 몇 가지 심볼을 설정합니다.\n\n```assembly\n    . = 0x8000;\n    __start = .;\n```\n\n첫 번째 줄의 \"`.`\"은 현재 주소를 커널이 시작되는 `0x8000`(또는 `0x80000`)으로 설정하도록 Linker에 알\n리기 위해 현재 주소를 나타냅니다. Linker가 데이터를 추가하면 현재 주소가 자동으로 증가합니다. 두 번\n째 줄은 \"`__start`\" 심볼을 만들고 현재 주소로 설정합니다.\n\n이후 섹션은 Text(Code), Read-Only Data, Read-Write Data 그리고 BSS(0으로 초기화된 메모리)로 정의됩니\n다.\n\n```assembly\n    __text_start = .;\n    .text : {\n        KEEP(*(.text.boot))\n        *(.text)\n    }\n    . = ALIGN(4096); /* align to page size */\n    __text_end = .;\n```\n\n첫 번째 행은 섹션에 `__text_start` 심볼을 만듭니다. 두 번째 줄부터 다섯 번째 줄까지는 `.text` 섹션입\n니다. 3행과 4행은 파일의 어떤 섹션이 `.text` 섹션에 배치될지 선언합니다. 여기서는 \"`.text.boot`\"이\n먼저 배치되고 그 뒤에 일반적인 \"`.text`\"가 옵니다. \"`.text.boot`\"는 `boot.S`에서만 사용되며 커널 이\n미지의 시작 부분에서 끝납니다. \"`.text`\"는 나머지 코드 모두를 포함합니다. Linker에서 추가한 모든 데\n이터는 현재 주소(\"`.`\")를 자동으로 증가시킵니다. 6행에서는 4096 바이트씩(Raspberry Pi에 대한 페이지\n크기) 정렬되도록 설정합니다. 그리고 마지막 7행에서는 `__text_end` 심볼을 만들어서 섹션이 끝나는 곳을\n알 수 있습니다.\n\n`__text_start`와 `__text_end`는 무엇이고 페이지 정렬을 사용하는 이유는 무엇일까요? 심볼\n`__text_start`와 `__text_end`는 커널 소스에서 사용될 수 있으며, Linker는 올바른 주소를 바이너리에 저\n장합니다. 예를 들어 `__bss_start` 와 `__bss_end`는 `boot.S`에서 사용하고 있습니다. 원한다면 C에서\n`extern`으로 선언하여 사용할 수도 있습니다. 필요하진 않지만 모든 섹션을 페이지 크기에 맞게 정렬했습\n니다. 나중에 겹쳐서(한 페이지에 2개의 섹션) 처리할 필요 없이 Executable, Read-Only, Read-Write 권한\n을 사용하여 [페이지 테이블](https://ko.wikipedia.org/wiki/페이지_테이블)에 매핑할 수 있습니다.\n\n```assembly\n    __end = .;\n```\n\n모든 섹션이 선언된 후 `__end` 심볼을 만듭니다. 런타임 중에 커널의 크기를 알고 싶다면 `__start`와\n`__end`를 사용하여 구할 수 있습니다.\n\n이러한 구성요소를 통해 실제로 최종적인 커널을 빌드 할 수 있습니다. Linker는 Link Process를 보다 잘\n할 수 있도록 Compiler를 Linker로 사용합니다. 커널이 C++로 작성되었다면, C++ 컴파일러를 사용해야 합니\n다.\n\n아래와 같이 커널을 빌드 합니다:\n\n```sh\narm-none-eabi-gcc -T linker.ld -o myos.elf -ffreestanding -O2 -nostdlib boot.o kernel.o\narm-none-eabi-objcopy myos.elf -O binary kernel7.img\n```\n\n64비트용으로는 다음과 같이 합니다:\n\n```sh\naarch64-elf-ld -nostdlib -nostartfiles boot.o kernel.o -T link.ld -o myos.elf\naarch64-elf-objcopy myos.elf -O binary kernel8.img\n```\n\n# Booting the Kernel\n\n이제 여러분이 만든 커널을 부팅해보겠습니다.\n\n## Testing your operating system (Real Hardware)\n\nRaspbian 이미지가 기록된 SD카드가 있다면, 이미 부팅 파티션과 필요한 파일이 있다는 것입니다.\n\nSD카드에서 첫 번째 파티션을 마운트 하면 아래와 같은 파일들이 있을 것입니다.\n\n```\nbootcode.bin  fixup.dat     kernel.img            start.elf\ncmdline.txt   fixup_cd.dat  kernel_cutdown.img    start_cd.elf\nconfig.txt    issue.txt     kernel_emergency.img\n```\n\n만약 Raspbian 이미지가 없으면, FAT32 파티션을 만들고\n[공식 저장소에서 펌웨어 파일을 다운로드](https://github.com/raspberrypi/firmware/tree/master/boot)\n할 수 있습니다. 3개의 파일만 필요합니다.\n\n- `bootcode.bin`: 이 파일이 제일 먼저 로드되고, GPU에서 실행되는 파일입니다.\n- `fixup.dat`: 이 데이터 파일에는 중요한 하드웨어 관련 정보가 들어있습니다.\n- `start.elf`: Raspberry Pi 펌웨어입니다. (IBM PC의 BIOS와 동일합니다) 이것 또한 GPU에서 실행됩니다.\n\nRaspberry Pi의 전원이 켜지면 ARM CPU가 중지되고 GPU가 실행됩니다. GPU는 ROM에서 부트로더를 로드하고\n실행합니다. 그리고 SD카드를 찾아 `bootcode.bin`을 로드합니다. bootcode는 `config.txt`와\n`cmdline.txt`를 처리하는 `start.elf` 펌웨어를 로드합니다. `start.elf`는 `kernel*.img`를 로드하고 해\n당 커널 이미지를 실행하는 ARM CPU가 실행됩니다.\n\nARM 모드 간을 전환하려면 `kernel.img` 파일의 이름을 변경해야 합니다. `kernel7.img`로 이름을 바꾸면\nAArch32 모드 (ARMv7)에서 실행됩니다. AArch64 모드(ARMv8)의 경우 `kernel8.img`로 이름을 변경해야 합니\n다.\n\n이제 원래 있던 `kernel.img`를 자신이 만든 커널 파일로 교체하고, SD카드를 Raspberry Pi에 꽂아 전원을\n켭니다. Minicom에서는 다음을 보여주게 됩니다.\n\n```\nHello, kernel World!\n```\n\n## Testing your operating system (QEMU)\n\nQEMU는 Raspberry Pi 2 에뮬레이팅을 지원합니다. Machine type를 \"raspi2\"로 사용하면 됩니다.  \nQEMU를 사용하면 일반적으로 커널을 바이너리로 objcopy 할 필요가 없습니다. QEMU는 ELF 커널도 지원합니\n다.\n\n```sh\nqemu-system-arm -m 256 -M raspi2 -serial stdio -kernel kernel.elf\n```\n\n\u003e 원문 : [OSDev Wiki - Raspberry Pi Bare Bones](https://wiki.osdev.org/Raspberry_Pi_Bare_Bones)\n"},"__N_SSG":true},"page":"/article/[category]/[year]/[month]/[day]/[slug]","query":{"category":"raspberry-pi","year":"2019","month":"05","day":"14","slug":"Raspberry-Pi-Bare-Bones"},"buildId":"Dsgna1Ug9ERZ37IDpNGla","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

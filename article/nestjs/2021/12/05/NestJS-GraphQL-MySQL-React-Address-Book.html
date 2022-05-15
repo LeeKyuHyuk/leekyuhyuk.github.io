@@ -1,0 +1,716 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><meta property="og:image" content="https://kyuhyuk.kr/thumbnail.png"/><title>NestJS, GraphQL, React을 사용하여 주소록 구현 하기</title><meta name="author" content="KyuHyuk Lee"/><meta name="generator" content="KyuHyuk Lee"/><meta name="description" content=" MariaDB Installation MariaDB는 Oracle 소유의 불확실한 MySQL의 라이선스 상태에 반발하여 만들어졌습니다. MySQL의 소스코드 를 Fork하여 만들어졌으므로 사용방법과 구조가 MySQL과 동일합니다. MySQL은 상업용으로 사용하면 유료이지만, Maria"/><meta itemProp="url" content="https://kyuhyuk.kr/article/nestjs/2021/12/05/NestJS-GraphQL-MySQL-React-Address-Book"/><meta itemProp="headline" content="NestJS, GraphQL, React을 사용하여 주소록 구현 하기"/><meta property="og:type" content="article"/><meta property="og:url" content="https://kyuhyuk.kr/article/nestjs/2021/12/05/NestJS-GraphQL-MySQL-React-Address-Book"/><meta property="og:title" content="NestJS, GraphQL, React을 사용하여 주소록 구현 하기"/><meta property="og:description" content=" MariaDB Installation MariaDB는 Oracle 소유의 불확실한 MySQL의 라이선스 상태에 반발하여 만들어졌습니다. MySQL의 소스코드 를 Fork하여 만들어졌으므로 사용방법과 구조가 MySQL과 동일합니다. MySQL은 상업용으로 사용하면 유료이지만, Maria"/><meta property="og:site_name" content="KyuHyuk Blog"/><meta property="og:locale" content="ko_KR"/><meta name="next-head-count" content="15"/><link rel="preload" href="/_next/static/css/4e0666c6da09e1ee.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4e0666c6da09e1ee.css" data-n-g=""/><link rel="preload" href="/_next/static/css/c2a527101433f11d.css" as="style"/><link rel="stylesheet" href="/_next/static/css/c2a527101433f11d.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-a87821de553db91d.js" defer=""></script><script src="/_next/static/chunks/main-fc7d2f0e2098927e.js" defer=""></script><script src="/_next/static/chunks/pages/_app-2774ecbb7f55613d.js" defer=""></script><script src="/_next/static/chunks/869-82e19047d92f6e30.js" defer=""></script><script src="/_next/static/chunks/895-531271280742d591.js" defer=""></script><script src="/_next/static/chunks/pages/article/%5Bcategory%5D/%5Byear%5D/%5Bmonth%5D/%5Bday%5D/%5Bslug%5D-e1207b3501068a48.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_buildManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_ssgManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><header class="c-opBYf"><a href="https://kyuhyuk.kr"><div class="c-bHyrwK"><div class="c-uBnvQ">Kh.</div><div class="c-hehuMV">KyuHyuk Blog</div></div></a><ul class="c-bjkCdF"><li><a href="https://github.com/LeeKyuHyuk" class="c-hAoZGi"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></a></li><li><a href="https://linkedin.com/in/leekyuhyuk" class="c-hAoZGi"><span role="img" aria-label="linkedin" class="anticon anticon-linkedin"><svg viewBox="64 64 896 896" focusable="false" data-icon="linkedin" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1168.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg></span></a></li><li><a href="mailto:lee@kyuhyuk.kr" class="c-hAoZGi"><span role="img" aria-label="mail" class="anticon anticon-mail"><svg viewBox="64 64 896 896" focusable="false" data-icon="mail" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-80.8 108.9L531.7 514.4c-7.8 6.1-18.7 6.1-26.5 0L189.6 268.9A7.2 7.2 0 01194 256h648.8a7.2 7.2 0 014.4 12.9z"></path></svg></span></a></li></ul></header><main class="c-jfcKOQ"><article><h1 class="c-fxvkZv"><a href="https://kyuhyuk.kr/article/nestjs/2021/12/05/NestJS-GraphQL-MySQL-React-Address-Book">NestJS, GraphQL, React을 사용하여 주소록 구현 하기</a></h1><a href="https://kyuhyuk.kr/category/NestJS" class="c-iosjjB">NestJS</a><time dateTime="2021-12-05 15:21:11" class="c-jYwCTI">Dec 06, 2021 12:21:11 AM</time><div id="post" class="c-dIcdES"><h1>MariaDB Installation</h1>
+<blockquote>
+<p>MariaDB는 Oracle 소유의 불확실한 MySQL의 라이선스 상태에 반발하여 만들어졌습니다. MySQL의 소스코드
+를 Fork하여 만들어졌으므로 사용방법과 구조가 MySQL과 동일합니다.<br>
+MySQL은 상업용으로 사용하면 유료이지만, MariaDB는 상업용으로 사용해도 비용을 지불하지 않아도 되는
+장점이 있습니다.</p>
+</blockquote>
+<p><a href="https://mariadb.org/download/">Download MariaDB Server</a>에 접속하여 MariaDB Server 설치 파일을 다운
+로드하고 설치합니다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_1.png" alt="Download MariaDB Server"></p>
+<p>MariaDB에 <code>address_book</code> 데이터베이스와 <code>contact</code> 테이블을 추가합니다.</p>
+<pre><code class="language-bash">CREATE DATABASE address_book default CHARACTER SET UTF8;
+USE `address_book`;
+CREATE TABLE `contact` (
+	`<span class="hljs-built_in">id</span>` CHAR(50) NOT NULL,
+	`name` CHAR(50) NOT NULL,
+	`number` CHAR(50) NULL DEFAULT NULL,
+	`email` CHAR(50) NULL DEFAULT NULL
+)
+COLLATE=<span class="hljs-string">&#x27;utf8mb3_general_ci&#x27;</span>;
+</code></pre>
+<h1>Create Address Book Project</h1>
+<p>Nest.js + GraphQL + React.js 조합의 프로젝트를 생성할 것입니다.<br>
+Address Book 프로젝트에 Backend와 Frontend 프로젝트를 포함시켜 관리할 것입니다.</p>
+<p>우선 아래와 같이 <code>address-book</code> 프로젝트를 생성합니다.</p>
+<pre><code class="language-bash"><span class="hljs-built_in">mkdir</span> address-book
+<span class="hljs-built_in">cd</span> address-book
+npm init
+</code></pre>
+<p><code>npm</code>의 <a href="https://docs.npmjs.com/cli/v8/using-npm/workspaces">workspaces</a>를 사용하여 <code>backend</code>와
+<code>frontend</code> 프로젝트를 추가합니다.</p>
+<pre><code class="language-bash">npm init -w backend
+npm init -w frontend
+</code></pre>
+<p>위 명령어로 <code>backend</code>와 <code>frontend</code> 프로젝트를 추가하면 아래와 같은 구조로 되어있을 것입니다.</p>
+<pre><code>├── backend
+│   └── package.json
+├── frontend
+│   └── package.json
+└── package.json
+</code></pre>
+<p>이제 <code>backend</code> 프로젝트를 설정해 봅시다.</p>
+<h1>Configuration Backend Project</h1>
+<p>Backend를 Nest.js와 GraphQL로 구성하기 위해 아래의 패키지를 설치합니다.</p>
+<pre><code class="language-bash">npm install --save @nestjs/axios @nestjs/common @nestjs/core @nestjs/platform-express reflect-metadata rxjs @nestjs/graphql apollo-server-express graphql @nestjs/typeorm typeorm mysql2 -w backend
+npm install --save-dev @nestjs/cli @nestjs/schematics @types/express @types/node ts-loader ts-node tsconfig-paths typescript cross-env -w backend
+</code></pre>
+<p><code>backend/package.json</code>에 <code>&quot;main&quot;: &quot;index.js&quot;</code> 행을 삭제하고 아래 내용을 추가합니다.</p>
+<pre><code class="language-json"><span class="hljs-attr">&quot;private&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+<span class="hljs-attr">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;build&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;nest build&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;start&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;nest start&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;start:dev&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;cross-env NODE_ENV=development nest start --watch&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;start:debug&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;cross-env NODE_ENV=development nest start --debug --watch&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;start:prod&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;npm run build &amp;&amp; NODE_ENV=production node dist/main&quot;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+</code></pre>
+<p><code>backend/nest-cli.json</code>, <code>backend/tsconfig.build.json</code>, <code>backend/tsconfig.json</code>을 아래와 같이 작성하
+여 저장합니다.</p>
+<p><strong><code>backend/nest-cli.json</code> :</strong></p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;collection&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;@nestjs/schematics&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;sourceRoot&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;src&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p><strong><code>backend/tsconfig.build.json</code> :</strong></p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;extends&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./tsconfig.json&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;exclude&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;node_modules&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;dist&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;test&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;**/*spec.ts&quot;</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p><strong><code>backend/tsconfig.json</code> :</strong></p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;compilerOptions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;module&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;commonjs&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;declaration&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;removeComments&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;emitDecoratorMetadata&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;experimentalDecorators&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;allowSyntheticDefaultImports&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;target&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;es2017&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;sourceMap&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;outDir&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./dist&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;baseUrl&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;incremental&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;skipLibCheck&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p><code>backend/src</code> 폴더를 만들고 <code>backend/src/app.module.ts</code>와 <code>backend/src/main.ts</code>를 생성합니다.</p>
+<p><strong><code>backend/src/app.module.ts</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/common&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">GraphQLModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/graphql&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/typeorm&#x27;</span>;
+
+<span class="hljs-meta">@Module</span>({
+  <span class="hljs-attr">imports</span>: [
+    <span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forRoot</span>(),
+    <span class="hljs-title class_">GraphQLModule</span>.<span class="hljs-title function_">forRoot</span>({
+      <span class="hljs-attr">typePaths</span>: [<span class="hljs-string">&#x27;./**/*.graphql&#x27;</span>],
+    }),
+  ],
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}
+</code></pre>
+<p><strong><code>backend/src/main.ts</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NestFactory</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">AppModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./app.module&#x27;</span>;
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">bootstrap</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> app = <span class="hljs-keyword">await</span> <span class="hljs-title class_">NestFactory</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">AppModule</span>);
+  <span class="hljs-keyword">await</span> app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">8081</span>);
+}
+<span class="hljs-title function_">bootstrap</span>();
+</code></pre>
+<p>MySQL과 연동하기 위해 <code>ormconfig.json</code>를 작성합니다.<br>
+<span style="color:red;">Backend 프로젝트에 생성하지 않고, Address Book 프로젝트에 생성합니다
+.</span></p>
+<p><strong><code>ormconfig.json</code> :</strong></p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;mysql&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;host&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;localhost&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;port&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3306</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;username&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;root&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;password&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;root&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;database&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;address_book&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;entities&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;dist/**/*.entity{.ts,.js}&quot;</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h1>GraphQL Schema와 Query, Mutation 만들기</h1>
+<p>Schema는 아래와 같이 정의할 수 있습니다. 간단하게 주소록에 필요한 Schema를 작성해 보겠습니다.<br>
+<code>backend/graphql</code> 폴더를 생성하고 <code>contact.graphql</code> 파일을 생성합니다.</p>
+<p><strong><code>backend/graphql/contact.graphql</code> :</strong></p>
+<pre><code class="language-graphql"><span class="hljs-keyword">type</span> Contact <span class="hljs-punctuation">{</span>
+  <span class="hljs-symbol">id</span><span class="hljs-punctuation">:</span> String<span class="hljs-punctuation">!</span>
+  <span class="hljs-symbol">name</span><span class="hljs-punctuation">:</span> String<span class="hljs-punctuation">!</span>
+  <span class="hljs-symbol">number</span><span class="hljs-punctuation">:</span> String
+  <span class="hljs-symbol">email</span><span class="hljs-punctuation">:</span> String
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">input</span> ContactInput <span class="hljs-punctuation">{</span>
+  <span class="hljs-symbol">name</span><span class="hljs-punctuation">:</span> String<span class="hljs-punctuation">!</span>
+  <span class="hljs-symbol">number</span><span class="hljs-punctuation">:</span> String
+  <span class="hljs-symbol">email</span><span class="hljs-punctuation">:</span> String
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">type</span> ContactResponse <span class="hljs-punctuation">{</span>
+  <span class="hljs-symbol">result</span><span class="hljs-punctuation">:</span> String<span class="hljs-punctuation">!</span>
+  <span class="hljs-symbol">msg</span><span class="hljs-punctuation">:</span> String<span class="hljs-punctuation">!</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">type</span> <span class="hljs-keyword">Query</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-symbol">getAllContact</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>Contact<span class="hljs-punctuation">]</span>
+  getContact<span class="hljs-punctuation">(</span><span class="hljs-symbol">id</span><span class="hljs-punctuation">:</span> String<span class="hljs-punctuation">!</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">:</span> Contact
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">type</span> <span class="hljs-keyword">Mutation</span> <span class="hljs-punctuation">{</span>
+  addContact<span class="hljs-punctuation">(</span><span class="hljs-symbol">contact</span><span class="hljs-punctuation">:</span> ContactInput<span class="hljs-punctuation">!</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">:</span> ContactResponse
+  removeContact<span class="hljs-punctuation">(</span><span class="hljs-symbol">id</span><span class="hljs-punctuation">:</span> String<span class="hljs-punctuation">!</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">:</span> ContactResponse
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h1>Resolver 만들기</h1>
+<p>위에서 정의한 GraphQL Schema를 바탕으로 Type를 만들어줍니다.<br>
+<code>backend/src/types</code> 폴더를 생성하고 <code>contact.ts</code> 파일을 생성합니다.</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">Contact</span> = {
+  <span class="hljs-attr">id</span>: <span class="hljs-built_in">string</span>;
+  <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>;
+  <span class="hljs-built_in">number</span>?: <span class="hljs-built_in">string</span>;
+  email?: <span class="hljs-built_in">string</span>;
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">ContactInput</span> = {
+  <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>;
+  <span class="hljs-built_in">number</span>?: <span class="hljs-built_in">string</span>;
+  email?: <span class="hljs-built_in">string</span>;
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">ContactResponse</span> = {
+  <span class="hljs-attr">result</span>: <span class="hljs-built_in">string</span>;
+  <span class="hljs-attr">msg</span>: <span class="hljs-built_in">string</span>;
+};
+</code></pre>
+<p>TypeORM을 사용하여 Repository Design Pattern을 정의합니다. 아래와 같이 <code>Contact</code> Entity를 정의합니다
+.</p>
+<p><strong><code>backend/src/repository/contact.entity.ts</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Entity</span>, <span class="hljs-title class_">Column</span>, <span class="hljs-title class_">PrimaryGeneratedColumn</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;typeorm&#x27;</span>;
+
+<span class="hljs-meta">@Entity</span>()
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Contact</span> {
+  <span class="hljs-meta">@PrimaryGeneratedColumn</span>(<span class="hljs-string">&#x27;uuid&#x27;</span>)
+  id?: <span class="hljs-built_in">string</span>;
+
+  <span class="hljs-meta">@Column</span>()
+  <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>;
+
+  <span class="hljs-meta">@Column</span>()
+  <span class="hljs-built_in">number</span>?: <span class="hljs-built_in">string</span>;
+
+  <span class="hljs-meta">@Column</span>()
+  email?: <span class="hljs-built_in">string</span>;
+}
+</code></pre>
+<p><code>backend/src/models</code> 폴더를 만들고, <code>contact.service.ts</code>, <code>contact.resolver.ts</code>,
+<code>contact.module.ts</code>를 작성합니다.</p>
+<p><strong><code>backend/src/models/contact.service.ts</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Injectable</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/common&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">InjectRepository</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/typeorm&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Contact</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../repository/contact.entity&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Repository</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;typeorm&#x27;</span>;
+
+<span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ContactService</span> {
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">
+    <span class="hljs-meta">@InjectRepository</span>(Contact)
+    <span class="hljs-keyword">private</span> ContactRepository: Repository&lt;Contact&gt;
+  </span>) {}
+
+  <span class="hljs-title function_">findAll</span>(): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">Contact</span>[]&gt; {
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">ContactRepository</span>.<span class="hljs-title function_">find</span>();
+  }
+
+  <span class="hljs-title function_">findOne</span>(<span class="hljs-attr">id</span>: <span class="hljs-built_in">string</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">Contact</span>&gt; {
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">ContactRepository</span>.<span class="hljs-title function_">findOne</span>(id);
+  }
+
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">add</span>(<span class="hljs-title class_">Contact</span>: <span class="hljs-title class_">Contact</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">ContactRepository</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title class_">Contact</span>);
+  }
+
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">remove</span>(<span class="hljs-attr">id</span>: <span class="hljs-built_in">string</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+    <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">ContactRepository</span>.<span class="hljs-title function_">delete</span>(id);
+  }
+}
+</code></pre>
+<p><strong><code>backend/src/models/contact.resolver.ts</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Args</span>, <span class="hljs-title class_">Mutation</span>, <span class="hljs-title class_">Query</span>, <span class="hljs-title class_">Resolver</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/graphql&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Contact</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;src/repository/contact.entity&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ContactInput</span>, <span class="hljs-title class_">ContactResponse</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../types/Contact&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ContactService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./contact.service&#x27;</span>;
+
+<span class="hljs-meta">@Resolver</span>(<span class="hljs-string">&#x27;Contact&#x27;</span>)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ContactResolver</span> {
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> contactService: ContactService</span>) {}
+
+  <span class="hljs-meta">@Query</span>()
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">getAllContact</span>(): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">Contact</span>[]&gt; {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">contactService</span>.<span class="hljs-title function_">findAll</span>();
+  }
+
+  <span class="hljs-meta">@Query</span>()
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">getContact</span>(<span class="hljs-meta">@Args</span>(<span class="hljs-string">&#x27;id&#x27;</span>) <span class="hljs-attr">id</span>: <span class="hljs-built_in">string</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">Contact</span>&gt; {
+    <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">contactService</span>.<span class="hljs-title function_">findOne</span>(id);
+    <span class="hljs-keyword">if</span> (result) <span class="hljs-keyword">return</span> result;
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;Error&#x27;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;There is no information about that Contact ID.&#x27;</span>,
+    };
+  }
+
+  <span class="hljs-meta">@Mutation</span>()
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">addContact</span>(<span class="hljs-meta">@Args</span>(<span class="hljs-string">&#x27;contact&#x27;</span>) <span class="hljs-attr">contact</span>: <span class="hljs-title class_">ContactInput</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">ContactResponse</span>&gt; {
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">contactService</span>.<span class="hljs-title function_">add</span>(contact);
+      <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">result</span>: <span class="hljs-string">&#x27;Success&#x27;</span>,
+        <span class="hljs-attr">msg</span>: <span class="hljs-string">&#x27;Added successfully.&#x27;</span>,
+      };
+    } <span class="hljs-keyword">catch</span> (error) {
+      <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">result</span>: <span class="hljs-string">&#x27;Error&#x27;</span>,
+        <span class="hljs-attr">msg</span>: error,
+      };
+    }
+  }
+
+  <span class="hljs-meta">@Mutation</span>()
+  <span class="hljs-keyword">async</span> <span class="hljs-title function_">removeContact</span>(<span class="hljs-meta">@Args</span>(<span class="hljs-string">&#x27;id&#x27;</span>) <span class="hljs-attr">id</span>: <span class="hljs-built_in">string</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">ContactResponse</span>&gt; {
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">contactService</span>.<span class="hljs-title function_">remove</span>(id);
+      <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">result</span>: <span class="hljs-string">&#x27;Success&#x27;</span>,
+        <span class="hljs-attr">msg</span>: <span class="hljs-string">&#x27;Removed successfully.&#x27;</span>,
+      };
+    } <span class="hljs-keyword">catch</span> (error) {
+      <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">result</span>: <span class="hljs-string">&#x27;Error&#x27;</span>,
+        <span class="hljs-attr">msg</span>: error,
+      };
+    }
+  }
+}
+</code></pre>
+<p><strong><code>backend/src/models/contact.module.ts</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/common&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/typeorm&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Contact</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../repository/contact.entity&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ContactResolver</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./contact.resolver&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ContactService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./contact.service&#x27;</span>;
+
+<span class="hljs-meta">@Module</span>({
+  <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forFeature</span>([<span class="hljs-title class_">Contact</span>])],
+  <span class="hljs-attr">providers</span>: [<span class="hljs-title class_">ContactResolver</span>, <span class="hljs-title class_">ContactService</span>],
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ContactModule</span> {}
+</code></pre>
+<p><code>backend/src/app.module.ts</code>에 <code>ContactModule</code>를 추가합니다.</p>
+<p><strong><code>backend/src/models/app.module.ts</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Module</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/common&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">GraphQLModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/graphql&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypeOrmModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/typeorm&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ContactModule</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./models/contact.module&#x27;</span>;
+
+<span class="hljs-meta">@Module</span>({
+  <span class="hljs-attr">imports</span>: [
+    <span class="hljs-title class_">TypeOrmModule</span>.<span class="hljs-title function_">forRoot</span>(),
+    <span class="hljs-title class_">GraphQLModule</span>.<span class="hljs-title function_">forRoot</span>({
+      <span class="hljs-attr">typePaths</span>: [<span class="hljs-string">&#x27;./**/*.graphql&#x27;</span>],
+    }),
+    <span class="hljs-title class_">ContactModule</span>,
+  ],
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppModule</span> {}
+</code></pre>
+<h1>GraphQL Playground</h1>
+<p>GraphQL Playground를 통하여 원하는 대로 동작하는지 확인을 해보겠습니다.</p>
+<pre><code class="language-bash">npm run start:dev --workspace=backend
+</code></pre>
+<p>위의 명령어로 Nest.js Dev Server를 실행하고,
+<a href="http://localhost:8081/graphql">http://localhost:8081/graphql</a>에 접속합니다.<br>
+접속하면 아래와 같이 우리가 구현한 Query와 Mutation이 Docs에 출력되는 것을 확인할 수 있습니다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_2.png" alt="GraphQL Playground"></p>
+<p>아래와 같이 Mutation을 작성하여 요청해봅시다.</p>
+<pre><code class="language-graphql"><span class="hljs-keyword">mutation</span> <span class="hljs-punctuation">{</span>
+  addContact<span class="hljs-punctuation">(</span><span class="hljs-symbol">contact</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-symbol">name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;이규혁&quot;</span>, <span class="hljs-symbol">number</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;+82 10-1234-5678&quot;</span>, <span class="hljs-symbol">email</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;lee@kyuhyuk.kr&quot;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    result
+    msg
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>아래와 같이 성공적으로 추가되었다는 메세지가 출력됩니다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_3.png" alt="addContact Mutation"></p>
+<p>이제 <code>getAllContact</code> Query를 사용하여 추가된 주소록을 확인해 봅시다.</p>
+<pre><code class="language-graphql"><span class="hljs-keyword">query</span> <span class="hljs-punctuation">{</span>
+  getAllContact <span class="hljs-punctuation">{</span>
+    id
+    name
+    number
+    email
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p><img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_4.png" alt="getAllContact Query"></p>
+<p>위에 출력된 <code>id</code>를 사용하여 <code>getContact</code> Query를 테스트해봅시다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_5.png" alt="getContact Query"></p>
+<p>정상적으로 작동되는 것을 확인했으니, 마지막으로 <code>removeContact</code> Mutation을 사용하여 정상적으로 삭제
+되는지도 확인해 봅시다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_6.png" alt="removeContact Mutation"></p>
+<p><code>getAllContact</code> Query를 사용하여 주소록을 확인해 봅시다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_7.png" alt="getAllContact Query"></p>
+<p>모두 정상적으로 동작되는 것을 확인하였으니, 다음 단계인 React를 사용하여 Frontend를 구현해 봅시다.</p>
+<h1>Configuration Frontend Project</h1>
+<pre><code class="language-bash">npm install --save @apollo/client graphql@15.7.2 react react-dom react-router react-router-dom -w frontend
+npm install --save-dev @types/react @types/react-dom @types/react-router @types/react-router-dom @types/webpack apollo apollo-language-server clean-webpack-plugin cross-env css-loader file-loader html-webpack-plugin style-loader ts-loader typescript webpack webpack-cli webpack-dev-server -w frontend
+</code></pre>
+<p><code>frontend/package.json</code>에 <code>&quot;main&quot;: &quot;index.js&quot;</code> 행을 삭제하고 아래 내용을 추가합니다.</p>
+<pre><code class="language-json"><span class="hljs-attr">&quot;private&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+<span class="hljs-attr">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;dev&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;cross-env NODE_ENV=development webpack serve --progress&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;build&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;cross-env NODE_ENV=production webpack --progress&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;apollo:codegen&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;apollo client:codegen src/types --target=typescript --outputFlat&quot;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+</code></pre>
+<p><code>frontend/apollo.config.js</code>, <code>frontend/tsconfig.json</code>, <code>frontend/webpack.config.js</code>을 아래와 같이 작
+성하여 저장합니다.</p>
+<p><strong><code>frontend/apollo.config.js</code> :</strong></p>
+<pre><code class="language-javascript"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {
+  <span class="hljs-attr">client</span>: {
+    <span class="hljs-attr">service</span>: {
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;My GraphQL Server&#x27;</span>,
+      <span class="hljs-attr">url</span>: <span class="hljs-string">&#x27;http://localhost:8081/graphql&#x27;</span>,
+      <span class="hljs-comment">// Optional disable SSL validation check</span>
+      <span class="hljs-attr">skipSSLValidation</span>: <span class="hljs-literal">true</span>,
+    },
+    <span class="hljs-attr">includes</span>: [<span class="hljs-string">&#x27;./src/**/*.tsx&#x27;</span>, <span class="hljs-string">&#x27;./src/**/*.ts&#x27;</span>],
+    <span class="hljs-attr">tagName</span>: <span class="hljs-string">&#x27;gql&#x27;</span>,
+  },
+};
+</code></pre>
+<p><strong><code>frontend/tsconfig.json</code> :</strong></p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;compilerOptions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;outDir&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./dist&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;target&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;es5&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;module&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;esnext&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;jsx&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;react&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;noImplicitAny&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;allowSyntheticDefaultImports&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;lib&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;dom&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;dom.iterable&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;esnext&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;allowJs&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;skipLibCheck&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;esModuleInterop&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;strict&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;forceConsistentCasingInFileNames&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;moduleResolution&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;node&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;resolveJsonModule&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;isolatedModules&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;include&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;src/**/*&quot;</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p><strong><code>frontend/webpack.config.js</code> :</strong></p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;path&#x27;</span>);
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">HtmlWebpackPlugin</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;html-webpack-plugin&#x27;</span>);
+<span class="hljs-keyword">const</span> { <span class="hljs-title class_">CleanWebpackPlugin</span> } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;clean-webpack-plugin&#x27;</span>);
+
+<span class="hljs-keyword">const</span> mode = process.<span class="hljs-property">env</span>.<span class="hljs-property">NODE_ENV</span> || <span class="hljs-string">&#x27;development&#x27;</span>;
+
+<span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {
+  mode,
+  <span class="hljs-attr">devServer</span>: {
+    <span class="hljs-attr">historyApiFallback</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">port</span>: <span class="hljs-number">8080</span>,
+  },
+  <span class="hljs-attr">entry</span>: {
+    <span class="hljs-attr">app</span>: path.<span class="hljs-title function_">join</span>(__dirname, <span class="hljs-string">&#x27;src&#x27;</span>, <span class="hljs-string">&#x27;index.tsx&#x27;</span>),
+  },
+  <span class="hljs-attr">output</span>: {
+    <span class="hljs-attr">filename</span>: <span class="hljs-string">&#x27;[name].js&#x27;</span>,
+    <span class="hljs-attr">path</span>: path.<span class="hljs-title function_">resolve</span>(__dirname, <span class="hljs-string">&#x27;dist&#x27;</span>),
+    <span class="hljs-attr">publicPath</span>: <span class="hljs-string">&#x27;/&#x27;</span>,
+  },
+  <span class="hljs-attr">resolve</span>: {
+    <span class="hljs-attr">extensions</span>: [<span class="hljs-string">&#x27;.ts&#x27;</span>, <span class="hljs-string">&#x27;.tsx&#x27;</span>, <span class="hljs-string">&#x27;.js&#x27;</span>],
+  },
+  <span class="hljs-attr">module</span>: {
+    <span class="hljs-attr">rules</span>: [
+      {
+        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.(ts|tsx)$/</span>,
+        <span class="hljs-attr">use</span>: <span class="hljs-string">&#x27;ts-loader&#x27;</span>,
+        <span class="hljs-attr">exclude</span>: <span class="hljs-regexp">/node_modules/</span>,
+      },
+      {
+        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.(scss|css)$/</span>,
+        <span class="hljs-attr">use</span>: [<span class="hljs-string">&#x27;style-loader&#x27;</span>, <span class="hljs-string">&#x27;css-loader&#x27;</span>],
+      },
+      {
+        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.(jpg|png)$/</span>,
+        <span class="hljs-attr">use</span>: <span class="hljs-string">&#x27;file-loader?name=assets/[name].[ext]&#x27;</span>,
+      },
+    ],
+  },
+  <span class="hljs-attr">plugins</span>: [
+    <span class="hljs-keyword">new</span> <span class="hljs-title class_">HtmlWebpackPlugin</span>({
+      <span class="hljs-attr">template</span>: <span class="hljs-string">&#x27;./src/index.html&#x27;</span>,
+      <span class="hljs-attr">templateParameters</span>: {
+        <span class="hljs-attr">env</span>: process.<span class="hljs-property">env</span>.<span class="hljs-property">NODE_ENV</span> === <span class="hljs-string">&#x27;production&#x27;</span> ? <span class="hljs-string">&#x27;&#x27;</span> : <span class="hljs-string">&#x27;development&#x27;</span>,
+      },
+      <span class="hljs-attr">minify</span>:
+        process.<span class="hljs-property">env</span>.<span class="hljs-property">NODE_ENV</span> === <span class="hljs-string">&#x27;production&#x27;</span>
+          ? {
+              <span class="hljs-attr">collapseWhitespace</span>: <span class="hljs-literal">true</span>,
+              <span class="hljs-attr">removeComments</span>: <span class="hljs-literal">true</span>,
+            }
+          : <span class="hljs-literal">false</span>,
+    }),
+    <span class="hljs-keyword">new</span> <span class="hljs-title class_">CleanWebpackPlugin</span>(),
+  ],
+};
+</code></pre>
+<p><code>frontend/src</code> 폴더를 생성하고, <code>index.html</code>을 아래와 같이 작성합니다.</p>
+<p><strong><code>frontend/src/index.html</code> :</strong></p>
+<pre><code class="language-html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;ko&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;viewport&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;width=device-width, initial-scale=1.0&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">property</span>=<span class="hljs-string">&quot;og:type&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;website&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Address Book<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;root&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre>
+<h1>GraphQL API의 Type 받아오기</h1>
+<p><code>frontend/src/GraphQL</code> 폴더를 만들고, <code>Contact.ts</code>를 아래와 같이 작성합니다.<br>
+<code>frontend/src/GraphQL/Contact.ts</code>에는 Frontend에서 사용하는 GraphQL Query, Mutation가 정의됩니다.</p>
+<p><strong><code>frontend/src/GraphQL/Contact.ts</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { gql } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@apollo/client&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">GET_ALL_CONTACT</span> = gql<span class="hljs-string">`
+  query GetAllContact {
+    getAllContact {
+      id
+      name
+      number
+      email
+    }
+  }
+`</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">GET_CONTACT</span> = gql<span class="hljs-string">`
+  query GetContact($id: String!) {
+    getContact(id: $id) {
+      name
+      number
+      email
+    }
+  }
+`</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ADD_CONTACT</span> = gql<span class="hljs-string">`
+  mutation AddContact($contact: ContactInput!) {
+    addContact(contact: $contact) {
+      result
+      msg
+    }
+  }
+`</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-variable constant_">REMOVE_CONTACT</span> = gql<span class="hljs-string">`
+  mutation RemoveContact($id: String!) {
+    removeContact(id: $id) {
+      result
+      msg
+    }
+  }
+`</span>;
+</code></pre>
+<p>사용할 Query와 Mutation을 모두 작성했다면, 아래 명령을 실행하여 GraphQL Type을 생성합니다.</p>
+<pre><code class="language-bash">npm run apollo:codegen --workspace=frontend
+</code></pre>
+<p><span style="color:red;">2021년 12월 5일 기준으로 아래와 같은 오류가 발생하고 있습니다.</span><br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_8.png" alt="apollo:codegen Error"></p>
+<p><code>node_modules/apollo-language-server/node_modules/graphql</code> 폴더를 삭제하면 아래와 같이 정상적으로 생
+성됩니다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_9.png" alt="apollo:codegen"></p>
+<h1>List, Add, Detail 컴포넌트 만들기</h1>
+<p>주소록 목록을 보여주는 <code>frontend/src/List.tsx</code>를 간단하게 만들어봅시다.</p>
+<p><strong><code>frontend/src/List.tsx</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { useQuery } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@apollo/client&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Link</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-router-dom&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">GET_ALL_CONTACT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./GraphQL/Contact&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">GetAllContact</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./types/GetAllContact&#x27;</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">List</span> = (<span class="hljs-params"></span>) =&gt; {
+  <span class="hljs-keyword">const</span> { loading, error, data } = useQuery&lt;<span class="hljs-title class_">GetAllContact</span>&gt;(<span class="hljs-variable constant_">GET_ALL_CONTACT</span>);
+
+  <span class="hljs-keyword">if</span> (loading) <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Loading...<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>;
+  <span class="hljs-keyword">if</span> (error) <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{error.message}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>;
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Address Book :<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">&quot;/add&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span>&gt;</span>Add<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {data?.getAllContact?.map((contact) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{contact?.id}</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">{</span>`/<span class="hljs-attr">detail</span>/${<span class="hljs-attr">contact</span>?<span class="hljs-attr">.id</span>}`}&gt;</span>{contact?.name}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/&gt;</span></span>
+  );
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">List</span>;
+</code></pre>
+<p>주소록을 추가하는 <code>frontend/src/Add.tsx</code>도 아래와 같이 만들어봅시다.</p>
+<p><strong><code>frontend/src/Add.tsx</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { useMutation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@apollo/client&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ADD_CONTACT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./GraphQL/Contact&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">AddContact</span>, <span class="hljs-title class_">AddContactVariables</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./types/AddContact&#x27;</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">Add</span> = (<span class="hljs-params"></span>) =&gt; {
+  <span class="hljs-keyword">const</span> [name, setName] = <span class="hljs-title class_">React</span>.<span class="hljs-property">useState</span>&lt;<span class="hljs-built_in">string</span>&gt;(<span class="hljs-string">&#x27;&#x27;</span>);
+  <span class="hljs-keyword">const</span> [<span class="hljs-built_in">number</span>, setNumber] = <span class="hljs-title class_">React</span>.<span class="hljs-property">useState</span>&lt;<span class="hljs-built_in">string</span>&gt;(<span class="hljs-string">&#x27;&#x27;</span>);
+  <span class="hljs-keyword">const</span> [email, setEmail] = <span class="hljs-title class_">React</span>.<span class="hljs-property">useState</span>&lt;<span class="hljs-built_in">string</span>&gt;(<span class="hljs-string">&#x27;&#x27;</span>);
+
+  <span class="hljs-keyword">const</span> [addContact] = useMutation&lt;<span class="hljs-title class_">AddContact</span>, <span class="hljs-title class_">AddContactVariables</span>&gt;(<span class="hljs-variable constant_">ADD_CONTACT</span>);
+
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">handleSubmit</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; {
+    <span class="hljs-keyword">await</span> <span class="hljs-title function_">addContact</span>({
+      <span class="hljs-attr">variables</span>: {
+        <span class="hljs-attr">contact</span>: {
+          name,
+          <span class="hljs-built_in">number</span>,
+          email,
+        },
+      },
+    });
+  };
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">&quot;/&quot;</span> <span class="hljs-attr">onSubmit</span>=<span class="hljs-string">{handleSubmit}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>
+          Name :
+          <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{name}</span> <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(event)</span> =&gt;</span> setName(event.target.value)} /&gt;
+        <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>
+          Number :
+          <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{number}</span> <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(event)</span> =&gt;</span> setNumber(event.target.value)} /&gt;
+        <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>
+          Email :
+          <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;email&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{email}</span> <span class="hljs-attr">onChange</span>=<span class="hljs-string">{(event)</span> =&gt;</span> setEmail(event.target.value)} /&gt;
+        <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;Submit&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+    <span class="hljs-tag">&lt;/&gt;</span></span>
+  );
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Add</span>;
+</code></pre>
+<p>주소록 내용을 보여주는 <code>frontend/src/Detail.tsx</code>도 작성합니다.</p>
+<p><strong><code>frontend/src/Detail.tsx</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { useQuery } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@apollo/client&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;
+<span class="hljs-keyword">import</span> { useParams } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-router&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">GET_CONTACT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./GraphQL/Contact&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">GetContact</span>, <span class="hljs-title class_">GetContactVariables</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./types/GetContact&#x27;</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">Detail</span> = (<span class="hljs-params"></span>) =&gt; {
+  <span class="hljs-keyword">const</span> { id } = <span class="hljs-title function_">useParams</span>();
+  <span class="hljs-keyword">const</span> { loading, error, data } = useQuery&lt;<span class="hljs-title class_">GetContact</span>, <span class="hljs-title class_">GetContactVariables</span>&gt;(<span class="hljs-variable constant_">GET_CONTACT</span>, {
+    <span class="hljs-attr">variables</span>: { <span class="hljs-attr">id</span>: id || <span class="hljs-string">&#x27;&#x27;</span> },
+  });
+
+  <span class="hljs-keyword">if</span> (loading) <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Loading...<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>;
+  <span class="hljs-keyword">if</span> (error) <span class="hljs-keyword">return</span> <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{error.message}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>;
+
+  <span class="hljs-keyword">return</span> (
+    <span class="language-xml"><span class="hljs-tag">&lt;&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>{data?.getContact?.name}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>Number : {data?.getContact?.number || &#x27;N/A&#x27;}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>Email : {data?.getContact?.email || &#x27;N/A&#x27;}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/&gt;</span></span>
+  );
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Detail</span>;
+</code></pre>
+<p>이제 필요한 Component는 모두 만들어졌습니다.</p>
+<p><code>frontend/src/index.tsx</code>를 아래와 같이 작성합니다.<br>
+<code>index.tsx</code>에서는 <code>ApolloClient</code>와 Router를 설정합니다.</p>
+<p><strong><code>frontend/src/index.tsx</code> :</strong></p>
+<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ApolloClient</span>, <span class="hljs-title class_">ApolloProvider</span>, <span class="hljs-title class_">InMemoryCache</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@apollo/client&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">React</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">ReactDOM</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-dom&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">BrowserRouter</span>, <span class="hljs-title class_">Route</span>, <span class="hljs-title class_">Routes</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-router-dom&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Detail</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./Detail&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Add</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./Add&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">List</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./List&#x27;</span>;
+
+<span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ApolloClient</span>({
+  <span class="hljs-attr">uri</span>: <span class="hljs-string">&#x27;http://localhost:8081/graphql&#x27;</span>,
+  <span class="hljs-attr">cache</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">InMemoryCache</span>(),
+});
+
+<span class="hljs-title class_">ReactDOM</span>.<span class="hljs-title function_">render</span>(
+  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ApolloProvider</span> <span class="hljs-attr">client</span>=<span class="hljs-string">{client}</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">BrowserRouter</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Routes</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">&quot;/&quot;</span> <span class="hljs-attr">element</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">List</span> /&gt;</span>} /&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">&quot;/add&quot;</span> <span class="hljs-attr">element</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Add</span> /&gt;</span>} /&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">&quot;detail/:id&quot;</span> <span class="hljs-attr">element</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Detail</span> /&gt;</span>} /&gt;
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Routes</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">BrowserRouter</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">ApolloProvider</span>&gt;</span></span>,
+  <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;root&#x27;</span>)
+);
+</code></pre>
+<h1>결과물 확인하기</h1>
+<p>아래 명령어로 Backend와 Frontend의 Dev Server를 실행합니다.</p>
+<pre><code class="language-bash">npm run start:dev --workspace=backend
+npm run dev --workspace=frontend
+</code></pre>
+<p><a href="http://localhost:8080">http://localhost:8080</a>에 접속하면 아래와 같은 화면이 출력될 것입니다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_10.png" alt="List"><br>
+Add 버튼을 눌러 주소록을 추가해 봅시다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_11.png" alt="Add"><br>
+추가한 주소록이 목록에 보입니다. 클릭해 봅시다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_12.png" alt="List Check"><br>
+입력한 정보가 정상적으로 출력되고 있음을 확인할 수 있습니다.<br>
+<img src="/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_13.png" alt="Detail"></p>
+<blockquote>
+<p>삭제 기능은 <code>Detail.tsx</code>에 추가해 봅시다. <code>Add.tsx</code>에 있는 <code>useMutation()</code>를 참고하여 구현할 수 있
+습니다.</p>
+</blockquote>
+<h1>마무리</h1>
+<p>간편하게 프로젝트 관리를 하기 위해 <code>address-book</code>에 있는 <code>package.json</code>을 수정해 봅시다.<br>
+우선, 아래 명령어로 <code>concurrently</code>와 <code>rimraf</code> 패키지를 추가합니다.</p>
+<pre><code class="language-bash">npm install --save concurrently rimraf
+</code></pre>
+<p><code>package.json</code>의 <code>scripts</code>를 아래와 같이 수정합니다.</p>
+<pre><code class="language-json"><span class="hljs-attr">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;postinstall&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;rimraf node_modules/apollo-language-server/node_modules/graphql&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;dev&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;concurrently \&quot;npm run start:dev --workspace=backend\&quot; \&quot;npm run dev --workspace=frontend\&quot;&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;build&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;npm run build --workspace=backend --workspace=frontend&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;apollo:codegen&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;npm run apollo:codegen --workspace=frontend&quot;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+</code></pre>
+<ul>
+<li><code>postinstall</code>은 현재(2021년 12월 5일 기준) 발생되는 GraphQL의 문제를 해결하기 위해 넣었습니다.</li>
+<li><code>dev</code>를 위와 같이 설정하면, <code>address-book</code>에서 <code>npm run dev</code> 명령어 한 번으로 Backend, Frontend의
+Dev Server를 동시에 실행할 수 있습니다.</li>
+</ul>
+</div></article></main><footer class="c-cpkrrK"><div class="c-fiqONv">© <!-- -->2022<!-- --></div><div class="c-bHyrwK"><div class="c-iUFgVP">Kh.</div><div class="c-cshSRb">KyuHyuk Lee</div></div></footer></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"excerpt":" MariaDB Installation MariaDB는 Oracle 소유의 불확실한 MySQL의 라이선스 상태에 반발하여 만들어졌습니다. MySQL의 소스코드 를 Fork하여 만들어졌으므로 사용방법과 구조가 MySQL과 동일합니다. MySQL은 상업용으로 사용하면 유료이지만, Maria","url":"/article/nestjs/2021/12/05/NestJS-GraphQL-MySQL-React-Address-Book","frontmatter":{"title":"NestJS, GraphQL, React을 사용하여 주소록 구현 하기","date":"2021-12-05 15:21:11","category":"NestJS"},"content":"\r\n# MariaDB Installation\r\n\r\n\u003e MariaDB는 Oracle 소유의 불확실한 MySQL의 라이선스 상태에 반발하여 만들어졌습니다. MySQL의 소스코드\r\n\u003e 를 Fork하여 만들어졌으므로 사용방법과 구조가 MySQL과 동일합니다.  \r\n\u003e MySQL은 상업용으로 사용하면 유료이지만, MariaDB는 상업용으로 사용해도 비용을 지불하지 않아도 되는\r\n\u003e 장점이 있습니다.\r\n\r\n[Download MariaDB Server](https://mariadb.org/download/)에 접속하여 MariaDB Server 설치 파일을 다운\r\n로드하고 설치합니다.  \r\n![Download MariaDB Server](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_1.png)\r\n\r\nMariaDB에 `address_book` 데이터베이스와 `contact` 테이블을 추가합니다.\r\n\r\n```bash\r\nCREATE DATABASE address_book default CHARACTER SET UTF8;\r\nUSE `address_book`;\r\nCREATE TABLE `contact` (\r\n\t`id` CHAR(50) NOT NULL,\r\n\t`name` CHAR(50) NOT NULL,\r\n\t`number` CHAR(50) NULL DEFAULT NULL,\r\n\t`email` CHAR(50) NULL DEFAULT NULL\r\n)\r\nCOLLATE='utf8mb3_general_ci';\r\n```\r\n\r\n# Create Address Book Project\r\n\r\nNest.js + GraphQL + React.js 조합의 프로젝트를 생성할 것입니다.  \r\nAddress Book 프로젝트에 Backend와 Frontend 프로젝트를 포함시켜 관리할 것입니다.\r\n\r\n우선 아래와 같이 `address-book` 프로젝트를 생성합니다.\r\n\r\n```bash\r\nmkdir address-book\r\ncd address-book\r\nnpm init\r\n```\r\n\r\n`npm`의 [workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces)를 사용하여 `backend`와\r\n`frontend` 프로젝트를 추가합니다.\r\n\r\n```bash\r\nnpm init -w backend\r\nnpm init -w frontend\r\n```\r\n\r\n위 명령어로 `backend`와 `frontend` 프로젝트를 추가하면 아래와 같은 구조로 되어있을 것입니다.\r\n\r\n```\r\n├── backend\r\n│   └── package.json\r\n├── frontend\r\n│   └── package.json\r\n└── package.json\r\n```\r\n\r\n이제 `backend` 프로젝트를 설정해 봅시다.\r\n\r\n# Configuration Backend Project\r\n\r\nBackend를 Nest.js와 GraphQL로 구성하기 위해 아래의 패키지를 설치합니다.\r\n\r\n```bash\r\nnpm install --save @nestjs/axios @nestjs/common @nestjs/core @nestjs/platform-express reflect-metadata rxjs @nestjs/graphql apollo-server-express graphql @nestjs/typeorm typeorm mysql2 -w backend\r\nnpm install --save-dev @nestjs/cli @nestjs/schematics @types/express @types/node ts-loader ts-node tsconfig-paths typescript cross-env -w backend\r\n```\r\n\r\n`backend/package.json`에 `\"main\": \"index.js\"` 행을 삭제하고 아래 내용을 추가합니다.\r\n\r\n```json\r\n\"private\": true,\r\n\"scripts\": {\r\n    \"build\": \"nest build\",\r\n    \"start\": \"nest start\",\r\n    \"start:dev\": \"cross-env NODE_ENV=development nest start --watch\",\r\n    \"start:debug\": \"cross-env NODE_ENV=development nest start --debug --watch\",\r\n    \"start:prod\": \"npm run build \u0026\u0026 NODE_ENV=production node dist/main\"\r\n},\r\n```\r\n\r\n`backend/nest-cli.json`, `backend/tsconfig.build.json`, `backend/tsconfig.json`을 아래와 같이 작성하\r\n여 저장합니다.\r\n\r\n**`backend/nest-cli.json` :**\r\n\r\n```json\r\n{\r\n  \"collection\": \"@nestjs/schematics\",\r\n  \"sourceRoot\": \"src\"\r\n}\r\n```\r\n\r\n**`backend/tsconfig.build.json` :**\r\n\r\n```json\r\n{\r\n  \"extends\": \"./tsconfig.json\",\r\n  \"exclude\": [\"node_modules\", \"dist\", \"test\", \"**/*spec.ts\"]\r\n}\r\n```\r\n\r\n**`backend/tsconfig.json` :**\r\n\r\n```json\r\n{\r\n  \"compilerOptions\": {\r\n    \"module\": \"commonjs\",\r\n    \"declaration\": true,\r\n    \"removeComments\": true,\r\n    \"emitDecoratorMetadata\": true,\r\n    \"experimentalDecorators\": true,\r\n    \"allowSyntheticDefaultImports\": true,\r\n    \"target\": \"es2017\",\r\n    \"sourceMap\": true,\r\n    \"outDir\": \"./dist\",\r\n    \"baseUrl\": \"./\",\r\n    \"incremental\": true,\r\n    \"skipLibCheck\": true\r\n  }\r\n}\r\n```\r\n\r\n`backend/src` 폴더를 만들고 `backend/src/app.module.ts`와 `backend/src/main.ts`를 생성합니다.\r\n\r\n**`backend/src/app.module.ts` :**\r\n\r\n```typescript\r\nimport { Module } from '@nestjs/common';\r\nimport { GraphQLModule } from '@nestjs/graphql';\r\nimport { TypeOrmModule } from '@nestjs/typeorm';\r\n\r\n@Module({\r\n  imports: [\r\n    TypeOrmModule.forRoot(),\r\n    GraphQLModule.forRoot({\r\n      typePaths: ['./**/*.graphql'],\r\n    }),\r\n  ],\r\n})\r\nexport class AppModule {}\r\n```\r\n\r\n**`backend/src/main.ts` :**\r\n\r\n```typescript\r\nimport { NestFactory } from '@nestjs/core';\r\nimport { AppModule } from './app.module';\r\n\r\nasync function bootstrap() {\r\n  const app = await NestFactory.create(AppModule);\r\n  await app.listen(8081);\r\n}\r\nbootstrap();\r\n```\r\n\r\nMySQL과 연동하기 위해 `ormconfig.json`를 작성합니다.  \r\n\u003cspan style=\"color:red;\"\u003eBackend 프로젝트에 생성하지 않고, Address Book 프로젝트에 생성합니다\r\n.\u003c/span\u003e\r\n\r\n**`ormconfig.json` :**\r\n\r\n```json\r\n{\r\n  \"type\": \"mysql\",\r\n  \"host\": \"localhost\",\r\n  \"port\": 3306,\r\n  \"username\": \"root\",\r\n  \"password\": \"root\",\r\n  \"database\": \"address_book\",\r\n  \"entities\": [\"dist/**/*.entity{.ts,.js}\"]\r\n}\r\n```\r\n\r\n# GraphQL Schema와 Query, Mutation 만들기\r\n\r\nSchema는 아래와 같이 정의할 수 있습니다. 간단하게 주소록에 필요한 Schema를 작성해 보겠습니다.  \r\n`backend/graphql` 폴더를 생성하고 `contact.graphql` 파일을 생성합니다.\r\n\r\n**`backend/graphql/contact.graphql` :**\r\n\r\n```graphql\r\ntype Contact {\r\n  id: String!\r\n  name: String!\r\n  number: String\r\n  email: String\r\n}\r\n\r\ninput ContactInput {\r\n  name: String!\r\n  number: String\r\n  email: String\r\n}\r\n\r\ntype ContactResponse {\r\n  result: String!\r\n  msg: String!\r\n}\r\n\r\ntype Query {\r\n  getAllContact: [Contact]\r\n  getContact(id: String!): Contact\r\n}\r\n\r\ntype Mutation {\r\n  addContact(contact: ContactInput!): ContactResponse\r\n  removeContact(id: String!): ContactResponse\r\n}\r\n```\r\n\r\n# Resolver 만들기\r\n\r\n위에서 정의한 GraphQL Schema를 바탕으로 Type를 만들어줍니다.  \r\n`backend/src/types` 폴더를 생성하고 `contact.ts` 파일을 생성합니다.\r\n\r\n```typescript\r\nexport type Contact = {\r\n  id: string;\r\n  name: string;\r\n  number?: string;\r\n  email?: string;\r\n};\r\n\r\nexport type ContactInput = {\r\n  name: string;\r\n  number?: string;\r\n  email?: string;\r\n};\r\n\r\nexport type ContactResponse = {\r\n  result: string;\r\n  msg: string;\r\n};\r\n```\r\n\r\nTypeORM을 사용하여 Repository Design Pattern을 정의합니다. 아래와 같이 `Contact` Entity를 정의합니다\r\n.\r\n\r\n**`backend/src/repository/contact.entity.ts` :**\r\n\r\n```typescript\r\nimport { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';\r\n\r\n@Entity()\r\nexport class Contact {\r\n  @PrimaryGeneratedColumn('uuid')\r\n  id?: string;\r\n\r\n  @Column()\r\n  name: string;\r\n\r\n  @Column()\r\n  number?: string;\r\n\r\n  @Column()\r\n  email?: string;\r\n}\r\n```\r\n\r\n`backend/src/models` 폴더를 만들고, `contact.service.ts`, `contact.resolver.ts`,\r\n`contact.module.ts`를 작성합니다.\r\n\r\n**`backend/src/models/contact.service.ts` :**\r\n\r\n```typescript\r\nimport { Injectable } from '@nestjs/common';\r\nimport { InjectRepository } from '@nestjs/typeorm';\r\nimport { Contact } from '../repository/contact.entity';\r\nimport { Repository } from 'typeorm';\r\n\r\n@Injectable()\r\nexport class ContactService {\r\n  constructor(\r\n    @InjectRepository(Contact)\r\n    private ContactRepository: Repository\u003cContact\u003e\r\n  ) {}\r\n\r\n  findAll(): Promise\u003cContact[]\u003e {\r\n    return this.ContactRepository.find();\r\n  }\r\n\r\n  findOne(id: string): Promise\u003cContact\u003e {\r\n    return this.ContactRepository.findOne(id);\r\n  }\r\n\r\n  async add(Contact: Contact): Promise\u003cvoid\u003e {\r\n    await this.ContactRepository.save(Contact);\r\n  }\r\n\r\n  async remove(id: string): Promise\u003cvoid\u003e {\r\n    await this.ContactRepository.delete(id);\r\n  }\r\n}\r\n```\r\n\r\n**`backend/src/models/contact.resolver.ts` :**\r\n\r\n```typescript\r\nimport { Args, Mutation, Query, Resolver } from '@nestjs/graphql';\r\nimport { Contact } from 'src/repository/contact.entity';\r\nimport { ContactInput, ContactResponse } from '../types/Contact';\r\nimport { ContactService } from './contact.service';\r\n\r\n@Resolver('Contact')\r\nexport class ContactResolver {\r\n  constructor(private contactService: ContactService) {}\r\n\r\n  @Query()\r\n  async getAllContact(): Promise\u003cContact[]\u003e {\r\n    return await this.contactService.findAll();\r\n  }\r\n\r\n  @Query()\r\n  async getContact(@Args('id') id: string): Promise\u003cContact\u003e {\r\n    const result = await this.contactService.findOne(id);\r\n    if (result) return result;\r\n    return {\r\n      id: 'Error',\r\n      name: 'There is no information about that Contact ID.',\r\n    };\r\n  }\r\n\r\n  @Mutation()\r\n  async addContact(@Args('contact') contact: ContactInput): Promise\u003cContactResponse\u003e {\r\n    try {\r\n      await this.contactService.add(contact);\r\n      return {\r\n        result: 'Success',\r\n        msg: 'Added successfully.',\r\n      };\r\n    } catch (error) {\r\n      return {\r\n        result: 'Error',\r\n        msg: error,\r\n      };\r\n    }\r\n  }\r\n\r\n  @Mutation()\r\n  async removeContact(@Args('id') id: string): Promise\u003cContactResponse\u003e {\r\n    try {\r\n      await this.contactService.remove(id);\r\n      return {\r\n        result: 'Success',\r\n        msg: 'Removed successfully.',\r\n      };\r\n    } catch (error) {\r\n      return {\r\n        result: 'Error',\r\n        msg: error,\r\n      };\r\n    }\r\n  }\r\n}\r\n```\r\n\r\n**`backend/src/models/contact.module.ts` :**\r\n\r\n```typescript\r\nimport { Module } from '@nestjs/common';\r\nimport { TypeOrmModule } from '@nestjs/typeorm';\r\nimport { Contact } from '../repository/contact.entity';\r\nimport { ContactResolver } from './contact.resolver';\r\nimport { ContactService } from './contact.service';\r\n\r\n@Module({\r\n  imports: [TypeOrmModule.forFeature([Contact])],\r\n  providers: [ContactResolver, ContactService],\r\n})\r\nexport class ContactModule {}\r\n```\r\n\r\n`backend/src/app.module.ts`에 `ContactModule`를 추가합니다.\r\n\r\n**`backend/src/models/app.module.ts` :**\r\n\r\n```typescript\r\nimport { Module } from '@nestjs/common';\r\nimport { GraphQLModule } from '@nestjs/graphql';\r\nimport { TypeOrmModule } from '@nestjs/typeorm';\r\nimport { ContactModule } from './models/contact.module';\r\n\r\n@Module({\r\n  imports: [\r\n    TypeOrmModule.forRoot(),\r\n    GraphQLModule.forRoot({\r\n      typePaths: ['./**/*.graphql'],\r\n    }),\r\n    ContactModule,\r\n  ],\r\n})\r\nexport class AppModule {}\r\n```\r\n\r\n# GraphQL Playground\r\n\r\nGraphQL Playground를 통하여 원하는 대로 동작하는지 확인을 해보겠습니다.\r\n\r\n```bash\r\nnpm run start:dev --workspace=backend\r\n```\r\n\r\n위의 명령어로 Nest.js Dev Server를 실행하고,\r\n[http://localhost:8081/graphql](http://localhost:8081/graphql)에 접속합니다.  \r\n접속하면 아래와 같이 우리가 구현한 Query와 Mutation이 Docs에 출력되는 것을 확인할 수 있습니다.  \r\n![GraphQL Playground](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_2.png)\r\n\r\n아래와 같이 Mutation을 작성하여 요청해봅시다.\r\n\r\n```graphql\r\nmutation {\r\n  addContact(contact: { name: \"이규혁\", number: \"+82 10-1234-5678\", email: \"lee@kyuhyuk.kr\" }) {\r\n    result\r\n    msg\r\n  }\r\n}\r\n```\r\n\r\n아래와 같이 성공적으로 추가되었다는 메세지가 출력됩니다.  \r\n![addContact Mutation](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_3.png)\r\n\r\n이제 `getAllContact` Query를 사용하여 추가된 주소록을 확인해 봅시다.\r\n\r\n```graphql\r\nquery {\r\n  getAllContact {\r\n    id\r\n    name\r\n    number\r\n    email\r\n  }\r\n}\r\n```\r\n\r\n![getAllContact Query](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_4.png)\r\n\r\n위에 출력된 `id`를 사용하여 `getContact` Query를 테스트해봅시다.  \r\n![getContact Query](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_5.png)\r\n\r\n정상적으로 작동되는 것을 확인했으니, 마지막으로 `removeContact` Mutation을 사용하여 정상적으로 삭제\r\n되는지도 확인해 봅시다.  \r\n![removeContact Mutation](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_6.png)\r\n\r\n`getAllContact` Query를 사용하여 주소록을 확인해 봅시다.  \r\n![getAllContact Query](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_7.png)\r\n\r\n모두 정상적으로 동작되는 것을 확인하였으니, 다음 단계인 React를 사용하여 Frontend를 구현해 봅시다.\r\n\r\n# Configuration Frontend Project\r\n\r\n```bash\r\nnpm install --save @apollo/client graphql@15.7.2 react react-dom react-router react-router-dom -w frontend\r\nnpm install --save-dev @types/react @types/react-dom @types/react-router @types/react-router-dom @types/webpack apollo apollo-language-server clean-webpack-plugin cross-env css-loader file-loader html-webpack-plugin style-loader ts-loader typescript webpack webpack-cli webpack-dev-server -w frontend\r\n```\r\n\r\n`frontend/package.json`에 `\"main\": \"index.js\"` 행을 삭제하고 아래 내용을 추가합니다.\r\n\r\n```json\r\n\"private\": true,\r\n\"scripts\": {\r\n  \"dev\": \"cross-env NODE_ENV=development webpack serve --progress\",\r\n  \"build\": \"cross-env NODE_ENV=production webpack --progress\",\r\n  \"apollo:codegen\": \"apollo client:codegen src/types --target=typescript --outputFlat\"\r\n},\r\n```\r\n\r\n`frontend/apollo.config.js`, `frontend/tsconfig.json`, `frontend/webpack.config.js`을 아래와 같이 작\r\n성하여 저장합니다.\r\n\r\n**`frontend/apollo.config.js` :**\r\n\r\n```javascript\r\nmodule.exports = {\r\n  client: {\r\n    service: {\r\n      name: 'My GraphQL Server',\r\n      url: 'http://localhost:8081/graphql',\r\n      // Optional disable SSL validation check\r\n      skipSSLValidation: true,\r\n    },\r\n    includes: ['./src/**/*.tsx', './src/**/*.ts'],\r\n    tagName: 'gql',\r\n  },\r\n};\r\n```\r\n\r\n**`frontend/tsconfig.json` :**\r\n\r\n```json\r\n{\r\n  \"compilerOptions\": {\r\n    \"outDir\": \"./dist\",\r\n    \"target\": \"es5\",\r\n    \"module\": \"esnext\",\r\n    \"jsx\": \"react\",\r\n    \"noImplicitAny\": true,\r\n    \"allowSyntheticDefaultImports\": true,\r\n    \"lib\": [\"dom\", \"dom.iterable\", \"esnext\"],\r\n    \"allowJs\": true,\r\n    \"skipLibCheck\": true,\r\n    \"esModuleInterop\": true,\r\n    \"strict\": true,\r\n    \"forceConsistentCasingInFileNames\": true,\r\n    \"moduleResolution\": \"node\",\r\n    \"resolveJsonModule\": true,\r\n    \"isolatedModules\": false\r\n  },\r\n  \"include\": [\"src/**/*\"]\r\n}\r\n```\r\n\r\n**`frontend/webpack.config.js` :**\r\n\r\n```javascript\r\nconst path = require('path');\r\nconst HtmlWebpackPlugin = require('html-webpack-plugin');\r\nconst { CleanWebpackPlugin } = require('clean-webpack-plugin');\r\n\r\nconst mode = process.env.NODE_ENV || 'development';\r\n\r\nmodule.exports = {\r\n  mode,\r\n  devServer: {\r\n    historyApiFallback: true,\r\n    port: 8080,\r\n  },\r\n  entry: {\r\n    app: path.join(__dirname, 'src', 'index.tsx'),\r\n  },\r\n  output: {\r\n    filename: '[name].js',\r\n    path: path.resolve(__dirname, 'dist'),\r\n    publicPath: '/',\r\n  },\r\n  resolve: {\r\n    extensions: ['.ts', '.tsx', '.js'],\r\n  },\r\n  module: {\r\n    rules: [\r\n      {\r\n        test: /\\.(ts|tsx)$/,\r\n        use: 'ts-loader',\r\n        exclude: /node_modules/,\r\n      },\r\n      {\r\n        test: /\\.(scss|css)$/,\r\n        use: ['style-loader', 'css-loader'],\r\n      },\r\n      {\r\n        test: /\\.(jpg|png)$/,\r\n        use: 'file-loader?name=assets/[name].[ext]',\r\n      },\r\n    ],\r\n  },\r\n  plugins: [\r\n    new HtmlWebpackPlugin({\r\n      template: './src/index.html',\r\n      templateParameters: {\r\n        env: process.env.NODE_ENV === 'production' ? '' : 'development',\r\n      },\r\n      minify:\r\n        process.env.NODE_ENV === 'production'\r\n          ? {\r\n              collapseWhitespace: true,\r\n              removeComments: true,\r\n            }\r\n          : false,\r\n    }),\r\n    new CleanWebpackPlugin(),\r\n  ],\r\n};\r\n```\r\n\r\n`frontend/src` 폴더를 생성하고, `index.html`을 아래와 같이 작성합니다.\r\n\r\n**`frontend/src/index.html` :**\r\n\r\n```html\r\n\u003c!DOCTYPE html\u003e\r\n\u003chtml lang=\"ko\"\u003e\r\n  \u003chead\u003e\r\n    \u003cmeta charset=\"UTF-8\" /\u003e\r\n    \u003cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /\u003e\r\n    \u003cmeta property=\"og:type\" content=\"website\" /\u003e\r\n    \u003ctitle\u003eAddress Book\u003c/title\u003e\r\n  \u003c/head\u003e\r\n  \u003cbody\u003e\r\n    \u003cdiv id=\"root\"\u003e\u003c/div\u003e\r\n  \u003c/body\u003e\r\n\u003c/html\u003e\r\n```\r\n\r\n# GraphQL API의 Type 받아오기\r\n\r\n`frontend/src/GraphQL` 폴더를 만들고, `Contact.ts`를 아래와 같이 작성합니다.  \r\n`frontend/src/GraphQL/Contact.ts`에는 Frontend에서 사용하는 GraphQL Query, Mutation가 정의됩니다.\r\n\r\n**`frontend/src/GraphQL/Contact.ts` :**\r\n\r\n```typescript\r\nimport { gql } from '@apollo/client';\r\n\r\nexport const GET_ALL_CONTACT = gql`\r\n  query GetAllContact {\r\n    getAllContact {\r\n      id\r\n      name\r\n      number\r\n      email\r\n    }\r\n  }\r\n`;\r\n\r\nexport const GET_CONTACT = gql`\r\n  query GetContact($id: String!) {\r\n    getContact(id: $id) {\r\n      name\r\n      number\r\n      email\r\n    }\r\n  }\r\n`;\r\n\r\nexport const ADD_CONTACT = gql`\r\n  mutation AddContact($contact: ContactInput!) {\r\n    addContact(contact: $contact) {\r\n      result\r\n      msg\r\n    }\r\n  }\r\n`;\r\n\r\nexport const REMOVE_CONTACT = gql`\r\n  mutation RemoveContact($id: String!) {\r\n    removeContact(id: $id) {\r\n      result\r\n      msg\r\n    }\r\n  }\r\n`;\r\n```\r\n\r\n사용할 Query와 Mutation을 모두 작성했다면, 아래 명령을 실행하여 GraphQL Type을 생성합니다.\r\n\r\n```bash\r\nnpm run apollo:codegen --workspace=frontend\r\n```\r\n\r\n\u003cspan style=\"color:red;\"\u003e2021년 12월 5일 기준으로 아래와 같은 오류가 발생하고 있습니다.\u003c/span\u003e  \r\n![apollo:codegen Error](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_8.png)\r\n\r\n`node_modules/apollo-language-server/node_modules/graphql` 폴더를 삭제하면 아래와 같이 정상적으로 생\r\n성됩니다.  \r\n![apollo:codegen](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_9.png)\r\n\r\n# List, Add, Detail 컴포넌트 만들기\r\n\r\n주소록 목록을 보여주는 `frontend/src/List.tsx`를 간단하게 만들어봅시다.\r\n\r\n**`frontend/src/List.tsx` :**\r\n\r\n```typescript\r\nimport { useQuery } from '@apollo/client';\r\nimport React from 'react';\r\nimport { Link } from 'react-router-dom';\r\nimport { GET_ALL_CONTACT } from './GraphQL/Contact';\r\nimport { GetAllContact } from './types/GetAllContact';\r\n\r\nconst List = () =\u003e {\r\n  const { loading, error, data } = useQuery\u003cGetAllContact\u003e(GET_ALL_CONTACT);\r\n\r\n  if (loading) return \u003cp\u003eLoading...\u003c/p\u003e;\r\n  if (error) return \u003cp\u003e{error.message}\u003c/p\u003e;\r\n\r\n  return (\r\n    \u003c\u003e\r\n      \u003ch1\u003eAddress Book :\u003c/h1\u003e\r\n      \u003cLink to=\"/add\"\u003e\r\n        \u003cbutton\u003eAdd\u003c/button\u003e\r\n      \u003c/Link\u003e\r\n      \u003cul\u003e\r\n        {data?.getAllContact?.map((contact) =\u003e (\r\n          \u003cli key={contact?.id}\u003e\r\n            \u003ca href={`/detail/${contact?.id}`}\u003e{contact?.name}\u003c/a\u003e\r\n          \u003c/li\u003e\r\n        ))}\r\n      \u003c/ul\u003e\r\n    \u003c/\u003e\r\n  );\r\n};\r\n\r\nexport default List;\r\n```\r\n\r\n주소록을 추가하는 `frontend/src/Add.tsx`도 아래와 같이 만들어봅시다.\r\n\r\n**`frontend/src/Add.tsx` :**\r\n\r\n```typescript\r\nimport { useMutation } from '@apollo/client';\r\nimport React from 'react';\r\nimport { ADD_CONTACT } from './GraphQL/Contact';\r\nimport { AddContact, AddContactVariables } from './types/AddContact';\r\n\r\nconst Add = () =\u003e {\r\n  const [name, setName] = React.useState\u003cstring\u003e('');\r\n  const [number, setNumber] = React.useState\u003cstring\u003e('');\r\n  const [email, setEmail] = React.useState\u003cstring\u003e('');\r\n\r\n  const [addContact] = useMutation\u003cAddContact, AddContactVariables\u003e(ADD_CONTACT);\r\n\r\n  const handleSubmit = async () =\u003e {\r\n    await addContact({\r\n      variables: {\r\n        contact: {\r\n          name,\r\n          number,\r\n          email,\r\n        },\r\n      },\r\n    });\r\n  };\r\n\r\n  return (\r\n    \u003c\u003e\r\n      \u003cform action=\"/\" onSubmit={handleSubmit}\u003e\r\n        \u003clabel\u003e\r\n          Name :\r\n          \u003cinput type=\"text\" value={name} onChange={(event) =\u003e setName(event.target.value)} /\u003e\r\n        \u003c/label\u003e\r\n        \u003clabel\u003e\r\n          Number :\r\n          \u003cinput type=\"text\" value={number} onChange={(event) =\u003e setNumber(event.target.value)} /\u003e\r\n        \u003c/label\u003e\r\n        \u003clabel\u003e\r\n          Email :\r\n          \u003cinput type=\"email\" value={email} onChange={(event) =\u003e setEmail(event.target.value)} /\u003e\r\n        \u003c/label\u003e\r\n        \u003cinput type=\"submit\" value=\"Submit\" /\u003e\r\n      \u003c/form\u003e\r\n    \u003c/\u003e\r\n  );\r\n};\r\n\r\nexport default Add;\r\n```\r\n\r\n주소록 내용을 보여주는 `frontend/src/Detail.tsx`도 작성합니다.\r\n\r\n**`frontend/src/Detail.tsx` :**\r\n\r\n```typescript\r\nimport { useQuery } from '@apollo/client';\r\nimport React from 'react';\r\nimport { useParams } from 'react-router';\r\nimport { GET_CONTACT } from './GraphQL/Contact';\r\nimport { GetContact, GetContactVariables } from './types/GetContact';\r\n\r\nconst Detail = () =\u003e {\r\n  const { id } = useParams();\r\n  const { loading, error, data } = useQuery\u003cGetContact, GetContactVariables\u003e(GET_CONTACT, {\r\n    variables: { id: id || '' },\r\n  });\r\n\r\n  if (loading) return \u003cp\u003eLoading...\u003c/p\u003e;\r\n  if (error) return \u003cp\u003e{error.message}\u003c/p\u003e;\r\n\r\n  return (\r\n    \u003c\u003e\r\n      \u003ch1\u003e{data?.getContact?.name}\u003c/h1\u003e\r\n      \u003cul\u003e\r\n        \u003cli\u003eNumber : {data?.getContact?.number || 'N/A'}\u003c/li\u003e\r\n        \u003cli\u003eEmail : {data?.getContact?.email || 'N/A'}\u003c/li\u003e\r\n      \u003c/ul\u003e\r\n    \u003c/\u003e\r\n  );\r\n};\r\n\r\nexport default Detail;\r\n```\r\n\r\n이제 필요한 Component는 모두 만들어졌습니다.\r\n\r\n`frontend/src/index.tsx`를 아래와 같이 작성합니다.  \r\n`index.tsx`에서는 `ApolloClient`와 Router를 설정합니다.\r\n\r\n**`frontend/src/index.tsx` :**\r\n\r\n```typescript\r\nimport { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';\r\nimport React from 'react';\r\nimport ReactDOM from 'react-dom';\r\nimport { BrowserRouter, Route, Routes } from 'react-router-dom';\r\nimport Detail from './Detail';\r\nimport Add from './Add';\r\nimport List from './List';\r\n\r\nconst client = new ApolloClient({\r\n  uri: 'http://localhost:8081/graphql',\r\n  cache: new InMemoryCache(),\r\n});\r\n\r\nReactDOM.render(\r\n  \u003cApolloProvider client={client}\u003e\r\n    \u003cBrowserRouter\u003e\r\n      \u003cRoutes\u003e\r\n        \u003cRoute path=\"/\" element={\u003cList /\u003e} /\u003e\r\n        \u003cRoute path=\"/add\" element={\u003cAdd /\u003e} /\u003e\r\n        \u003cRoute path=\"detail/:id\" element={\u003cDetail /\u003e} /\u003e\r\n      \u003c/Routes\u003e\r\n    \u003c/BrowserRouter\u003e\r\n  \u003c/ApolloProvider\u003e,\r\n  document.getElementById('root')\r\n);\r\n```\r\n\r\n# 결과물 확인하기\r\n\r\n아래 명령어로 Backend와 Frontend의 Dev Server를 실행합니다.\r\n\r\n```bash\r\nnpm run start:dev --workspace=backend\r\nnpm run dev --workspace=frontend\r\n```\r\n\r\n[http://localhost:8080](http://localhost:8080)에 접속하면 아래와 같은 화면이 출력될 것입니다.  \r\n![List](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_10.png)  \r\nAdd 버튼을 눌러 주소록을 추가해 봅시다.  \r\n![Add](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_11.png)  \r\n추가한 주소록이 목록에 보입니다. 클릭해 봅시다.  \r\n![List Check](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_12.png)  \r\n입력한 정보가 정상적으로 출력되고 있음을 확인할 수 있습니다.  \r\n![Detail](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_13.png)\r\n\r\n\u003e 삭제 기능은 `Detail.tsx`에 추가해 봅시다. `Add.tsx`에 있는 `useMutation()`를 참고하여 구현할 수 있\r\n\u003e 습니다.\r\n\r\n# 마무리\r\n\r\n간편하게 프로젝트 관리를 하기 위해 `address-book`에 있는 `package.json`을 수정해 봅시다.  \r\n우선, 아래 명령어로 `concurrently`와 `rimraf` 패키지를 추가합니다.\r\n\r\n```bash\r\nnpm install --save concurrently rimraf\r\n```\r\n\r\n`package.json`의 `scripts`를 아래와 같이 수정합니다.\r\n\r\n```json\r\n\"scripts\": {\r\n  \"postinstall\": \"rimraf node_modules/apollo-language-server/node_modules/graphql\",\r\n  \"dev\": \"concurrently \\\"npm run start:dev --workspace=backend\\\" \\\"npm run dev --workspace=frontend\\\"\",\r\n  \"build\": \"npm run build --workspace=backend --workspace=frontend\",\r\n  \"apollo:codegen\": \"npm run apollo:codegen --workspace=frontend\"\r\n},\r\n```\r\n\r\n- `postinstall`은 현재(2021년 12월 5일 기준) 발생되는 GraphQL의 문제를 해결하기 위해 넣었습니다.\r\n- `dev`를 위와 같이 설정하면, `address-book`에서 `npm run dev` 명령어 한 번으로 Backend, Frontend의\r\n  Dev Server를 동시에 실행할 수 있습니다.\r\n"},"__N_SSG":true},"page":"/article/[category]/[year]/[month]/[day]/[slug]","query":{"category":"nestjs","year":"2021","month":"12","day":"05","slug":"NestJS-GraphQL-MySQL-React-Address-Book"},"buildId":"Dsgna1Ug9ERZ37IDpNGla","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><meta property="og:image" content="https://kyuhyuk.kr/thumbnail.png"/><title>Node.js로 구현하는 블록체인 - 1. 기본 프로토타입</title><meta name="author" content="KyuHyuk Lee"/><meta name="generator" content="KyuHyuk Lee"/><meta name="description" content=" 이 글은 Building Blockchain in Go. Part 1: Basic Prototype 를 Node.js로 작성하고 번역하였습니다. 소스코드는 LeeKyuHyuk/blockchain-nodejs 에 있습 니다. 소개 블록체인은 21세기의 가장 혁신적인 기술 중 하나로, 아"/><meta itemProp="url" content="https://kyuhyuk.kr/article/blockchain/2021/12/11/Building-Blockchain-in-NodeJS-Part-1-Basic-Prototype"/><meta itemProp="headline" content="Node.js로 구현하는 블록체인 - 1. 기본 프로토타입"/><meta property="og:type" content="article"/><meta property="og:url" content="https://kyuhyuk.kr/article/blockchain/2021/12/11/Building-Blockchain-in-NodeJS-Part-1-Basic-Prototype"/><meta property="og:title" content="Node.js로 구현하는 블록체인 - 1. 기본 프로토타입"/><meta property="og:description" content=" 이 글은 Building Blockchain in Go. Part 1: Basic Prototype 를 Node.js로 작성하고 번역하였습니다. 소스코드는 LeeKyuHyuk/blockchain-nodejs 에 있습 니다. 소개 블록체인은 21세기의 가장 혁신적인 기술 중 하나로, 아"/><meta property="og:site_name" content="KyuHyuk Blog"/><meta property="og:locale" content="ko_KR"/><meta name="next-head-count" content="15"/><link rel="preload" href="/_next/static/css/4e0666c6da09e1ee.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4e0666c6da09e1ee.css" data-n-g=""/><link rel="preload" href="/_next/static/css/c2a527101433f11d.css" as="style"/><link rel="stylesheet" href="/_next/static/css/c2a527101433f11d.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-a87821de553db91d.js" defer=""></script><script src="/_next/static/chunks/main-fc7d2f0e2098927e.js" defer=""></script><script src="/_next/static/chunks/pages/_app-2774ecbb7f55613d.js" defer=""></script><script src="/_next/static/chunks/869-82e19047d92f6e30.js" defer=""></script><script src="/_next/static/chunks/895-531271280742d591.js" defer=""></script><script src="/_next/static/chunks/pages/article/%5Bcategory%5D/%5Byear%5D/%5Bmonth%5D/%5Bday%5D/%5Bslug%5D-e1207b3501068a48.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_buildManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_ssgManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><header class="c-opBYf"><a href="https://kyuhyuk.kr"><div class="c-bHyrwK"><div class="c-uBnvQ">Kh.</div><div class="c-hehuMV">KyuHyuk Blog</div></div></a><ul class="c-bjkCdF"><li><a href="https://github.com/LeeKyuHyuk" class="c-hAoZGi"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></a></li><li><a href="https://linkedin.com/in/leekyuhyuk" class="c-hAoZGi"><span role="img" aria-label="linkedin" class="anticon anticon-linkedin"><svg viewBox="64 64 896 896" focusable="false" data-icon="linkedin" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1168.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg></span></a></li><li><a href="mailto:lee@kyuhyuk.kr" class="c-hAoZGi"><span role="img" aria-label="mail" class="anticon anticon-mail"><svg viewBox="64 64 896 896" focusable="false" data-icon="mail" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-80.8 108.9L531.7 514.4c-7.8 6.1-18.7 6.1-26.5 0L189.6 268.9A7.2 7.2 0 01194 256h648.8a7.2 7.2 0 014.4 12.9z"></path></svg></span></a></li></ul></header><main class="c-jfcKOQ"><article><h1 class="c-fxvkZv"><a href="https://kyuhyuk.kr/article/blockchain/2021/12/11/Building-Blockchain-in-NodeJS-Part-1-Basic-Prototype">Node.js로 구현하는 블록체인 - 1. 기본 프로토타입</a></h1><a href="https://kyuhyuk.kr/category/Blockchain" class="c-iosjjB">Blockchain</a><time dateTime="2021-12-11 22:22:43" class="c-jYwCTI">Dec 12, 2021 07:22:43 AM</time><div id="post" class="c-dIcdES"><blockquote>
+<p>이 글은
+<a href="https://jeiwan.net/posts/building-blockchain-in-go-part-1/">Building Blockchain in Go. Part 1: Basic Prototype</a>를
+Node.js로 작성하고 번역하였습니다.<br>
+소스코드는 <a href="https://github.com/LeeKyuHyuk/blockchain-nodejs">LeeKyuHyuk/blockchain-nodejs</a>에 있습
+니다.</p>
+</blockquote>
+<h1>소개</h1>
+<p>블록체인은 21세기의 가장 혁신적인 기술 중 하나로, 아직 성숙 단계에 있으며 그 잠재력이 아직 완전히 실
+현되지 않았습니다. 본질적으로 블록체인은 분산된 기록 데이터베이스입니다. 그러나 블록체인이 특별한 이
+유는 개인 데이터베이스가 아니라 공용 데이터베이스라는 것입니다. 그리고 새로운 기록은 데이터베이스의
+다른 보관자의 동의가 있어야만 추가될 수 있습니다. 또한 암호화폐와 스마트 계약을 가능하게 한 것은 블
+록체인입니다.</p>
+<p>우리는 이제 간단한 블록체인 구현을 기반으로 하는 단순화된 암호화폐를 구축할 것입니다.</p>
+<h1>블록 (Block)</h1>
+<p>'블록체인'의 '블록' 부분부터 알아보겠습니다. 블록체인에서 블록은 정보를 저장하는 공간입니다. 블록에
+는 버전, 현재 타임스탬프 및 이전 블록의 해시와 같은 정보가 포함되어 있습니다.</p>
+<p>이 글에서는 블록체인이나 비트코인 사양(Specification)에 설명된 대로 블록을 구현하지 않고, 간단하게중
+요한 정보만 포함하도록 만들 것입니다.</p>
+<p>블록의 구조는 다음과 같습니다:</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">type</span> <span class="hljs-title class_">Block</span> = {
+  <span class="hljs-attr">timestamp</span>: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">data</span>: <span class="hljs-built_in">string</span>;
+  <span class="hljs-attr">prevBlockHash</span>: <span class="hljs-built_in">string</span>;
+  <span class="hljs-attr">hash</span>: <span class="hljs-built_in">string</span>;
+};
+</code></pre>
+<p><code>timestamp</code>는 현재 타임스탬프(블록이 생성되었을 때), <code>data</code>는 블록에 포함된 데이터,
+<code>prevBlockHash</code>는 이전 블록의 해시를 저장하고 <code>hash</code>는 블록의 해시입니다. Bitcoint 사양에서
+<code>timestamp</code>, <code>prevBlockHash</code> 및 <code>hash</code>는 블록 헤더라는 별도의 데이터 구조가 있으며, 트랜잭션(여기서
+는 <code>data</code>)은 별도의 데이터 구조를 가지고 있습니다. 이 글에서는 구현을 간단하게 하기 위하여 블록 헤더
+와 트랜젝션을 합쳤습니다.</p>
+<p>그렇다면 해시를 어떻게 계산할까요? 해시가 계산되는 방식은 블록체인의 매우 중요한 기능이며 블록체인을
+안전하게 만드는 기능입니다. 문제는 해시를 계산하는 것은 어려운 작업이며 빠른 컴퓨터에서도 시간이 걸
+립니다(그래서 사람들은 Bitcoin을 채굴하기 위해 강력한 GPU를 구입합니다). 새 블록을 추가하기 어렵게하
+여 추가된 후 블록의 수정을 방지하기 위해서 입니다.</p>
+<p>블록을 구성하는 필드를 하나로 이은 뒤 이어진 문자열에 대해 SHA-256 해시를 계산할 것입니다. 다음과 같
+이 <code>setHash()</code>를 작성합니다.</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">setHash</span>(<span class="hljs-params">block: Block</span>): <span class="hljs-built_in">string</span> {
+  <span class="hljs-keyword">const</span> timeStamp = block.<span class="hljs-property">timestamp</span>.<span class="hljs-title function_">toString</span>();
+  <span class="hljs-keyword">const</span> headers = <span class="hljs-string">`<span class="hljs-subst">${block.prevBlockHash}</span><span class="hljs-subst">${block.data}</span><span class="hljs-subst">${timeStamp}</span>`</span>;
+  <span class="hljs-keyword">return</span> <span class="hljs-title function_">createHash</span>(<span class="hljs-string">&#x27;sha256&#x27;</span>).<span class="hljs-title function_">update</span>(headers).<span class="hljs-title function_">digest</span>(<span class="hljs-string">&#x27;hex&#x27;</span>);
+}
+</code></pre>
+<p>다음으로 블록을 생성하는 <code>createBlock()</code>을 구현합니다.</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">createBlock</span>(<span class="hljs-params">data: <span class="hljs-built_in">string</span>, prevBlockHash: <span class="hljs-built_in">string</span></span>): <span class="hljs-title class_">Block</span> {
+  <span class="hljs-keyword">const</span> <span class="hljs-attr">block</span>: <span class="hljs-title class_">Block</span> = {
+    <span class="hljs-attr">timestamp</span>: <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
+    data,
+    prevBlockHash,
+  };
+  block.<span class="hljs-property">hash</span> = <span class="hljs-title function_">setHash</span>(block);
+  <span class="hljs-keyword">return</span> block;
+}
+</code></pre>
+<h1>블록체인 (Blockchain)</h1>
+<p>이제 블록체인을 구현해 봅시다. 본질적으로 블록체인은 특정 구조를 가진 데이터베이스일 뿐입니다. 순서
+가 있고 연결된 목록입니다. 이는 블록이 추가된 순서대로 저장되고, 각 블록이 이전 블록에 연결된다는 것
+을 의미합니다. 이 구조를 사용하면 체인의 최신 블록을 빠르게 얻을 수 있고 해시 값을 통하여 블록을 효
+율적으로 얻을 수 있습니다.</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">type</span> <span class="hljs-title class_">Blockchain</span> = {
+  <span class="hljs-attr">blocks</span>: <span class="hljs-title class_">Block</span>[];
+};
+</code></pre>
+<p>이것은 우리의 첫 번째 블록체인 입니다. 이렇게 쉬울 줄은 상상도 못했겠죠?!😉</p>
+<p>이제 블록을 추가할 수 있습니다:</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">addBlock</span>(<span class="hljs-params">blockchain: Blockchain, data: <span class="hljs-built_in">string</span></span>) {
+  <span class="hljs-keyword">const</span> prevBlock = blockchain.<span class="hljs-property">blocks</span>[blockchain.<span class="hljs-property">blocks</span>.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>];
+  <span class="hljs-keyword">const</span> newBlock = <span class="hljs-title function_">createBlock</span>(data, prevBlock.<span class="hljs-property">hash</span>);
+  blockchain.<span class="hljs-property">blocks</span>.<span class="hljs-title function_">push</span>(newBlock);
+}
+</code></pre>
+<p>이게 다일까요!? 아닙니다...!</p>
+<p>새 블록을 추가하려면 기존 블록이 필요하지만, 우리가 가지고 있는 블록체인에는 아직 블록이 없습니다!
+따라서 모든 블록체인에는 적어도 하나의 블록이 있어야 하며, 이러한 체인의 첫 번째 블록을 <strong>제네시스블
+록(Genesis Block</strong>이라고 합니다. 이러한 블록을 생성하는 <code>createGenesisBlock()</code>를 구현해 보겠습니다 .</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">createGenesisBlock</span>(<span class="hljs-params"></span>): <span class="hljs-title class_">Block</span> {
+  <span class="hljs-keyword">return</span> <span class="hljs-title function_">createBlock</span>(<span class="hljs-string">&#x27;Genesis Block&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+}
+</code></pre>
+<p>이제 제네시스 블록으로 블록체인을 생성하는 기능을 구현할 수 있습니다:</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">createBlockchain</span>(<span class="hljs-params"></span>): <span class="hljs-title class_">Blockchain</span> {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">blocks</span>: [<span class="hljs-title function_">createGenesisBlock</span>()],
+  };
+}
+</code></pre>
+<p>블록체인이 올바르게 작동하는지 확인합시다:</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> blockchain = <span class="hljs-title function_">createBlockchain</span>();
+
+  <span class="hljs-title function_">addBlock</span>(blockchain, <span class="hljs-string">&#x27;Send 1 BTC to KyuHyuk&#x27;</span>);
+  <span class="hljs-title function_">addBlock</span>(blockchain, <span class="hljs-string">&#x27;Send 2 more BTC to KyuHyuk&#x27;</span>);
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> index = <span class="hljs-number">0</span>; index &lt; blockchain.<span class="hljs-property">blocks</span>.<span class="hljs-property">length</span>; index++) {
+    <span class="hljs-keyword">const</span> block = blockchain.<span class="hljs-property">blocks</span>[index];
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Prev. hash: <span class="hljs-subst">${block.prevBlockHash}</span>`</span>);
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Data: <span class="hljs-subst">${block.data}</span>`</span>);
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Hash: <span class="hljs-subst">${block.hash}</span>`</span>);
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>();
+  }
+}
+</code></pre>
+<p>출력:</p>
+<pre><code>Prev. hash:
+Data: Genesis Block
+Hash: 9f50a344368018cbd86eb62ca405b9179cd9d39603e3b0f2939bad6e32af4034
+
+Prev. hash: 9f50a344368018cbd86eb62ca405b9179cd9d39603e3b0f2939bad6e32af4034
+Data: Send 1 BTC to KyuHyuk
+Hash: c214ef7639423a219bb2ee2acd13f2adcfddee46d84ec7e9c6832f301606d10f
+
+Prev. hash: c214ef7639423a219bb2ee2acd13f2adcfddee46d84ec7e9c6832f301606d10f
+Data: Send 2 more BTC to KyuHyuk
+Hash: 93e1f4dacfdbe0bcc8e3c31c6bf61e1c264176b34ea4e25b9067577069b25be7
+</code></pre>
+<p>잘 동작합니다!</p>
+<h1>결론</h1>
+<p>우리는 매우 간단한 블록체인 프로토타입을 만들어봤습니다. 우리가 만든 블록체인은 각 블록이 이전 블록
+과 연결되어 있는 블록 배열일 뿐입니다. 실제 블록체인은 훨씬 더 복잡합니다. 우리 블록체인에서 새 블록
+을 추가하는 것은 쉽고 빠르지만 실제 블록체인에서 새 블록을 추가하려면 약간의 작업이 필요합니다. 블록
+추가 권한을 받기 전에 무거운 계산을 수행해야 합니다(이 메커니즘을 작업 증명(Proof of Work)이라고 합
+니다). 또한 블록체인은 단일 의사결정자가 없는 분산 데이터베이스입니다. 따라서 새 블록은 네트워크의다
+른 참가자가 확인하고 승인해야 합니다(이 메커니즘을 합의(Consensus)라고 합니다). 그리고 아직 우리블록
+체인에는 트랜잭션(Transactions)이 없습니다!</p>
+<p>다음 글에서 위의 각 기능에 대해 다룰 것입니다.</p>
+</div></article></main><footer class="c-cpkrrK"><div class="c-fiqONv">© <!-- -->2022<!-- --></div><div class="c-bHyrwK"><div class="c-iUFgVP">Kh.</div><div class="c-cshSRb">KyuHyuk Lee</div></div></footer></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"excerpt":" 이 글은 Building Blockchain in Go. Part 1: Basic Prototype 를 Node.js로 작성하고 번역하였습니다. 소스코드는 LeeKyuHyuk/blockchain-nodejs 에 있습 니다. 소개 블록체인은 21세기의 가장 혁신적인 기술 중 하나로, 아","url":"/article/blockchain/2021/12/11/Building-Blockchain-in-NodeJS-Part-1-Basic-Prototype","frontmatter":{"title":"Node.js로 구현하는 블록체인 - 1. 기본 프로토타입","date":"2021-12-11 22:22:43","category":"Blockchain"},"content":"\r\n\u003e 이 글은\r\n\u003e [Building Blockchain in Go. Part 1: Basic Prototype](https://jeiwan.net/posts/building-blockchain-in-go-part-1/)를\r\n\u003e Node.js로 작성하고 번역하였습니다.  \r\n\u003e 소스코드는 [LeeKyuHyuk/blockchain-nodejs](https://github.com/LeeKyuHyuk/blockchain-nodejs)에 있습\r\n\u003e 니다.\r\n\r\n# 소개\r\n\r\n블록체인은 21세기의 가장 혁신적인 기술 중 하나로, 아직 성숙 단계에 있으며 그 잠재력이 아직 완전히 실\r\n현되지 않았습니다. 본질적으로 블록체인은 분산된 기록 데이터베이스입니다. 그러나 블록체인이 특별한 이\r\n유는 개인 데이터베이스가 아니라 공용 데이터베이스라는 것입니다. 그리고 새로운 기록은 데이터베이스의\r\n다른 보관자의 동의가 있어야만 추가될 수 있습니다. 또한 암호화폐와 스마트 계약을 가능하게 한 것은 블\r\n록체인입니다.\r\n\r\n우리는 이제 간단한 블록체인 구현을 기반으로 하는 단순화된 암호화폐를 구축할 것입니다.\r\n\r\n# 블록 (Block)\r\n\r\n'블록체인'의 '블록' 부분부터 알아보겠습니다. 블록체인에서 블록은 정보를 저장하는 공간입니다. 블록에\r\n는 버전, 현재 타임스탬프 및 이전 블록의 해시와 같은 정보가 포함되어 있습니다.\r\n\r\n이 글에서는 블록체인이나 비트코인 사양(Specification)에 설명된 대로 블록을 구현하지 않고, 간단하게중\r\n요한 정보만 포함하도록 만들 것입니다.\r\n\r\n블록의 구조는 다음과 같습니다:\r\n\r\n```typescript\r\ntype Block = {\r\n  timestamp: number;\r\n  data: string;\r\n  prevBlockHash: string;\r\n  hash: string;\r\n};\r\n```\r\n\r\n`timestamp`는 현재 타임스탬프(블록이 생성되었을 때), `data`는 블록에 포함된 데이터,\r\n`prevBlockHash`는 이전 블록의 해시를 저장하고 `hash`는 블록의 해시입니다. Bitcoint 사양에서\r\n`timestamp`, `prevBlockHash` 및 `hash`는 블록 헤더라는 별도의 데이터 구조가 있으며, 트랜잭션(여기서\r\n는 `data`)은 별도의 데이터 구조를 가지고 있습니다. 이 글에서는 구현을 간단하게 하기 위하여 블록 헤더\r\n와 트랜젝션을 합쳤습니다.\r\n\r\n그렇다면 해시를 어떻게 계산할까요? 해시가 계산되는 방식은 블록체인의 매우 중요한 기능이며 블록체인을\r\n안전하게 만드는 기능입니다. 문제는 해시를 계산하는 것은 어려운 작업이며 빠른 컴퓨터에서도 시간이 걸\r\n립니다(그래서 사람들은 Bitcoin을 채굴하기 위해 강력한 GPU를 구입합니다). 새 블록을 추가하기 어렵게하\r\n여 추가된 후 블록의 수정을 방지하기 위해서 입니다.\r\n\r\n블록을 구성하는 필드를 하나로 이은 뒤 이어진 문자열에 대해 SHA-256 해시를 계산할 것입니다. 다음과 같\r\n이 `setHash()`를 작성합니다.\r\n\r\n```typescript\r\nfunction setHash(block: Block): string {\r\n  const timeStamp = block.timestamp.toString();\r\n  const headers = `${block.prevBlockHash}${block.data}${timeStamp}`;\r\n  return createHash('sha256').update(headers).digest('hex');\r\n}\r\n```\r\n\r\n다음으로 블록을 생성하는 `createBlock()`을 구현합니다.\r\n\r\n```typescript\r\nfunction createBlock(data: string, prevBlockHash: string): Block {\r\n  const block: Block = {\r\n    timestamp: Date.now(),\r\n    data,\r\n    prevBlockHash,\r\n  };\r\n  block.hash = setHash(block);\r\n  return block;\r\n}\r\n```\r\n\r\n# 블록체인 (Blockchain)\r\n\r\n이제 블록체인을 구현해 봅시다. 본질적으로 블록체인은 특정 구조를 가진 데이터베이스일 뿐입니다. 순서\r\n가 있고 연결된 목록입니다. 이는 블록이 추가된 순서대로 저장되고, 각 블록이 이전 블록에 연결된다는 것\r\n을 의미합니다. 이 구조를 사용하면 체인의 최신 블록을 빠르게 얻을 수 있고 해시 값을 통하여 블록을 효\r\n율적으로 얻을 수 있습니다.\r\n\r\n```typescript\r\ntype Blockchain = {\r\n  blocks: Block[];\r\n};\r\n```\r\n\r\n이것은 우리의 첫 번째 블록체인 입니다. 이렇게 쉬울 줄은 상상도 못했겠죠?!😉\r\n\r\n이제 블록을 추가할 수 있습니다:\r\n\r\n```typescript\r\nfunction addBlock(blockchain: Blockchain, data: string) {\r\n  const prevBlock = blockchain.blocks[blockchain.blocks.length - 1];\r\n  const newBlock = createBlock(data, prevBlock.hash);\r\n  blockchain.blocks.push(newBlock);\r\n}\r\n```\r\n\r\n이게 다일까요!? 아닙니다...!\r\n\r\n새 블록을 추가하려면 기존 블록이 필요하지만, 우리가 가지고 있는 블록체인에는 아직 블록이 없습니다!\r\n따라서 모든 블록체인에는 적어도 하나의 블록이 있어야 하며, 이러한 체인의 첫 번째 블록을 **제네시스블\r\n록(Genesis Block**이라고 합니다. 이러한 블록을 생성하는 `createGenesisBlock()`를 구현해 보겠습니다 .\r\n\r\n```typescript\r\nfunction createGenesisBlock(): Block {\r\n  return createBlock('Genesis Block', '');\r\n}\r\n```\r\n\r\n이제 제네시스 블록으로 블록체인을 생성하는 기능을 구현할 수 있습니다:\r\n\r\n```typescript\r\nfunction createBlockchain(): Blockchain {\r\n  return {\r\n    blocks: [createGenesisBlock()],\r\n  };\r\n}\r\n```\r\n\r\n블록체인이 올바르게 작동하는지 확인합시다:\r\n\r\n```typescript\r\nfunction main() {\r\n  const blockchain = createBlockchain();\r\n\r\n  addBlock(blockchain, 'Send 1 BTC to KyuHyuk');\r\n  addBlock(blockchain, 'Send 2 more BTC to KyuHyuk');\r\n\r\n  for (let index = 0; index \u003c blockchain.blocks.length; index++) {\r\n    const block = blockchain.blocks[index];\r\n    console.log(`Prev. hash: ${block.prevBlockHash}`);\r\n    console.log(`Data: ${block.data}`);\r\n    console.log(`Hash: ${block.hash}`);\r\n    console.log();\r\n  }\r\n}\r\n```\r\n\r\n출력:\r\n\r\n```\r\nPrev. hash:\r\nData: Genesis Block\r\nHash: 9f50a344368018cbd86eb62ca405b9179cd9d39603e3b0f2939bad6e32af4034\r\n\r\nPrev. hash: 9f50a344368018cbd86eb62ca405b9179cd9d39603e3b0f2939bad6e32af4034\r\nData: Send 1 BTC to KyuHyuk\r\nHash: c214ef7639423a219bb2ee2acd13f2adcfddee46d84ec7e9c6832f301606d10f\r\n\r\nPrev. hash: c214ef7639423a219bb2ee2acd13f2adcfddee46d84ec7e9c6832f301606d10f\r\nData: Send 2 more BTC to KyuHyuk\r\nHash: 93e1f4dacfdbe0bcc8e3c31c6bf61e1c264176b34ea4e25b9067577069b25be7\r\n```\r\n\r\n잘 동작합니다!\r\n\r\n# 결론\r\n\r\n우리는 매우 간단한 블록체인 프로토타입을 만들어봤습니다. 우리가 만든 블록체인은 각 블록이 이전 블록\r\n과 연결되어 있는 블록 배열일 뿐입니다. 실제 블록체인은 훨씬 더 복잡합니다. 우리 블록체인에서 새 블록\r\n을 추가하는 것은 쉽고 빠르지만 실제 블록체인에서 새 블록을 추가하려면 약간의 작업이 필요합니다. 블록\r\n추가 권한을 받기 전에 무거운 계산을 수행해야 합니다(이 메커니즘을 작업 증명(Proof of Work)이라고 합\r\n니다). 또한 블록체인은 단일 의사결정자가 없는 분산 데이터베이스입니다. 따라서 새 블록은 네트워크의다\r\n른 참가자가 확인하고 승인해야 합니다(이 메커니즘을 합의(Consensus)라고 합니다). 그리고 아직 우리블록\r\n체인에는 트랜잭션(Transactions)이 없습니다!\r\n\r\n다음 글에서 위의 각 기능에 대해 다룰 것입니다.\r\n"},"__N_SSG":true},"page":"/article/[category]/[year]/[month]/[day]/[slug]","query":{"category":"blockchain","year":"2021","month":"12","day":"11","slug":"Building-Blockchain-in-NodeJS-Part-1-Basic-Prototype"},"buildId":"Dsgna1Ug9ERZ37IDpNGla","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

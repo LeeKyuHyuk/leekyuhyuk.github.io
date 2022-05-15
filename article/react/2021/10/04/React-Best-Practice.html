@@ -1,0 +1,127 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><meta property="og:image" content="https://kyuhyuk.kr/thumbnail.png"/><title>React의 모범 사례</title><meta name="author" content="KyuHyuk Lee"/><meta name="generator" content="KyuHyuk Lee"/><meta name="description" content=" React를 어떻게 해야 좋은 방법으로 사용할 수 있을지 궁금하여 Google에서 검색해 보고 간단하게 정리해보 았습니다. Reference : Top 8 React Js Best Practices to Follow in the Year 2021 React best practices-"/><meta itemProp="url" content="https://kyuhyuk.kr/article/react/2021/10/04/React-Best-Practice"/><meta itemProp="headline" content="React의 모범 사례"/><meta property="og:type" content="article"/><meta property="og:url" content="https://kyuhyuk.kr/article/react/2021/10/04/React-Best-Practice"/><meta property="og:title" content="React의 모범 사례"/><meta property="og:description" content=" React를 어떻게 해야 좋은 방법으로 사용할 수 있을지 궁금하여 Google에서 검색해 보고 간단하게 정리해보 았습니다. Reference : Top 8 React Js Best Practices to Follow in the Year 2021 React best practices-"/><meta property="og:site_name" content="KyuHyuk Blog"/><meta property="og:locale" content="ko_KR"/><meta name="next-head-count" content="15"/><link rel="preload" href="/_next/static/css/4e0666c6da09e1ee.css" as="style"/><link rel="stylesheet" href="/_next/static/css/4e0666c6da09e1ee.css" data-n-g=""/><link rel="preload" href="/_next/static/css/c2a527101433f11d.css" as="style"/><link rel="stylesheet" href="/_next/static/css/c2a527101433f11d.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-5cd94c89d3acac5f.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-a87821de553db91d.js" defer=""></script><script src="/_next/static/chunks/main-fc7d2f0e2098927e.js" defer=""></script><script src="/_next/static/chunks/pages/_app-2774ecbb7f55613d.js" defer=""></script><script src="/_next/static/chunks/869-82e19047d92f6e30.js" defer=""></script><script src="/_next/static/chunks/895-531271280742d591.js" defer=""></script><script src="/_next/static/chunks/pages/article/%5Bcategory%5D/%5Byear%5D/%5Bmonth%5D/%5Bday%5D/%5Bslug%5D-e1207b3501068a48.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_buildManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_ssgManifest.js" defer=""></script><script src="/_next/static/Dsgna1Ug9ERZ37IDpNGla/_middlewareManifest.js" defer=""></script></head><body><div id="__next"><header class="c-opBYf"><a href="https://kyuhyuk.kr"><div class="c-bHyrwK"><div class="c-uBnvQ">Kh.</div><div class="c-hehuMV">KyuHyuk Blog</div></div></a><ul class="c-bjkCdF"><li><a href="https://github.com/LeeKyuHyuk" class="c-hAoZGi"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></a></li><li><a href="https://linkedin.com/in/leekyuhyuk" class="c-hAoZGi"><span role="img" aria-label="linkedin" class="anticon anticon-linkedin"><svg viewBox="64 64 896 896" focusable="false" data-icon="linkedin" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1168.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg></span></a></li><li><a href="mailto:lee@kyuhyuk.kr" class="c-hAoZGi"><span role="img" aria-label="mail" class="anticon anticon-mail"><svg viewBox="64 64 896 896" focusable="false" data-icon="mail" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-80.8 108.9L531.7 514.4c-7.8 6.1-18.7 6.1-26.5 0L189.6 268.9A7.2 7.2 0 01194 256h648.8a7.2 7.2 0 014.4 12.9z"></path></svg></span></a></li></ul></header><main class="c-jfcKOQ"><article><h1 class="c-fxvkZv"><a href="https://kyuhyuk.kr/article/react/2021/10/04/React-Best-Practice">React의 모범 사례</a></h1><a href="https://kyuhyuk.kr/category/React" class="c-iosjjB">React</a><time dateTime="2021-10-04 15:56:47" class="c-jYwCTI">Oct 05, 2021 12:56:47 AM</time><div id="post" class="c-dIcdES"><p>React를 어떻게 해야 좋은 방법으로 사용할 수 있을지 궁금하여 Google에서 검색해 보고 간단하게 정리해보
+았습니다.</p>
+<p><strong>Reference :</strong></p>
+<ul>
+<li><a href="https://rencybeth.medium.com/top-8-reactjs-best-practices-to-follow-in-the-year-2021-4abd41618ea4">Top 8 React Js Best Practices to Follow in the Year 2021</a></li>
+<li><a href="https://onoufriosm.medium.com/react-best-practices-react-at-scale-part-2-11b69b96f5e">React best practices-React at scale (Part 2)</a></li>
+</ul>
+<h1>1. 재사용성</h1>
+<p>하나의 기능은 하나의 컴포넌트(Component)를 의미합니다. 이를 통하여 컴포넌트의 재사용성을 높일 수 있
+습니다.<br>
+재사용성을 높이게 되면, 개발자가 기능에 대한 새로운 컴포넌트를 만드는 일이 줄어들게 됩니다.<br>
+예를 들어 아이콘과 함께 보여주는 버튼 컴포넌트를 하나 만들게 되면, 다른 컴포넌트에서 해당 컴포넌트를
+재사용하여 사용이 가능합니다.<br>
+만약, 같은 기능을 하는 컴포넌트가 <code>HomeButton.tsx</code>, <code>MenuButton.tsx</code>, <code>ModalButton.tsx</code>와 같이 여러
+개가 존재한다면 고쳐야 합니다.<br>
+되도록이면 여러 위치에서 사용할 수 있는 컴포넌트를 만들어야 하며, 추상적이지만 지나치게 복잡하지 않
+게 작성해야 합니다.<br>
+또한 어떤 컴포넌트가 거대해져서 유지관리가 어려워지게 된다면, 이를 더 작은 컴포넌트로 분할해야 합니
+다.</p>
+<h1>2. 기능별로 작은 컴포넌트 만들기</h1>
+<p>React는 여러 컴포넌트들을 모아 거대한 컴포넌트를 만들 수 있게 해주는 기술입니다.<br>
+컴포넌트를 설계할 수 있는 가장 좋은 방법은 컴포넌트를 작게 만들어 각 컴포넌트가 하나의 기능에 해당하
+도록 만드는 것입니다.<br>
+기본적으로 한 컴포넌트는 페이지의 특정 부분을 렌더링 하거나 속성을 변경합니다.<br>
+전체적으로 개발자는 여러 가지의 컴포넌트를 가질 수 있으며, 예상한 결과를 만들기 위해 이 컴포넌트 들
+을 재결합할 수 있습니다.</p>
+<h1>3. JavaScript(TypeScript)로 CSS 작성하기</h1>
+<p>프론트엔드 개발자가 작업을 시작할 때, 가장 일반적인 방법 중 하나는 모든 CSS 스타일을 하나의 SCSS 파
+일에 넣는 것입니다. 이 과정에서 전역 접두사를 사용하여 가능한 충돌을 방지합니다. 그러나 프로젝트가확
+장되면 이 솔루션이 좋은 방법이 않을 수 있습니다.<br>
+따라서 개발자는 JavaScript(TypeScript)로 CSS를 작성해야 하며, 라이브러리를 사용해야 합니다. 대표적으
+로 <a href="https://www.npmjs.com/package/@emotion/css">EmotionJS</a>는 JavaScript와 TypeScript 라이브러리에서
+가장 널리 사용되는 CSS 라이브러리 입니다.</p>
+<h1>4. 중복코드 정리하기</h1>
+<p>아마 대부분의 개발자들은 최대한 간결하게 코드를 작성하려고 노력할 것입니다. React도 마찬가지입니다.
+여기서도 개발자는 코드를 정확하고 간략하게 작성해야 합니다.<br>
+코드 중복을 피하는 한가지 방법은 <strong>DRY(Don't Repeat Yourself)</strong> 입니다. 이것 또한 위에서 설명한 '재
+사용성'과 같은 내용입니다. 중복으로 사용되는 코드는 별도의 컴포넌트로 분리하여 중복코드가 생기지 않
+도록 해야 합니다.</p>
+<h1>5. 컴포넌트 이름을 지정하는 방법</h1>
+<p>함수 이름을 따서 컴포넌트의 이름을 지정하는 것이 가장 좋은 아이디어 중 하나입니다. 개발자가 컴포넌트
+를 쉽게 알아볼 수 있도록 도와줍니다.<br>
+예를 들어, <code>ProductTable</code>은 컴포넌트가 수행하는 작업을 명확하게 보여주는 이름입니다. 하지만, 이와 같
+이 개발자가 코드 기반으로 컴포넌트의 이름을 지정하면 나중에 혼동을 일으킬 수 있으므로 주의해야 합니
+다.<br>
+다른 안 좋은 예시를 들자면 사용자, 작성자 또는 댓글에 나오는 사용자 사진에 대한 컴포넌트의 이름을
+<code>AuthorAvatar</code>로 지정하게 된다면 컴포넌트를 <code>Author</code>에서 사용하는 <code>Avatar</code>로 제한하게 됩니다. 이럴때
+는 <code>Avatar</code>로 지정하는 것이 좋습니다.</p>
+<h1>6. 컴포넌트의 이름은 대문자로 시작해야 합니다</h1>
+<p>개발자가 JSX를 사용하는 경우 생성하는 컴포넌트의 이름은 대문자로 시작해야 합니다. 예를 들어 개발자는
+컴포넌트의 이름을 <code>selectbutton</code>이 아닌 <code>SelectButton</code>으로 지정해야 합니다. 이것은 JSX가 모든 기본
+HTML 태그와 다르게 식별되도록 하는데 필수적입니다.</p>
+<h1>7. 하나의 폴더에는 유사한 컴포넌트만 넣습니다</h1>
+<p>컴포넌트와 관련된 것들은 하나의 폴더에 보관해야 합니다. 특정 컴포넌트에서 사용하는 작은 컴포넌트가있
+다는 것은 작은 컴포넌트들도 하나의 폴더에 함께 보관해야 함을 의미합니다. 이것은 React 컴포넌트를이해
+하기 위해 따라야 하는 계층 구조입니다.<br>
+큰 컴포넌트도 어딘가에 위치하는 폴더에 있으며, 이러한 큰 컴포넌트에서 사용되는 작은 컴포넌트들은 그
+폴더의 하위 폴더로 나뉘게 됩니다.<br>
+예를 들어 <code>Form</code> 컴포넌트에는 아이콘, 텍스트, 이미지과 같은 부분들이 있으며, <code>Form</code> 컴포넌트와 관련
+된 기타 하위 컴포넌트들은 동일한 폴더에 있어야 합니다.<br>
+이렇게 함으로써 개발자는 코드를 다른 프로젝트로 쉽게 옮기거나 코드를 쉽게 수정할 수 있습니다.</p>
+<h1>8. React 프로젝트의 폴더 구조</h1>
+<p>좋은 폴더 구조를 찾는 것은 어려운 작업입니다. React 프로젝트의 폴더를 구성하는 방법에는 여러 가지가
+있습니다. 어떤 것을 사용할지는 개발자가 결정해야 합니다.<br>
+하지만, 폴더 구조를 보다 견고하게 만들기 위해 따를 수 있는 몇 가지 팁이 있습니다:</p>
+<ol>
+<li>
+<p>폴더 및 파일명은 일관되고 예측이 가능해야 합니다. 폴더 구조 패턴에 따라서 유사한 컴포넌트를 배치
+해야 합니다.<br>
+예를 들어, 게시물을 작성하는 양식을 표시하는 컴포넌트와 댓글을 작성하는 양식을 표시하는 컴포넌트
+는 각각 <code>/components/Post/Form/Create</code> 및 <code>/components/Comment/Form/Create</code>에 있을 수 있습니다.<br>
+마찬가지로 모든 페이지에 왼쪽에 렌더링 하는 컴포넌트가 있는 경우에는 <code>/components/Page/Home/Left</code>
+및 <code>/components/Page/Groups/Left</code>와 같은 패턴을 가질 수 있습니다.<br>
+<strong>기본적으로 새 컴포넌트를 생성할 때마다 잘 정의된 패턴을 기반으로 컴포넌트를 생성할 위치를 알아
+야 합니다.</strong></p>
+</li>
+<li>
+<p>관련 파일(컴포넌트, 테스트 코드, 스타일, 타입)은 모두 하나의 폴더에 보관해야 합니다.<br>
+예를 들어 <code>Story.tsx</code>(스토리북을 사용하는 경우)와 같은 다른 파일을 추가하려는 경우에는 동일한 폴
+더에 추가할 수 있습니다. 이와 같이 매우 간편하게 확장할 수 있습니다.<br>
+이렇게 관련 파일을 하나의 폴더에 넣게 되면, 폴더와 모든 리소스를 쉽게 이동하거나 삭제할 수 있습니
+다.</p>
+</li>
+<li>
+<p>Button, Form, List와 같이 기본적인 UI에서 사용되는 컴포넌트 들은 별도의 폴더에 보관해야 합니다.<br>
+이 방법은 좋은 분리 방법이며, 분리된 작업을 쉽게 할 수 있습니다. 일부 개발자는 이 폴더에만 집중을
+할 수 있습니다.<br>
+또한 다른 프로젝트에서 사용하기 위해 패키지를 만들거나 이러한 모든 구성요소를 스토리북의 일부로어
+딘가에 쉽게 게시할 수도 있습니다.</p>
+</li>
+</ol>
+<p>아래는 폴더 구조의 예시 입니다:</p>
+<pre><code>├── README.md
+├── node_modules
+├── package.json
+├── public
+├── src
+│   ├── components
+│   │   ├── Comment
+│   │   │   ├── Form
+│   │   │   │   ├── Create
+│   │   │   │   └── Edit
+│   │   │   └── List
+│   │   ├── Post
+│   │   │   ├── Form
+│   │   │   │   ├── Crate
+│   │   │   │   │   ├── Spec.tsx
+│   │   │   │   │   ├── Types.ts
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   ├── Stories.tsx
+│   │   │   │   │   └── styles.scss
+│   │   │   │   └── Edit
+│   │   │   └── List
+│   │   └── pages
+│   │       ├── Groups
+│   │       ├── Home
+│   │       └── Posts
+│   ├── constants
+│   ├── core
+│   │   ├── Button
+│   │   ├── List
+│   │   └── Table
+│   ├── index.tsx
+│   └── utils
+└── tsconfig.json
+</code></pre>
+</div></article></main><footer class="c-cpkrrK"><div class="c-fiqONv">© <!-- -->2022<!-- --></div><div class="c-bHyrwK"><div class="c-iUFgVP">Kh.</div><div class="c-cshSRb">KyuHyuk Lee</div></div></footer></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"excerpt":" React를 어떻게 해야 좋은 방법으로 사용할 수 있을지 궁금하여 Google에서 검색해 보고 간단하게 정리해보 았습니다. Reference : Top 8 React Js Best Practices to Follow in the Year 2021 React best practices-","url":"/article/react/2021/10/04/React-Best-Practice","frontmatter":{"title":"React의 모범 사례","date":"2021-10-04 15:56:47","category":"React"},"content":"\r\nReact를 어떻게 해야 좋은 방법으로 사용할 수 있을지 궁금하여 Google에서 검색해 보고 간단하게 정리해보\r\n았습니다.\r\n\r\n**Reference :**\r\n\r\n- [Top 8 React Js Best Practices to Follow in the Year 2021](https://rencybeth.medium.com/top-8-reactjs-best-practices-to-follow-in-the-year-2021-4abd41618ea4)\r\n- [React best practices-React at scale (Part 2)](https://onoufriosm.medium.com/react-best-practices-react-at-scale-part-2-11b69b96f5e)\r\n\r\n# 1. 재사용성\r\n\r\n하나의 기능은 하나의 컴포넌트(Component)를 의미합니다. 이를 통하여 컴포넌트의 재사용성을 높일 수 있\r\n습니다.  \r\n재사용성을 높이게 되면, 개발자가 기능에 대한 새로운 컴포넌트를 만드는 일이 줄어들게 됩니다.  \r\n예를 들어 아이콘과 함께 보여주는 버튼 컴포넌트를 하나 만들게 되면, 다른 컴포넌트에서 해당 컴포넌트를\r\n재사용하여 사용이 가능합니다.  \r\n만약, 같은 기능을 하는 컴포넌트가 `HomeButton.tsx`, `MenuButton.tsx`, `ModalButton.tsx`와 같이 여러\r\n개가 존재한다면 고쳐야 합니다.  \r\n되도록이면 여러 위치에서 사용할 수 있는 컴포넌트를 만들어야 하며, 추상적이지만 지나치게 복잡하지 않\r\n게 작성해야 합니다.  \r\n또한 어떤 컴포넌트가 거대해져서 유지관리가 어려워지게 된다면, 이를 더 작은 컴포넌트로 분할해야 합니\r\n다.\r\n\r\n# 2. 기능별로 작은 컴포넌트 만들기\r\n\r\nReact는 여러 컴포넌트들을 모아 거대한 컴포넌트를 만들 수 있게 해주는 기술입니다.  \r\n컴포넌트를 설계할 수 있는 가장 좋은 방법은 컴포넌트를 작게 만들어 각 컴포넌트가 하나의 기능에 해당하\r\n도록 만드는 것입니다.  \r\n기본적으로 한 컴포넌트는 페이지의 특정 부분을 렌더링 하거나 속성을 변경합니다.  \r\n전체적으로 개발자는 여러 가지의 컴포넌트를 가질 수 있으며, 예상한 결과를 만들기 위해 이 컴포넌트 들\r\n을 재결합할 수 있습니다.\r\n\r\n# 3. JavaScript(TypeScript)로 CSS 작성하기\r\n\r\n프론트엔드 개발자가 작업을 시작할 때, 가장 일반적인 방법 중 하나는 모든 CSS 스타일을 하나의 SCSS 파\r\n일에 넣는 것입니다. 이 과정에서 전역 접두사를 사용하여 가능한 충돌을 방지합니다. 그러나 프로젝트가확\r\n장되면 이 솔루션이 좋은 방법이 않을 수 있습니다.  \r\n따라서 개발자는 JavaScript(TypeScript)로 CSS를 작성해야 하며, 라이브러리를 사용해야 합니다. 대표적으\r\n로 [EmotionJS](https://www.npmjs.com/package/@emotion/css)는 JavaScript와 TypeScript 라이브러리에서\r\n가장 널리 사용되는 CSS 라이브러리 입니다.\r\n\r\n# 4. 중복코드 정리하기\r\n\r\n아마 대부분의 개발자들은 최대한 간결하게 코드를 작성하려고 노력할 것입니다. React도 마찬가지입니다.\r\n여기서도 개발자는 코드를 정확하고 간략하게 작성해야 합니다.  \r\n코드 중복을 피하는 한가지 방법은 **DRY(Don't Repeat Yourself)** 입니다. 이것 또한 위에서 설명한 '재\r\n사용성'과 같은 내용입니다. 중복으로 사용되는 코드는 별도의 컴포넌트로 분리하여 중복코드가 생기지 않\r\n도록 해야 합니다.\r\n\r\n# 5. 컴포넌트 이름을 지정하는 방법\r\n\r\n함수 이름을 따서 컴포넌트의 이름을 지정하는 것이 가장 좋은 아이디어 중 하나입니다. 개발자가 컴포넌트\r\n를 쉽게 알아볼 수 있도록 도와줍니다.  \r\n예를 들어, `ProductTable`은 컴포넌트가 수행하는 작업을 명확하게 보여주는 이름입니다. 하지만, 이와 같\r\n이 개발자가 코드 기반으로 컴포넌트의 이름을 지정하면 나중에 혼동을 일으킬 수 있으므로 주의해야 합니\r\n다.  \r\n다른 안 좋은 예시를 들자면 사용자, 작성자 또는 댓글에 나오는 사용자 사진에 대한 컴포넌트의 이름을\r\n`AuthorAvatar`로 지정하게 된다면 컴포넌트를 `Author`에서 사용하는 `Avatar`로 제한하게 됩니다. 이럴때\r\n는 `Avatar`로 지정하는 것이 좋습니다.\r\n\r\n# 6. 컴포넌트의 이름은 대문자로 시작해야 합니다\r\n\r\n개발자가 JSX를 사용하는 경우 생성하는 컴포넌트의 이름은 대문자로 시작해야 합니다. 예를 들어 개발자는\r\n컴포넌트의 이름을 `selectbutton`이 아닌 `SelectButton`으로 지정해야 합니다. 이것은 JSX가 모든 기본\r\nHTML 태그와 다르게 식별되도록 하는데 필수적입니다.\r\n\r\n# 7. 하나의 폴더에는 유사한 컴포넌트만 넣습니다\r\n\r\n컴포넌트와 관련된 것들은 하나의 폴더에 보관해야 합니다. 특정 컴포넌트에서 사용하는 작은 컴포넌트가있\r\n다는 것은 작은 컴포넌트들도 하나의 폴더에 함께 보관해야 함을 의미합니다. 이것은 React 컴포넌트를이해\r\n하기 위해 따라야 하는 계층 구조입니다.  \r\n큰 컴포넌트도 어딘가에 위치하는 폴더에 있으며, 이러한 큰 컴포넌트에서 사용되는 작은 컴포넌트들은 그\r\n폴더의 하위 폴더로 나뉘게 됩니다.  \r\n예를 들어 `Form` 컴포넌트에는 아이콘, 텍스트, 이미지과 같은 부분들이 있으며, `Form` 컴포넌트와 관련\r\n된 기타 하위 컴포넌트들은 동일한 폴더에 있어야 합니다.  \r\n이렇게 함으로써 개발자는 코드를 다른 프로젝트로 쉽게 옮기거나 코드를 쉽게 수정할 수 있습니다.\r\n\r\n# 8. React 프로젝트의 폴더 구조\r\n\r\n좋은 폴더 구조를 찾는 것은 어려운 작업입니다. React 프로젝트의 폴더를 구성하는 방법에는 여러 가지가\r\n있습니다. 어떤 것을 사용할지는 개발자가 결정해야 합니다.  \r\n하지만, 폴더 구조를 보다 견고하게 만들기 위해 따를 수 있는 몇 가지 팁이 있습니다:\r\n\r\n1. 폴더 및 파일명은 일관되고 예측이 가능해야 합니다. 폴더 구조 패턴에 따라서 유사한 컴포넌트를 배치\r\n   해야 합니다.  \r\n   예를 들어, 게시물을 작성하는 양식을 표시하는 컴포넌트와 댓글을 작성하는 양식을 표시하는 컴포넌트\r\n   는 각각 `/components/Post/Form/Create` 및 `/components/Comment/Form/Create`에 있을 수 있습니다.  \r\n   마찬가지로 모든 페이지에 왼쪽에 렌더링 하는 컴포넌트가 있는 경우에는 `/components/Page/Home/Left`\r\n   및 `/components/Page/Groups/Left`와 같은 패턴을 가질 수 있습니다.  \r\n   **기본적으로 새 컴포넌트를 생성할 때마다 잘 정의된 패턴을 기반으로 컴포넌트를 생성할 위치를 알아\r\n   야 합니다.**\r\n\r\n2. 관련 파일(컴포넌트, 테스트 코드, 스타일, 타입)은 모두 하나의 폴더에 보관해야 합니다.  \r\n   예를 들어 `Story.tsx`(스토리북을 사용하는 경우)와 같은 다른 파일을 추가하려는 경우에는 동일한 폴\r\n   더에 추가할 수 있습니다. 이와 같이 매우 간편하게 확장할 수 있습니다.  \r\n   이렇게 관련 파일을 하나의 폴더에 넣게 되면, 폴더와 모든 리소스를 쉽게 이동하거나 삭제할 수 있습니\r\n   다.\r\n\r\n3. Button, Form, List와 같이 기본적인 UI에서 사용되는 컴포넌트 들은 별도의 폴더에 보관해야 합니다.  \r\n   이 방법은 좋은 분리 방법이며, 분리된 작업을 쉽게 할 수 있습니다. 일부 개발자는 이 폴더에만 집중을\r\n   할 수 있습니다.  \r\n   또한 다른 프로젝트에서 사용하기 위해 패키지를 만들거나 이러한 모든 구성요소를 스토리북의 일부로어\r\n   딘가에 쉽게 게시할 수도 있습니다.\r\n\r\n아래는 폴더 구조의 예시 입니다:\r\n\r\n```\r\n├── README.md\r\n├── node_modules\r\n├── package.json\r\n├── public\r\n├── src\r\n│   ├── components\r\n│   │   ├── Comment\r\n│   │   │   ├── Form\r\n│   │   │   │   ├── Create\r\n│   │   │   │   └── Edit\r\n│   │   │   └── List\r\n│   │   ├── Post\r\n│   │   │   ├── Form\r\n│   │   │   │   ├── Crate\r\n│   │   │   │   │   ├── Spec.tsx\r\n│   │   │   │   │   ├── Types.ts\r\n│   │   │   │   │   ├── index.tsx\r\n│   │   │   │   │   ├── Stories.tsx\r\n│   │   │   │   │   └── styles.scss\r\n│   │   │   │   └── Edit\r\n│   │   │   └── List\r\n│   │   └── pages\r\n│   │       ├── Groups\r\n│   │       ├── Home\r\n│   │       └── Posts\r\n│   ├── constants\r\n│   ├── core\r\n│   │   ├── Button\r\n│   │   ├── List\r\n│   │   └── Table\r\n│   ├── index.tsx\r\n│   └── utils\r\n└── tsconfig.json\r\n```\r\n"},"__N_SSG":true},"page":"/article/[category]/[year]/[month]/[day]/[slug]","query":{"category":"react","year":"2021","month":"10","day":"04","slug":"React-Best-Practice"},"buildId":"Dsgna1Ug9ERZ37IDpNGla","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
