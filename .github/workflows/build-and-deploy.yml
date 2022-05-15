@@ -8,6 +8,13 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Set Timezone
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: 'Asia/Seoul'
+          timezoneMacos: 'Asia/Seoul'
+          timezoneWindows: 'Seoul Standard Time'
+
       - name: Checkout
         uses: actions/checkout@v3.0.2
         with:
