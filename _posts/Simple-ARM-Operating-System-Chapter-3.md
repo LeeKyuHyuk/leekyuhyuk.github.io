@@ -4,9 +4,7 @@ date: '2019-03-04 23:07:03'
 category: Simple-ARM-Operating-System
 ---
 
-> Source Code는
-> [https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-3/src](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-3/src)에
-> 있습니다.
+> Source Code는 [https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-3/src](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-3/src)에있습니다.
 
 <br>
 ARM Assembly로 Raspberry Pi Zero의 GPIO를 제어하여 ACT LED를 켜고 끄는 것을 만들어보겠습니다.
@@ -21,11 +19,9 @@ Raspberry Pi Zero의 ACT LED는 GPIO `47`을 사용하고 있습니다.
 이번 예제에서는 GPIO 4번에 연결된 LED를 켜보겠습니다.
 
 우선 코드를 작성하기전에 라즈베리파이의 Memory Map부터 보도록 하겠습니다.  
-`BCM2835-ARM-Peripherals.pdf`의 5페이지를 보면 라즈베리파이1의 Memory Map은 아래와 같다고 설명하고있
-습니다.  
+`BCM2835-ARM-Peripherals.pdf`의 5페이지를 보면 라즈베리파이1의 Memory Map은 아래와 같다고 설명하고있습니다.  
 ![BCM2835 ARM Peripherals](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-3/2019-03-04-Simple-ARM-Operating-System-Chapter-3_2.png)  
-그림을 보면 BCM2835를 사용하는 Raspberry Pi Zero의 I/O Peripherals의 물리 주소는 `0x20000000`에서 시
-작한다고 합니다.
+그림을 보면 BCM2835를 사용하는 Raspberry Pi Zero의 I/O Peripherals의 물리 주소는 `0x20000000`에서 시작한다고 합니다.
 
 - 시스템 메모리는 ARM과 VC 파트로 분할되며, 부분적으로 공유됩니다. (예를 들면, Frame Buffer)
 - ARM의 메모리 매핑 된 레지스터는 `0x20000000`부터 시작합니다.
@@ -35,11 +31,9 @@ Raspberry Pi Zero의 GPIO는 아래와 같습니다.
 ![Raspberry Pi Zero GPIO](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-3/2019-03-04-Simple-ARM-Operating-System-Chapter-3_3.png)
 
 > GPIO 핀의 번호 배정은 숫자 순서가 아닙니다.  
-> GPIO 핀 `0`과 `1`은 라즈베리파이 보드의 물리적 핀 `27`과 `28`에 있지만 고급 사용을 위해 예약되어있
-> 습니다
+> GPIO 핀 `0`과 `1`은 라즈베리파이 보드의 물리적 핀 `27`과 `28`에 있지만 고급 사용을 위해 예약되어있습니다
 
-`BCM2835-ARM-Peripherals.pdf`의 90 페이지를 보면, GPIO는 아래와 같이 41개의 레지스터를 가지고 있습니
-다.
+`BCM2835-ARM-Peripherals.pdf`의 90 페이지를 보면, GPIO는 아래와 같이 41개의 레지스터를 가지고 있습니다.
 
 | Address        | Field Name | Description                           | Size | Read/Write |
 | -------------- | ---------- | ------------------------------------- | ---- | ---------- |
@@ -88,22 +82,15 @@ Raspberry Pi Zero의 GPIO는 아래와 같습니다.
 
 `GPFSEL`, `GPSET`, `GPCLR`와 같이 다양한 레지스터가 있습니다.
 
-우선
-[`BCM2835-ARM-Peripherals.pdf`](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/raw/raspberry-pi-zero/References/documentation/BCM2835-ARM-Peripherals.pdf)의
-91페이지를 보면, `GPFSEL` 레지스터는 GPIO 기능을 선택하는 레지스터라고 설명하고 있습니다.  
-`GPFSEL0`은 GPIO 0번~9번을 담당하고, [`2`:`0`] 비트는 GPIO 0번, [`5`:`3`] 비트는 GPIO 1번을 담당하고
-있습니다.  
-3비트씩 GPIO핀을 담당하고 있으며, `000`을 지정하면 입력(Input), `001`은 출력(Output)을 설정하게 됩니
-다.  
+우선 [`BCM2835-ARM-Peripherals.pdf`](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/raw/raspberry-pi-zero/References/documentation/BCM2835-ARM-Peripherals.pdf)의 91페이지를 보면, `GPFSEL` 레지스터는 GPIO 기능을 선택하는 레지스터라고 설명하고 있습니다.  
+`GPFSEL0`은 GPIO 0번~9번을 담당하고, [`2`:`0`] 비트는 GPIO 0번, [`5`:`3`] 비트는 GPIO 1번을 담당하고있습니다.  
+3비트씩 GPIO핀을 담당하고 있으며, `000`을 지정하면 입력(Input), `001`은 출력(Output)을 설정하게 됩니다.  
 GPIO 47번 핀을 출력으로 설정하려면 `GPFSEL4` 레지스터의 [`23`:`21`] 비트를 `001`로 설정하면 됩니다.
 
-[`BCM2835-ARM-Peripherals.pdf`](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/raw/raspberry-pi-zero/References/documentation/BCM2835-ARM-Peripherals.pdf)의
-95페이지를 보면 `GPSET`에 대해 설명하고 있습니다.  
-`GPSET`은 GPIO 핀의 출력을 설정하는 레지스터인데, `GPSET0`과 `GPSET1`이 있습니다. `GPSET` 레지스터의
-`n`번 비트는 GPIO `n`번 핀을 정의하며, `0`을 쓰는 것은 아무 효과가 없습니다.  
+[`BCM2835-ARM-Peripherals.pdf`](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/raw/raspberry-pi-zero/References/documentation/BCM2835-ARM-Peripherals.pdf)의 95페이지를 보면 `GPSET`에 대해 설명하고 있습니다.  
+`GPSET`은 GPIO 핀의 출력을 설정하는 레지스터인데, `GPSET0`과 `GPSET1`이 있습니다. `GPSET` 레지스터의 `n`번 비트는 GPIO `n`번 핀을 정의하며, `0`을 쓰는 것은 아무 효과가 없습니다.  
 `GPSET0`은 GPIO `0`번 ~ `31`번, `GPSET1`은 GPIO `32`번 ~ `53`번을 담당합니다.  
-GPIO 47번 핀을 출력(Output)으로 설정했고, LED를 켜고 싶으니 `GPSET0`의 `15`번 비트를 `1`로 설정하면
-됩니다. 메뉴얼을 잘 읽을줄만 알면 작업하기가 편해집니다.
+GPIO 47번 핀을 출력(Output)으로 설정했고, LED를 켜고 싶으니 `GPSET0`의 `15`번 비트를 `1`로 설정하면됩니다. 메뉴얼을 잘 읽을줄만 알면 작업하기가 편해집니다.
 
 **`boot.S`:**
 
@@ -176,14 +163,11 @@ clean:
 빌드가 완료되면 `kernel.bin` 파일이 생성됩니다.
 
 SDCard를 FAT32로 포맷합니다.  
-그리고,
-[/References/boot](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/References/boot)에
-있는 `bootcode.bin`, `config.txt`, `start.elf`를 모두 복사합니다.  
+그리고, [/References/boot](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/References/boot)에있는 `bootcode.bin`, `config.txt`, `start.elf`를 모두 복사합니다.  
 방금 빌드한 `kernel.bin`도 함께 복사합니다.  
 ![SDCard files](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-3/2019-03-04-Simple-ARM-Operating-System-Chapter-3_4.png)
 
-> SDCard에 있는 `config.txt`에는 `kernel=kernel.bin`이라는 설정만 있습니다. 이 설정은 `kernel.bin`을
-> 사용하여 부팅하겠다는 뜻입니다.
+> SDCard에 있는 `config.txt`에는 `kernel=kernel.bin`이라는 설정만 있습니다. 이 설정은 `kernel.bin`을사용하여 부팅하겠다는 뜻입니다.
 
 SDCard를 Raspberry Pi Zero에 넣고, 부팅하면 아래와 같이 ACT LED가 켜지는 것을 확인할 수 있습니다.  
 ![Raspberry Pi Zero ACT LED On](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-3/2019-03-04-Simple-ARM-Operating-System-Chapter-3_5.png)

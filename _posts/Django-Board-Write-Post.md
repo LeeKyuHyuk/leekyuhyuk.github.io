@@ -10,9 +10,7 @@ Django로 게시판을 만들기 전에, 우선 Django 환경을 설정하겠습
 
 Python 가상환경(virtualenv)을 생성한 뒤, Django를 설치할 것입니다.  
 가상환경을 사용하면, Python 프로젝트를 진행할 때 독립적인 환경을 만들어 줄 수 있습니다.  
-예를 들어, A라는 환경에서 개발할 때와 B라는 환경에서 개발할 때의 Python 및 라이브러리 버전이 다를 수
-있습니다. 가상환경을 통하여 독립된 환경을 만들고, Python 및 라이브러리 버전에 대해 걱정을 할 필요가
-없게 됩니다.
+예를 들어, A라는 환경에서 개발할 때와 B라는 환경에서 개발할 때의 Python 및 라이브러리 버전이 다를 수있습니다. 가상환경을 통하여 독립된 환경을 만들고, Python 및 라이브러리 버전에 대해 걱정을 할 필요가없게 됩니다.
 
 가상환경을 생성하기 전에, `Board`라는 폴더를 생성합니다.  
 우리가 만들 게시판의 소스코드가 저장될 폴더입니다.
@@ -46,15 +44,11 @@ C:\Users\leekyuhyuk\Board>venv\Scripts\activate
 'PyCharm'에서 'New Project'를 클릭합니다.  
 ![PyCharm - New Project](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_1.png)
 
-'Location'을 `C:\Users\<사용자명>\PycharmProjects\<프로젝트명>`으로 설정하고, 'Create a main.py
-welcome script'는 해제합니다.  
-'Python Interpreter: New Virtualenv Environment'가 보일 것입니다. 이것을 통하여 위에서 작업한 가상환
-경을 간단하게 생성할 수 있습니다.  
+'Location'을 `C:\Users\<사용자명>\PycharmProjects\<프로젝트명>`으로 설정하고, 'Create a main.py welcome script'는 해제합니다.  
+'Python Interpreter: New Virtualenv Environment'가 보일 것입니다. 이것을 통하여 위에서 작업한 가상환경을 간단하게 생성할 수 있습니다.  
 ![PyCharm - New Project](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_2.png)
 
-프로젝트가 생성되고, 'Terminal'을 클릭하면 아래와 같이 `(venv)`가 앞에 떠 있는것을 볼 수 있습니다.
-이것이 의미하는 것은 성공적으로 가상환경 `venv`가 생성되었고, `venv` 가상환경에 진입했다는 것을 말합
-니다.  
+프로젝트가 생성되고, 'Terminal'을 클릭하면 아래와 같이 `(venv)`가 앞에 떠 있는것을 볼 수 있습니다. 이것이 의미하는 것은 성공적으로 가상환경 `venv`가 생성되었고, `venv` 가상환경에 진입했다는 것을 말합니다.  
 ![PyCharm - Terminal](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_3.png)
 
 # Django 설치하기
@@ -69,11 +63,9 @@ welcome script'는 해제합니다.
 프로젝트를 생성하면, 프로젝트명('Board') 폴더가 아래와 같이 생성됩니다.  
 ![Create Project](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_5.png)
 
-'Board'에 대한 Application을 구성해봅시다. 하나의 프로젝트에는 여러 개의 Application으로 구성됩니다.
-우리가 만드는 게시판 프로젝트는 한 개의 Application만 만들어서 진행해보도록 하겠습니다.
+'Board'에 대한 Application을 구성해봅시다. 하나의 프로젝트에는 여러 개의 Application으로 구성됩니다. 우리가 만드는 게시판 프로젝트는 한 개의 Application만 만들어서 진행해보도록 하겠습니다.
 
-`manage.py`가 있는 `Board` 폴더로 이동한 뒤, `python manage.py startapp board_app` 명령어를 통해
-'board_app' Application을 만듭니다.  
+`manage.py`가 있는 `Board` 폴더로 이동한 뒤, `python manage.py startapp board_app` 명령어를 통해 'board_app' Application을 만듭니다.  
 ![Create Application](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_6.png)
 
 Application을 생성했다면, `Board` 폴더에 있는 `settings.py`를 수정해야합니다.  
@@ -99,8 +91,7 @@ INSTALLED_APPS = [
 
 게시판을 만들기 전에, 'Hello, world!'를 출력해봅시다.
 
-`Board/Board/urls.py`를 아래와 같이 수정하여, ''에 접속했을 때 `board_app` Application의 `urls.py`
-파일로 처리를 넘겨주게 합니다.
+`Board/Board/urls.py`를 아래와 같이 수정하여, ''에 접속했을 때 `board_app` Application의 `urls.py` 파일로 처리를 넘겨주게 합니다.
 
 ```python
 from django.contrib import admin
@@ -136,8 +127,7 @@ def index(request):
     return HttpResponse("Hello, world!")
 ```
 
-`python manage.py runserver 8080`를 실행하고, [http://127.0.0.1:8080](http://127.0.0.1:8080)에 접속
-하여 아래와 같이 'Hello, world!'가 출력되는지 확인해봅시다.  
+`python manage.py runserver 8080`를 실행하고, [http://127.0.0.1:8080](http://127.0.0.1:8080)에 접속하여 아래와 같이 'Hello, world!'가 출력되는지 확인해봅시다.  
 ![Hello, world!](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_7.png)
 
 # Bootstrap 추가하기
@@ -145,8 +135,7 @@ def index(request):
 본격적으로 게시판을 만들어보겠습니다.  
 빠르고 간편하게 게시판을 디자인하기 위해 Bootstrap를 추가해보겠습니다.
 
-[Download Bootstrap v4.5](https://getbootstrap.com/docs/4.5/getting-started/download) 페이지에 접속
-하여, 'Compiled CSS and JS'를 다운로드 합니다.  
+[Download Bootstrap v4.5](https://getbootstrap.com/docs/4.5/getting-started/download) 페이지에 접속하여, 'Compiled CSS and JS'를 다운로드 합니다.  
 ![Download Bootstrap](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_8.png)
 
 `Board`에 `static` 폴더를 만들고, 아래와 같은 구조로 `static` 폴더에 `bootstrap` 폴더를 넣습니다.
@@ -197,8 +186,7 @@ Board
             └── bootstrap.min.js.map
 ```
 
-`Board/Board`에 있는 `settings.py`에 `import os`를 추가해주고, 아래와 같이 `STATIC_DIR`와
-`STATICFILES_DIRS`를 추가하여 `static` 폴더와 연결합니다.
+`Board/Board`에 있는 `settings.py`에 `import os`를 추가해주고, 아래와 같이 `STATIC_DIR`와 `STATICFILES_DIRS`를 추가하여 `static` 폴더와 연결합니다.
 
 ```python
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
@@ -321,8 +309,7 @@ def index(request):
 `python manage.py runserver 8080`를 실행시켜 아래와 같이 출력되는지 확인해봅시다.  
 ![Board List Template](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_9.png)
 
-'글쓰기' 버튼을 누르면, `/post`로 이동이 됩니다. 글쓰기 Template도 아래와 같이 작성해봅시다. 파일명
-은 `post.html`으로 `templates` 폴더에 저장합니다.
+'글쓰기' 버튼을 누르면, `/post`로 이동이 됩니다. 글쓰기 Template도 아래와 같이 작성해봅시다. 파일명은 `post.html`으로 `templates` 폴더에 저장합니다.
 
 ```html
 {% raw %}{% load static %}
@@ -385,8 +372,7 @@ def post(request):
     return render(request, 'post.html')
 ```
 
-`board_app`의 `urls.py`에 `path('post', views.post)`를 추가하여 `http://127.0.0.1/post`에 접속되었을
-때, `views.py`에 있는 `post()` 함수가 작동하도록 작성합니다.
+`board_app`의 `urls.py`에 `path('post', views.post)`를 추가하여 `http://127.0.0.1/post`에 접속되었을때, `views.py`에 있는 `post()` 함수가 작동하도록 작성합니다.
 
 ```python
 urlpatterns = [
@@ -395,8 +381,7 @@ urlpatterns = [
 ]
 ```
 
-`python manage.py runserver 8080`를 실행시켜 '글쓰기' 버튼을 눌렀을 때 아래와 같이 출력되는지 확인해
-봅시다.  
+`python manage.py runserver 8080`를 실행시켜 '글쓰기' 버튼을 눌렀을 때 아래와 같이 출력되는지 확인해봅시다.  
 ![Board Post Template](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_10.png)
 
 # 게시물 작성 구현하기
@@ -425,34 +410,27 @@ class Board(models.Model):
   - 최대 길이를 100으로 제한하였습니다.
   - `null` 값이 저장될 수 없습니다.
 - `content` : 내용이 저장되는 필드입니다.
-  - 앞의 `author`, `title`과 다르게
-    [`TextField`](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.TextField)로
-    되어있어 많은 Text를 써넣을 수 있습니다.
+  - 앞의 `author`, `title`과 다르게 [`TextField`](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.TextField)로되어있어 많은 Text를 써넣을 수 있습니다.
   - `null` 값이 저장될 수 없습니다.
-- `created_date` : 게시물이 생성된 시간이 저장되는 필드입니다.
-  ([`auto_now_add=True`](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.DateField.auto_now_add))
-- `modified_date` : 게시물이 수정된 시간이 저장되는 필드입니다.
-  ([`auto_now=True`](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.DateField.auto_now))
+- `created_date` : 게시물이 생성된 시간이 저장되는 필드입니다. ([`auto_now_add=True`](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.DateField.auto_now_add))
+- `modified_date` : 게시물이 수정된 시간이 저장되는 필드입니다. ([`auto_now=True`](https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.DateField.auto_now))
 
 `models.py`를 수정했으면, Django 서버에 적용해 줘야 합니다.  
 `manage.py` 파일이 있는 위치에서 `python manage.py makemigrations` 명령을 실행합니다.  
 ![makemigrations](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_11.png)
 
-위의 명령어는 'Migration'을 하는 명령어입니다. 'Migration'은 데이터베이스에 전달할 설계도 같은 역할
-을 합니다.  
+위의 명령어는 'Migration'을 하는 명령어입니다. 'Migration'은 데이터베이스에 전달할 설계도 같은 역할을 합니다.  
 실제로 테이블을 만들려면 `python manage.py migrate` 명령을 실행해야 합니다.  
 ![migrate](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_12.png)
 
-제대로 테이블이 생성되었는지 확인하기 위해 `python manage.py dbshell` 명령어를 통하여 데이터베이스에
-접근합니다. 그리고 `.tables` 명령어로 데이터베이스에 있는 테이블들을 조회해봅시다.  
+제대로 테이블이 생성되었는지 확인하기 위해 `python manage.py dbshell` 명령어를 통하여 데이터베이스에접근합니다. 그리고 `.tables` 명령어로 데이터베이스에 있는 테이블들을 조회해봅시다.  
 ![Database Tables](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_13.png)
 
 'board*app_board'라는 테이블이 존재한다면, 성공적으로 테이블이 생성된 것입니다.  
 데이터베이스에 생성되는 테이블의 이름은 '[프로젝트 이름]*[모델 이름]' 규칙으로 생성됩니다.  
 'board_app_board'는 'board_app' 프로젝트에 있는 'board' 모델의 테이블이라고 해석하면 됩니다.
 
-`PRAGMA table_info(board_app_board);` 명령어로 우리가 설정한 필드들이 잘 설정되었는지 확인해봅시다
-.  
+`PRAGMA table_info(board_app_board);` 명령어로 우리가 설정한 필드들이 잘 설정되었는지 확인해봅시다 .  
 ![Table Info](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_14.png)
 
 위와 같이 출력되는데 아래와 같이 해석하면 됩니다.
@@ -500,8 +478,7 @@ class Board(models.Model):
 {% endraw %}
 ```
 
-`<form>` 태그를 보면, 아래의 `/post`로 POST 방식을 통하여 `<input>`에 있는 내용을 전달하게 되어있습
-니다.  
+`<form>` 태그를 보면, 아래의 `/post`로 POST 방식을 통하여 `<input>`에 있는 내용을 전달하게 되어있습니다.  
 우리는 `views.py`에서 아까 만든 `post()` 함수를 수정해 주면 됩니다.
 
 ```python
@@ -526,25 +503,17 @@ def post(request):
 ```
 
 `post()` 함수에 'POST' 요청이 들어오면 실행할 코드를 넣어주었습니다.  
-`request.POST[]`에는 `<input>`에 있는 `name` 속성의 값을 넣어, 변수에 입력한 내용의 값이 저장되도록
-하였습니다.  
-`python manage.py runserver 8080`를 실행시켜 '글쓰기' 버튼을 눌러 글을 하나 작성해봅시다. 테이블에데
-이터가 생성되었는지 확인하기 위해 `python manage.py dbshell` 명령어를 통하여 데이터베이스에 접근합니
-다. 그리고, `SELECT * FROM board_app_board;` 명령어로 `board_app_board`의 내용을 확인합니다. 아래와
-같이 잘 저장된 것을 확인할 수 있습니다.  
+`request.POST[]`에는 `<input>`에 있는 `name` 속성의 값을 넣어, 변수에 입력한 내용의 값이 저장되도록하였습니다.  
+`python manage.py runserver 8080`를 실행시켜 '글쓰기' 버튼을 눌러 글을 하나 작성해봅시다. 테이블에데이터가 생성되었는지 확인하기 위해 `python manage.py dbshell` 명령어를 통하여 데이터베이스에 접근합니다. 그리고, `SELECT * FROM board_app_board;` 명령어로 `board_app_board`의 내용을 확인합니다. 아래와같이 잘 저장된 것을 확인할 수 있습니다.  
 ![Database Check](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_15.png)
 
-그런데 이상한 점이 있습니다. `created_date`와 `modified_date` 필드의 시간이 컴퓨터 시간과 다르게 저
-장되어 있습니다.  
-그 이유는 `Board` 폴더에 있는 `settings.py`의 `TIME_ZONE`가 `UTC`로 설정되어 있어서 그렇습니다.
-`TIME_ZONE`를 `Asia/Seoul`로 변경하고, `USE_TZ`를 `False`로 변경하여 다시 글을 써봅시다.  
+그런데 이상한 점이 있습니다. `created_date`와 `modified_date` 필드의 시간이 컴퓨터 시간과 다르게 저장되어 있습니다.  
+그 이유는 `Board` 폴더에 있는 `settings.py`의 `TIME_ZONE`가 `UTC`로 설정되어 있어서 그렇습니다. `TIME_ZONE`를 `Asia/Seoul`로 변경하고, `USE_TZ`를 `False`로 변경하여 다시 글을 써봅시다.  
 아래와 같이 시간이 제대로 적용되어 저장되는 걸 확인할 수 있습니다.  
 ![Database Check](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_16.png)
 
-`post()` 함수를 보면 `HttpResponseRedirect()` 함수를 사용하여, 글 작성이 완료되면 다시 메인 페이지의
-URL로 돌아가게 해주고 있습니다.  
-지금은 `HttpResponseRedirect('/')`와 같이 URL을 직접 입력하고 있습니다. 더 쉬운 방법으로 접근하기 위
-해 `urls.py`를 아래와 같이 수정합니다.
+`post()` 함수를 보면 `HttpResponseRedirect()` 함수를 사용하여, 글 작성이 완료되면 다시 메인 페이지의 URL로 돌아가게 해주고 있습니다.  
+지금은 `HttpResponseRedirect('/')`와 같이 URL을 직접 입력하고 있습니다. 더 쉬운 방법으로 접근하기 위해 `urls.py`를 아래와 같이 수정합니다.
 
 ```python
 from django.urls import path
@@ -613,8 +582,7 @@ def post(request):
         return render(request, 'post.html')
 ```
 
-위에 코드를 보면, `Board` 모델에 접근하고, `objects`에 접근한 후에 `all()` 함수를 통해 모든 데이터를
-가져와 `boards` 딕셔너리의 `boards` 키에 할당합니다.  
+위에 코드를 보면, `Board` 모델에 접근하고, `objects`에 접근한 후에 `all()` 함수를 통해 모든 데이터를가져와 `boards` 딕셔너리의 `boards` 키에 할당합니다.  
 그리고 `boards` 딕셔너리를 `render()` 함수를 통해 전달합니다.  
 이렇게 전달한 데이터는 `list.html`에서 받아 출력하게 되는데, 출력하는 부분은 아래와 같습니다.
 
@@ -639,19 +607,13 @@ def post(request):
 {% endfor %}{% endraw %}
 ```
 
-`{% raw %}{% for board in boards %}{% endraw %}`를 통해 `boards` 키의 요소를 `board` 변수로 가져옵니
-다. (Python에서 사용한 `for` 반복문과 같습니다.)  
-그리고 `{% raw %}{{ board.id }}{% endraw %}`, `{% raw %}{{ board.title }}{% endraw %}`,
-`{% raw %}{{ board.author }}{% endraw %}`로 `board` 변수에서 `id`, `title`, `author` 값에 접근하여출
-력합니다.
+`{% raw %}{% for board in boards %}{% endraw %}`를 통해 `boards` 키의 요소를 `board` 변수로 가져옵니다. (Python에서 사용한 `for` 반복문과 같습니다.)  
+그리고 `{% raw %}{{ board.id }}{% endraw %}`, `{% raw %}{{ board.title }}{% endraw %}`, `{% raw %}{{ board.author }}{% endraw %}`로 `board` 변수에서 `id`, `title`, `author` 값에 접근하여출력합니다.
 
-> `{% raw %}{{ board.created_date | date:"Y-m-d h:i" }}{% endraw %}`은 `datetime` 타입의 데이터
-> (`created_date`)를 `date:"Y-m-d h:i"` 형식에 맞추어 출력해 줍니다.  
-> [https://docs.djangoproject.com/en/3.1/ref/templates/builtins/#date](https://docs.djangoproject.com/en/3.1/ref/templates/builtins/#date)를
-> 참고해주세요.
+> `{% raw %}{{ board.created_date | date:"Y-m-d h:i" }}{% endraw %}`은 `datetime` 타입의 데이터 (`created_date`)를 `date:"Y-m-d h:i"` 형식에 맞추어 출력해 줍니다.  
+> [https://docs.djangoproject.com/en/3.1/ref/templates/builtins/#date](https://docs.djangoproject.com/en/3.1/ref/templates/builtins/#date)를참고해주세요.
 
 `python manage.py runserver 8080`를 실행시켜 아래와 같이 목록이 잘 출력되는지 확인합니다.  
 ![Board List](/assets/image/2020-08-14-Django-Board-Write-Post/2020-08-14-Django-Board-Write-Post_17.png)
 
-**Source Code :**
-[github.com/LeeKyuHyuk/Django-Board-Example](https://github.com/LeeKyuHyuk/Django-Board-Example/tree/ac52195cc570091d601904a09c444548e58eac66)
+**Source Code :** [github.com/LeeKyuHyuk/Django-Board-Example](https://github.com/LeeKyuHyuk/Django-Board-Example/tree/ac52195cc570091d601904a09c444548e58eac66)

@@ -10,8 +10,7 @@ GUID Partition Table의 구조는 아래와 같습니다.
 ![GPT Scheme](/assets/image/2019-05-06-GUID-Partition-Table/GPT-Scheme.png)
 
 실제로 우리가 사용하는 컴퓨터의 GUID Partition Table도 확인해봅시다.  
-`sudo dd if=/dev/sda of=disk.img bs=2MB count=1` 명령어로 Protective MBR(LBA 0)부터 GUID Partition
-Entries 5~8(LBA 4)까지 disk.img에 저장을 할 수 있습니다.
+`sudo dd if=/dev/sda of=disk.img bs=2MB count=1` 명령어로 Protective MBR(LBA 0)부터 GUID Partition Entries 5~8(LBA 4)까지 disk.img에 저장을 할 수 있습니다.
 
 ![Protective MBR](/assets/image/2019-05-06-GUID-Partition-Table/Protective-MBR.png)
 

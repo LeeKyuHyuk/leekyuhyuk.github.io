@@ -4,14 +4,9 @@ date: '2019-03-04 23:07:05'
 category: Simple-ARM-Operating-System
 ---
 
-> Source Code는
-> [https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-5/src](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-5/src)에
-> 있습니다.
+> Source Code는 [https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-5/src](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-5/src)에있습니다.
 
-> UART(범용 비동기화 송수신기: Universal asynchronous receiver/transmitter)는 병렬 데이터의 형태를
-> 직렬 방식으로 전환하여 데이터를 전송하는 컴퓨터 하드웨어의 일종이다. UART는 일반적으로 EIA RS-232,
-> RS-422, RS-485와 같은 통신 표준과 함께 사용한다.
-> [Wikipedia - UART](https://ko.wikipedia.org/wiki/UART)
+> UART(범용 비동기화 송수신기: Universal asynchronous receiver/transmitter)는 병렬 데이터의 형태를직렬 방식으로 전환하여 데이터를 전송하는 컴퓨터 하드웨어의 일종이다. UART는 일반적으로 EIA RS-232, RS-422, RS-485와 같은 통신 표준과 함께 사용한다. [Wikipedia - UART](https://ko.wikipedia.org/wiki/UART)
 
 Mini UART를 사용하여 UART를 구현해보도록 하겠습니다.
 
@@ -25,10 +20,8 @@ Mini UART를 사용하여 UART를 구현해보도록 하겠습니다.
 
 3. `AUX_MU_LCR_REG` Register의 `0`번, `1`번 비트를 `1`으로 설정합니다.  
    `0`번 비트는 8-bit mode를 사용하도록 설정되며, `1`번 비트 또한 같은 이유로 설정되어야 합니다.  
-   **_문서에는 `5`:`1`번 비트가 Reserved라고 표기 되어있지만 이렇게 하지 않으면 정상적인 데이터가 전
-   송되지 않습니다._**  
-   [BCM2835 datasheet errata #14P](https://elinux.org/BCM2835_datasheet_errata#p14)에 BCM2835
-   Datasheet의 `AUX_MU_LCR_REG`의 틀린 부분이 언급되어 있습니다.  
+   **_문서에는 `5`:`1`번 비트가 Reserved라고 표기 되어있지만 이렇게 하지 않으면 정상적인 데이터가 전송되지 않습니다._**  
+   [BCM2835 datasheet errata #14P](https://elinux.org/BCM2835_datasheet_errata#p14)에 BCM2835 Datasheet의 `AUX_MU_LCR_REG`의 틀린 부분이 언급되어 있습니다.  
    ![AUX_MU_LCR_REG](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-5/AUX_MU_LCR.png)
 
 4. `AUX_MU_MCR_REG` Register의 모든 비트를 `0`으로 설정합니다.  
@@ -69,8 +62,7 @@ Mini UART를 사용하여 UART를 구현해보도록 하겠습니다.
 >
 > 1. `GPPUD`에 기록하여 필요한 control signal를 설정합니다.
 > 2. control signal를 설정하기 위해 150 사이클을 기다립니다.
-> 3. `GPPUD`에서 수정한 GPIO의 control signal에 clock을 보내기 위해 `GPPUDCLK0`에서도 해당 GPIO 핀을
->    수정합니다.
+> 3. `GPPUD`에서 수정한 GPIO의 control signal에 clock을 보내기 위해 `GPPUDCLK0`에서도 해당 GPIO 핀을수정합니다.
 > 4. 150 사이클을 기다립니다.
 > 5. '1'에서 `GPPUD`에 기록했던 GPIO의 설정을 제거합니다.
 > 6. '3'에서 `GPPUDCLK0`에 기록했던 GPIO의 설정을 제거합니다.
@@ -106,8 +98,7 @@ void uart_init() {
 
 ### `uart_send()` : Send a character
 
-1. `AUX_MU_LSR_REG` Register의 `5`번째 비트인 'Transmitter Empty'를 확인합니다.
-   ![AUX_MU_LSR_REG](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-5/AUX_MU_LSR.png)
+1. `AUX_MU_LSR_REG` Register의 `5`번째 비트인 'Transmitter Empty'를 확인합니다. ![AUX_MU_LSR_REG](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-5/AUX_MU_LSR.png)
 
 2. 'Transmitter Empty'가 `1`이면 `AUX_MU_IO_REG`에 Data를 넣어 Buffer에 문자를 기록합니다.  
    ![AUX_MU_IO_REG](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-5/AUX_MU_IO.png)
@@ -126,8 +117,7 @@ void uart_send(unsigned int data) {
 
 ### `uart_getc()` : Receive a character
 
-1. `AUX_MU_LSR_REG` Register의 `1`번째 비트인 'Data ready'를 확인합니다.
-   ![AUX_MU_LSR_REG](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-5/AUX_MU_LSR.png)
+1. `AUX_MU_LSR_REG` Register의 `1`번째 비트인 'Data ready'를 확인합니다. ![AUX_MU_LSR_REG](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-5/AUX_MU_LSR.png)
 
 2. 'Data ready'가 `1`이면 `AUX_MU_IO_REG`의 Data를 읽어 반환합니다.  
    ![AUX_MU_IO_REG](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-5/AUX_MU_IO.png)
@@ -149,8 +139,7 @@ char uart_getc() {
 
 ### `uart_puts()` : Display a string
 
-앞에서 만들었던 `uart_send()`를 사용하여, `string`의 index를 1씩 더하며 `string`이 `NULL`이 될 때까
-지 `uart_send(*string++);`을 호출합니다.
+앞에서 만들었던 `uart_send()`를 사용하여, `string`의 index를 1씩 더하며 `string`이 `NULL`이 될 때까지 `uart_send(*string++);`을 호출합니다.
 
 ```c
 /* Display a string */

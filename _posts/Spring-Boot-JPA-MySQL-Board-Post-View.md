@@ -4,9 +4,7 @@ date: '2020-07-20 11:01:06'
 category: Spring-Boot
 ---
 
-이번 시간에는
-[이전 글](https://kyuhyuk.kr/article/spring-boot/2020/07/19/Spring-Boot-JPA-MySQL-Board-Write-Post)에
-서 만든 게시글 목록을 클릭하면, 글을 조회하는 기능을 추가해보도록 하겠습니다.
+이번 시간에는 [이전 글](https://kyuhyuk.kr/article/spring-boot/2020/07/19/Spring-Boot-JPA-MySQL-Board-Write-Post)에서 만든 게시글 목록을 클릭하면, 글을 조회하는 기능을 추가해보도록 하겠습니다.
 
 ## 게시글 조회 페이지 만들기
 
@@ -121,10 +119,8 @@ public class BoardService {
 
 ## Controller 수정하기
 
-각 게시글을 클릭하면, `/post/{id}`으로 Get 요청을 합니다. (만약 1번 글을 클릭하면 `/post/1`로 접속됩
-니다.)  
-`BoardController`에 `detail()`을 아래와 같이 구현하여, 요청받았을 때 해당 `id`의 데이터가 View로 전
-달되도록 만들어줍니다.
+각 게시글을 클릭하면, `/post/{id}`으로 Get 요청을 합니다. (만약 1번 글을 클릭하면 `/post/1`로 접속됩니다.)  
+`BoardController`에 `detail()`을 아래와 같이 구현하여, 요청받았을 때 해당 `id`의 데이터가 View로 전달되도록 만들어줍니다.
 
 ```java
 package kr.kyuhyuk.board.controller;

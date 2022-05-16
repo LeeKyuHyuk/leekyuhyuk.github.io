@@ -5,12 +5,9 @@ date: '2019-03-04 23:07:04'
 category: Simple-ARM-Operating-System
 ---
 
-> Source Code는
-> [https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-4/src](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-4/src)에
-> 있습니다.
+> Source Code는 [https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-4/src](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/Chapter-4/src)에있습니다.
 
-'[Chapter 3: GPIO를 제어해보자! (ARM Assembly)](/article/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-3)'
-에서는 ARM Assembly를 사용하여 GPIO를 제어했습니다.  
+'[Chapter 3: GPIO를 제어해보자! (ARM Assembly)](/article/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-3)' 에서는 ARM Assembly를 사용하여 GPIO를 제어했습니다.  
 이번에는 ARM Assembly에서 C함수를 호출하여 GPIO를 제어해보도록 하겠습니다.
 
 ### Raspberry Pi Zero ACT LED Toggle
@@ -64,8 +61,7 @@ int main(void) {
 ```
 
 여기서 우리는 1초마다 ACT LED가 ON, OFF되는것을 구현하고 싶으니 Delay 함수를 구현해야합니다.  
-Delay 함수는 System Timer Counter 레지스터를 사용하면 쉽게 구현이 가능합니다.
-![System Timer Counter 레지스터](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-4/2019-03-04-Simple-ARM-Operating-System-Chapter-4_1.png)
+Delay 함수는 System Timer Counter 레지스터를 사용하면 쉽게 구현이 가능합니다. ![System Timer Counter 레지스터](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-4/2019-03-04-Simple-ARM-Operating-System-Chapter-4_1.png)
 
 **`delay.h`:**
 
@@ -168,15 +164,11 @@ clean:
 빌드가 완료되면 `kernel.bin` 파일이 생성됩니다.
 
 SDCard를 FAT32로 포맷합니다.  
-그리고,
-[/References/boot](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/References/boot)에
-있는 `bootcode.bin`, `config.txt`, `start.elf`를 모두 복사합니다.  
+그리고, [/References/boot](https://github.com/LeeKyuHyuk/Simple-ARM-Operating-System/tree/raspberry-pi-zero/References/boot)에있는 `bootcode.bin`, `config.txt`, `start.elf`를 모두 복사합니다.  
 방금 빌드한 `kernel.bin`도 함께 복사합니다.  
 ![SDCard files](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-4/2019-03-04-Simple-ARM-Operating-System-Chapter-4_2.png)
 
-> SDCard에 있는 `config.txt`에는 `kernel=kernel.bin`이라는 설정만 있습니다. 이 설정은 `kernel.bin`을
-> 사용하여 부팅하겠다는 뜻입니다.
+> SDCard에 있는 `config.txt`에는 `kernel=kernel.bin`이라는 설정만 있습니다. 이 설정은 `kernel.bin`을사용하여 부팅하겠다는 뜻입니다.
 
-SDCard를 Raspberry Pi Zero에 넣고, 부팅하면 아래와 같이 ACT LED가 켜지고 꺼지는 것을 확인할 수 있습
-니다.  
+SDCard를 Raspberry Pi Zero에 넣고, 부팅하면 아래와 같이 ACT LED가 켜지고 꺼지는 것을 확인할 수 있습니다.  
 ![Raspberry Pi Zero ACT LED On Off](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-4/2019-03-04-Simple-ARM-Operating-System-Chapter-4_3.gif)

@@ -4,16 +4,12 @@ date: '2021-09-17 03:27:23'
 category: GraphQL
 ---
 
-[이전 글](https://kyuhyuk.kr/article/graphql/2021/09/16/Building-a-GraphQL-Server-with-NestJS)에서
-구축했던 GraphQL 서버와 React & Electron Project와 연동하는 방법을 정리해 보았습니다.
+[이전 글](https://kyuhyuk.kr/article/graphql/2021/09/16/Building-a-GraphQL-Server-with-NestJS)에서구축했던 GraphQL 서버와 React & Electron Project와 연동하는 방법을 정리해 보았습니다.
 
 # React & Electron 프로젝트 생성
 
-[Electron-Typescript-React-Webpack-Boilerplate](https://github.com/LeeKyuHyuk/Electron-Typescript-React-Webpack-Boilerplate)을
-사용하여 React & Electron 프로젝트를 생성합니다.  
-설정 방법은
-[`README.md`](https://github.com/LeeKyuHyuk/Electron-Typescript-React-Webpack-Boilerplate/blob/master/README.md)
-파일을 참고합니다.
+[Electron-Typescript-React-Webpack-Boilerplate](https://github.com/LeeKyuHyuk/Electron-Typescript-React-Webpack-Boilerplate)을사용하여 React & Electron 프로젝트를 생성합니다.  
+설정 방법은 [`README.md`](https://github.com/LeeKyuHyuk/Electron-Typescript-React-Webpack-Boilerplate/blob/master/README.md) 파일을 참고합니다.
 
 # React & Electron 프로젝트에 Apollo GraphQL Client 추가 및 설정
 
@@ -84,8 +80,7 @@ ReactDOM.render(
 ```
 
 프로젝트에서 사용되는 Query, Mutation의 Type를 생성합니다.  
-`npm run apollo:codegen`를 실행하면, `src` 폴더 안에 `gql`로 명시한 구문에서 사용한 Type를
-`src/types`에 생성합니다.  
+`npm run apollo:codegen`를 실행하면, `src` 폴더 안에 `gql`로 명시한 구문에서 사용한 Type를 `src/types`에 생성합니다.  
 ![npm run apollo:codegen](/assets/image/2021-09-18-Using-GraphQL-in-React-and-Electron/2021-09-18-Using-GraphQL-in-React-and-Electron_1.png)
 
 **`src/renderer/renderer.tsx` :**

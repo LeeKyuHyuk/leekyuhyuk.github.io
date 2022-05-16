@@ -9,20 +9,15 @@ category: React
 
 ![Example Structure](/assets/image/2021-07-23-React-Context-API/2021-07-23-React-Context-API_2.png)
 
-Root의 State에 `itemList`라는 값이 있고, 이 값을 변경시키는 `handleSetItemList()`라는 함수가 있습니
-다.  
-상품을 장바구니에 넣을 때, `ProductItem`에서는 `itemList`의 값을 바꾸기 위해 `handleSetItemList()`를
-호출하고, `BasketHeader`에서는 `itemList`의 값을 이용하여 장바구니에 몇 개가 담겼는지 표시해 줍니다
-.  
-위의 요구 사항을 구현하기 위해서는 `itemList`와 `handleSetItemList()` 함수를 Props를 사용하여 하위컴
-포넌트에게 전달을 해야 합니다.
+Root의 State에 `itemList`라는 값이 있고, 이 값을 변경시키는 `handleSetItemList()`라는 함수가 있습니다.  
+상품을 장바구니에 넣을 때, `ProductItem`에서는 `itemList`의 값을 바꾸기 위해 `handleSetItemList()`를호출하고, `BasketHeader`에서는 `itemList`의 값을 이용하여 장바구니에 몇 개가 담겼는지 표시해 줍니다 .  
+위의 요구 사항을 구현하기 위해서는 `itemList`와 `handleSetItemList()` 함수를 Props를 사용하여 하위컴포넌트에게 전달을 해야 합니다.
 
 만약 하위 컴포넌트가 엄청 많고 복잡하다면 어떻게 해야 할까요? 계속 아래로 전달해야 할까요?
 
 ## React Context를 사용합시다!
 
-React 16.3부터 Context API가 추가되었으며, Context를 사용하면 더 간편하게 값을 읽고 설정할 수 있습니
-다.
+React 16.3부터 Context API가 추가되었으며, Context를 사용하면 더 간편하게 값을 읽고 설정할 수 있습니다.
 
 코드를 간단하게 짜보도록 하겠습니다.
 
@@ -167,8 +162,7 @@ export default ProductItem;
 모두 작성했다면, 아래와 같은 화면이 출력 될 것입니다.  
 ![Example React View](/assets/image/2021-07-23-React-Context-API/2021-07-23-React-Context-API_3.png)
 
-이 화면에서 장바구니 담기를 누르면, Console 창에 무엇이 담겼는지 출력되고 위에 장바구니 개수가 출력
-되는 것을 간단하게 구현해보려고 합니다.
+이 화면에서 장바구니 담기를 누르면, Console 창에 무엇이 담겼는지 출력되고 위에 장바구니 개수가 출력되는 것을 간단하게 구현해보려고 합니다.
 
 **src/BasketContext.tsx :**
 
@@ -248,8 +242,7 @@ export function useBasketDispatch() {
 ```
 
 이제 Context, Provider, Custom Hooks 모두 준비가 완료되었습니다.  
-`index.tsx`를 아래와 같이 수정하면, `App` 컴포넌트 안에 있는 모든 곳에서 `state`와 `dispatch`를 위에
-서 만든 Custom Hooks를 사용하여 쉽게 사용할 수 있습니다.
+`index.tsx`를 아래와 같이 수정하면, `App` 컴포넌트 안에 있는 모든 곳에서 `state`와 `dispatch`를 위에서 만든 Custom Hooks를 사용하여 쉽게 사용할 수 있습니다.
 
 **src/index.tsx :**
 
@@ -333,5 +326,4 @@ export default ProductItem;
 ![Example React View](/assets/image/2021-07-23-React-Context-API/2021-07-23-React-Context-API_4.png)
 
 긴 글을 읽어주셔서 감사합니다.  
-시간이 나신다면 `Action`에 'REMOVE'와 같은 여러 Action을 추가하여 여러 기능을 추가하여 더 완성도 있
-게 만들어봅시다.
+시간이 나신다면 `Action`에 'REMOVE'와 같은 여러 Action을 추가하여 여러 기능을 추가하여 더 완성도 있게 만들어봅시다.

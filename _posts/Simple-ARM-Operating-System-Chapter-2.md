@@ -56,14 +56,11 @@ category: Simple-ARM-Operating-System
 
 #### 사용된 상수가 `MOV` 명령에서 사용 가능한지 불가능한지 판단해보자
 
-- `MOV R0, #0x7F00` : **가능**
-  ![Example1](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-2/2019-03-04-Simple-ARM-Operating-System-Chapter-2_2.png)
+- `MOV R0, #0x7F00` : **가능** ![Example1](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-2/2019-03-04-Simple-ARM-Operating-System-Chapter-2_2.png)
 
-- `MOV R0, #0x30C0` : **가능**
-  ![Example2](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-2/2019-03-04-Simple-ARM-Operating-System-Chapter-2_3.png)
+- `MOV R0, #0x30C0` : **가능** ![Example2](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-2/2019-03-04-Simple-ARM-Operating-System-Chapter-2_3.png)
 
-- `MOV R3, #0x14E` : **불가능**
-  ![Example3](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-2/2019-03-04-Simple-ARM-Operating-System-Chapter-2_4.png)
+- `MOV R3, #0x14E` : **불가능** ![Example3](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-2/2019-03-04-Simple-ARM-Operating-System-Chapter-2_4.png)
 
 - `LDR`을 사용하면, **범위 제한 없는 32비트 값으로 표현 가능**
   - 실제 상수 값은 메모리에 존재하며 레지스터 참조로 변환됩니다.
@@ -174,8 +171,7 @@ START:  MOV R0, #10       @ R0 레지스터에 상수 10을 저장
                               @ R1 : 0x1000
 ```
 
-> Pre Indexing에서는 **값이 업데이트 되지 않습니다!** 만약 값을 업데이트하고 싶다면 아래의 `!`(Auto
-> Update) 옵션을 사용해야합니다.
+> Pre Indexing에서는 **값이 업데이트 되지 않습니다!** 만약 값을 업데이트하고 싶다면 아래의 `!`(Auto Update) 옵션을 사용해야합니다.
 
 #### '`!`(Auto Update) suffix' 사용 예시)
 
@@ -275,8 +271,7 @@ START:  MOV R0, #10       @ R0 레지스터에 상수 10을 저장
 
 > 비교연산은 레지스터에 변화가 없으며, Flag만 변합니다.
 
-- **[문제]** `R0`의 7번 비트가 `1`이면 `R1` 레지스터에 2를 기록하고, `0`이면 `R1` 레지스터에 3을 기
-  록하는 프로그램을 작성하시오.
+- **[문제]** `R0`의 7번 비트가 `1`이면 `R1` 레지스터에 2를 기록하고, `0`이면 `R1` 레지스터에 3을 기록하는 프로그램을 작성하시오.
 
 - `AND`를 사용하여 해결:
 
@@ -308,8 +303,7 @@ START:  MOV R0, #10       @ R0 레지스터에 상수 10을 저장
 - C (Carry) : 덧셈 Carry에 Set, 뺄셈 Borrow에 Clear, Rotate시 밀린 비트 저장
 - V (oVerflow) : `signed` 덧셈, 뺄셈 연산 결과로 값의 초과가 발생한 경우
 
-> Carry는 덧셈을 했을때 범위를 초과해서 자리 올림이 발생했을때를 말하는것입니다. Overflow와는 다릅니
-> 다.
+> Carry는 덧셈을 했을때 범위를 초과해서 자리 올림이 발생했을때를 말하는것입니다. Overflow와는 다릅니다.
 
 ---
 

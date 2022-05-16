@@ -4,41 +4,25 @@ date: '2019-05-14 19:39:57'
 category: Raspberry-Pi
 ---
 
-Raspberry Pi의 운영 체제 개발에 대한 글입니다. 이 글은 테스트할 다른 하드웨어가 없기 때문에
-Raspberry Pi Model B Rev 2에 맞춰져 작성되었습니다. 하지만 지금까지의 모델들은 Memory-Mapped I/O 위
-치 이외에는 대부분 동일합니다. 이것은 최소한의 시스템을 만드는 방법의 예를 보여주지만, 프로젝트를 적
-절하게 구조화하는 방법의 예는 아닙니다.
+Raspberry Pi의 운영 체제 개발에 대한 글입니다. 이 글은 테스트할 다른 하드웨어가 없기 때문에 Raspberry Pi Model B Rev 2에 맞춰져 작성되었습니다. 하지만 지금까지의 모델들은 Memory-Mapped I/O 위치 이외에는 대부분 동일합니다. 이것은 최소한의 시스템을 만드는 방법의 예를 보여주지만, 프로젝트를 적절하게 구조화하는 방법의 예는 아닙니다.
 
 # Prepare
 
-여러분은 이제 스스로 운영체제 개발을 시작하려고 합니다. 아마도 언젠가는 스스로 새로운 운영체제를 개
-발할 수도 있습니다. 이것은 Bootstrap 또는 Self-hosting으로 알려진 과정입니다. 우선은 기존 운영 체제
-에서 새 운영 체제를 컴파일 할 수 있는 시스템을 환경을 만들기만 하면 됩니다. 이 과정은
-[Cross-Compile](https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F)으로 알려져 있으며 운영체제
-개발의 첫 번째 단계입니다.
+여러분은 이제 스스로 운영체제 개발을 시작하려고 합니다. 아마도 언젠가는 스스로 새로운 운영체제를 개발할 수도 있습니다. 이것은 Bootstrap 또는 Self-hosting으로 알려진 과정입니다. 우선은 기존 운영 체제에서 새 운영 체제를 컴파일 할 수 있는 시스템을 환경을 만들기만 하면 됩니다. 이 과정은 [Cross-Compile](https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F)으로 알려져 있으며 운영체제개발의 첫 번째 단계입니다.
 
-이 글에서는 운영체제 개발을 원활하게 할 수 있는 Linux와 같은 Unix 계열 운영체제를 사용합니다.
-Windows 사용자는 [MinGW](https://wiki.osdev.org/MinGW) 또는 [Cygwin](https://wiki.osdev.org/Cygwin)
-환경에서 진행할 수 있습니다.
+이 글에서는 운영체제 개발을 원활하게 할 수 있는 Linux와 같은 Unix 계열 운영체제를 사용합니다. Windows 사용자는 [MinGW](https://wiki.osdev.org/MinGW) 또는 [Cygwin](https://wiki.osdev.org/Cygwin) 환경에서 진행할 수 있습니다.
 
 # Building a Cross-Compiler
 
-> Main article: [GCC Cross-Compiler](https://wiki.osdev.org/GCC_Cross-Compiler),
-> [Why do I need a Cross Compiler?](https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F)
+> Main article: [GCC Cross-Compiler](https://wiki.osdev.org/GCC_Cross-Compiler), [Why do I need a Cross Compiler?](https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F)
 
-우선해야 할 일은 **arm-none-eabi** 용 GCC Cross-Compiler를 준비하는 것입니다. 아직 운영체제를 만들기
-위해 컴파일러를 수정하지 않았기 때문에, arm-none-eabi라는 일반적인 타겟을 사용할 것입니다. 이 타겟은
-System V ABI를 대상으로 하는 Toolchain을 제공합니다. Cross-Compiler 없이 운영체제를 올바르게 컴파일
-할 수 없습니다.
+우선해야 할 일은 **arm-none-eabi** 용 GCC Cross-Compiler를 준비하는 것입니다. 아직 운영체제를 만들기위해 컴파일러를 수정하지 않았기 때문에, arm-none-eabi라는 일반적인 타겟을 사용할 것입니다. 이 타겟은 System V ABI를 대상으로 하는 Toolchain을 제공합니다. Cross-Compiler 없이 운영체제를 올바르게 컴파일할 수 없습니다.
 
-만약 64비트 커널이 필요하다면, aarch64-elf를 타겟으로 사용하면 됩니다. 동일한 System V ABI 인터페이
-스를 제공하지만 64비트 용입니다. elf를 사용하는 것은 필수가 아니지만 작업을 간편하게 해줍니다.
+만약 64비트 커널이 필요하다면, aarch64-elf를 타겟으로 사용하면 됩니다. 동일한 System V ABI 인터페이스를 제공하지만 64비트 용입니다. elf를 사용하는 것은 필수가 아니지만 작업을 간편하게 해줍니다.
 
 # Overview
 
-이제 여러분은 크로스 컴파일러를 가지고 있어야 합니다. 이 글은 간단한 운영체제를 만드는데 필요한 최소
-한의 방법을 제공하고 있습니다. 이는 프로젝트 구조에 대한 권장 구조로 사용되지는 않지만 최소한의 커널
-에 대한 예로서는 사용되고 있습니다. 이런 간단한 커널을 개발하는 경우에는 3개의 파일만 있으면 됩니다.
+이제 여러분은 크로스 컴파일러를 가지고 있어야 합니다. 이 글은 간단한 운영체제를 만드는데 필요한 최소한의 방법을 제공하고 있습니다. 이는 프로젝트 구조에 대한 권장 구조로 사용되지는 않지만 최소한의 커널에 대한 예로서는 사용되고 있습니다. 이런 간단한 커널을 개발하는 경우에는 3개의 파일만 있으면 됩니다.
 
 1. `boot.S` - 커널이 CPU 환경에서 동작할 수 있도록 만들어 주기 위한 커널의 진입점입니다.
 2. `kernel.c` - 여러분이 만들게 될 커널 루틴입니다.
@@ -46,9 +30,7 @@ System V ABI를 대상으로 하는 Toolchain을 제공합니다. Cross-Compiler
 
 # Booting the Operating System
 
-이제 `boot.S`라는 파일을 만들고 그 내용을 설명할 것입니다. 이 예제에서는 앞에서 빌드 한
-Cross-Compiler Toolchain의 일부인 GNU Assembler를 사용합니다. 이 어셈블러는 나머지 GNU Toolchain과
-잘 호환됩니다.
+이제 `boot.S`라는 파일을 만들고 그 내용을 설명할 것입니다. 이 예제에서는 앞에서 빌드 한 Cross-Compiler Toolchain의 일부인 GNU Assembler를 사용합니다. 이 어셈블러는 나머지 GNU Toolchain과잘 호환됩니다.
 
 ## Raspberry Pi Model A, B, A+, B+, and Zero
 
@@ -100,10 +82,7 @@ halt:
 	b halt
 ```
 
-Linker Script에서 `.text.boot` 섹션을 사용하여 `boot.S`를 커널 이미지의 맨 처음에 배치합니다. 이 코
-드는 `kernel_main` 함수를 호출하기 전에 최소의 C 환경을 초기화합니다. 즉, 스택이 있고 BSS 세그먼트를
-0으로 만드는 것을 의미합니다. 이 코드는 `r0`~`r2`를 사용하지 않으므로 `kernel_main` 호출에 유효합니
-다.
+Linker Script에서 `.text.boot` 섹션을 사용하여 `boot.S`를 커널 이미지의 맨 처음에 배치합니다. 이 코드는 `kernel_main` 함수를 호출하기 전에 최소의 C 환경을 초기화합니다. 즉, 스택이 있고 BSS 세그먼트를 0으로 만드는 것을 의미합니다. 이 코드는 `r0`~`r2`를 사용하지 않으므로 `kernel_main` 호출에 유효합니다.
 
 아래와 같이 `boot.S`를 assemble 할 수 있습니다:
 
@@ -113,9 +92,7 @@ arm-none-eabi-gcc -mcpu=arm1176jzf-s -fpic -ffreestanding -c boot.S -o boot.o
 
 ## Raspberry Pi 2
 
-최신 버전의 Raspberry Pi를 사용하면 더 많은 작업을 수행할 수 있습니다. Raspberry Pi 2와 3에는 4개의
-코어가 있습니다. 부팅 할 때 모든 코어가 실행 중이며 동일한 부팅 코드를 실행합니다. 따라서 코어를 구
-별하고 그중 하나만 실행할 수 있게 하고 나머지는 무한 루프에 넣어야 합니다.
+최신 버전의 Raspberry Pi를 사용하면 더 많은 작업을 수행할 수 있습니다. Raspberry Pi 2와 3에는 4개의코어가 있습니다. 부팅 할 때 모든 코어가 실행 중이며 동일한 부팅 코드를 실행합니다. 따라서 코어를 구별하고 그중 하나만 실행할 수 있게 하고 나머지는 무한 루프에 넣어야 합니다.
 
 ```assembly
 // AArch32 mode
@@ -229,22 +206,11 @@ aarch64-elf-gcc -ffreestanding -nostdinc -nostdlib -nostartfiles -c boot.S -o bo
 
 # Implementing the Kernel
 
-지금까지는 C와 같은 고급 언어를 사용할 수 있도록 프로세서를 설정하는 Bootstrap Assembly Stub를 작성
-했습니다. C++와 같은 다른 언어를 사용할 수도 있습니다.
+지금까지는 C와 같은 고급 언어를 사용할 수 있도록 프로세서를 설정하는 Bootstrap Assembly Stub를 작성했습니다. C++와 같은 다른 언어를 사용할 수도 있습니다.
 
 ## Freestanding and Hosted Environments
 
-일반적인 사용자 공간에서 C 또는 C++로 프로그래밍을 하는 경우에는 호스팅 환경(Hosted Environment)을
-사용했습니다. 호스팅 환경이란 C 표준 라이브러리 및 기타 기능이 있는 환경을 말합니다. 또는 독립적인
-(Freestanding) 환경이 있습니다. 이것은 우리가 여기서 사용하는 환경입니다. Freestanding은 C 표준 라이
-브러리가 없고, 우리가 제공하는 것만 사용할 수 있는 것을 의미합니다. 그러나 일부 헤더 파일은 실제로 C
-표준 라이브러리의 일부가 아니라 컴파일러에서 제공하는 헤더 파일입니다. 이러한 것들은 독립적인 C 소스
-코드에서도 사용할 수 있습니다. 이 경우 `<stddef.h>`를 사용하여 `size_t`와 `NULL` 및 `<stdint.h>`를
-가져와서 운영체제 개발에 매우 중요한 `intx_t` 및 `uintx_t` 자료형을 가져옵니다. 여기서 변수가 정확한
-크기인지 확인해야 합니다. (우리가 `uint16_t` 대신 `short`를 사용하고 `short`의 크기를 변경하면, 여기
-에 있는 VGA 드라이버가 깨질 것입니다!) 또한 `<float.h>`, `<iso646.h>`, `<limits.h>`, `<stdarg.h>` 헤
-더도 사용이 가능합니다. GCC는 실제로 몇 가지 헤더를 추가로 제공하지만 이들은 특별한 목적으로 사용됩
-니다.
+일반적인 사용자 공간에서 C 또는 C++로 프로그래밍을 하는 경우에는 호스팅 환경(Hosted Environment)을사용했습니다. 호스팅 환경이란 C 표준 라이브러리 및 기타 기능이 있는 환경을 말합니다. 또는 독립적인 (Freestanding) 환경이 있습니다. 이것은 우리가 여기서 사용하는 환경입니다. Freestanding은 C 표준 라이브러리가 없고, 우리가 제공하는 것만 사용할 수 있는 것을 의미합니다. 그러나 일부 헤더 파일은 실제로 C 표준 라이브러리의 일부가 아니라 컴파일러에서 제공하는 헤더 파일입니다. 이러한 것들은 독립적인 C 소스코드에서도 사용할 수 있습니다. 이 경우 `<stddef.h>`를 사용하여 `size_t`와 `NULL` 및 `<stdint.h>`를가져와서 운영체제 개발에 매우 중요한 `intx_t` 및 `uintx_t` 자료형을 가져옵니다. 여기서 변수가 정확한크기인지 확인해야 합니다. (우리가 `uint16_t` 대신 `short`를 사용하고 `short`의 크기를 변경하면, 여기에 있는 VGA 드라이버가 깨질 것입니다!) 또한 `<float.h>`, `<iso646.h>`, `<limits.h>`, `<stdarg.h>` 헤더도 사용이 가능합니다. GCC는 실제로 몇 가지 헤더를 추가로 제공하지만 이들은 특별한 목적으로 사용됩니다.
 
 ## Writing a kernel in C
 
@@ -389,16 +355,9 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 }
 ```
 
-GPU 부트로더는 `r0`~`r2`를 통해 커널에 인수(Argument)를 전달하고 `boot.S`는 이러한 3개의 레지스터를
-보존합니다. 이것들은 C 함수 호출에서 사용되는 3개의 인수입니다. `r0`은 Raspberry Pi가 부팅된 장치의
-코드를 포함합니다. 일반적으로 `0`이지만 실제 값은 보드의 펌웨어에 따라 다릅니다. `r1`은 'ARM Linux
-Machine Type'이 들어있으며, Raspberry Pi의 경우 BCM2708 CPU를 식별하는 `3138`(`0xC42`)입니다.
-[여기에서](https://www.arm.linux.org.uk/developer/machines/) ARM Machine 유형의 전체 목록을 볼 수 있
-습니다. `r2`는 ATAG(ARM TAG)의 주소를 가지고 있습니다.
+GPU 부트로더는 `r0`~`r2`를 통해 커널에 인수(Argument)를 전달하고 `boot.S`는 이러한 3개의 레지스터를보존합니다. 이것들은 C 함수 호출에서 사용되는 3개의 인수입니다. `r0`은 Raspberry Pi가 부팅된 장치의코드를 포함합니다. 일반적으로 `0`이지만 실제 값은 보드의 펌웨어에 따라 다릅니다. `r1`은 'ARM Linux Machine Type'이 들어있으며, Raspberry Pi의 경우 BCM2708 CPU를 식별하는 `3138`(`0xC42`)입니다. [여기에서](https://www.arm.linux.org.uk/developer/machines/) ARM Machine 유형의 전체 목록을 볼 수 있습니다. `r2`는 ATAG(ARM TAG)의 주소를 가지고 있습니다.
 
-GPIO와 UART의 주소는 Peripheral Base Address의 offset이며, Raspberry Pi 1은 `0x20000000`이고
-Raspberry Pi 2와 Raspberry Pi 3은 `0x3F000000`입니다. 레지스터 주소와 사용 방법은 BCM2835 설명서에서
-확인할 수 있습니다.
+GPIO와 UART의 주소는 Peripheral Base Address의 offset이며, Raspberry Pi 1은 `0x20000000`이고 Raspberry Pi 2와 Raspberry Pi 3은 `0x3F000000`입니다. 레지스터 주소와 사용 방법은 BCM2835 설명서에서확인할 수 있습니다.
 
 다음과 같이 컴파일합니다:
 
@@ -416,10 +375,7 @@ aarch64-elf-gcc -ffreestanding -nostdinc -nostdlib -nostartfiles -c kernel.c -o 
 
 # Linking the Kernel
 
-마지막으로 커널을 생성하기 위해 오브젝트 파일들을 Link 해야 합니다. 일반적인 프로그래밍을 할 때
-Toolchain은 프로그램을 Link 하기 위한 기본 스크립트를 제공합니다. 하지만 커널 개발에는 적합하지 않으
-며 사용자 정의된 Linker Script를 사용해야 합니다. 64비트 모드의 Linker Script는 시작 주소를 제외하고
-는 똑같습니다.
+마지막으로 커널을 생성하기 위해 오브젝트 파일들을 Link 해야 합니다. 일반적인 프로그래밍을 할 때 Toolchain은 프로그램을 Link 하기 위한 기본 스크립트를 제공합니다. 하지만 커널 개발에는 적합하지 않으며 사용자 정의된 Linker Script를 사용해야 합니다. 64비트 모드의 Linker Script는 시작 주소를 제외하고는 똑같습니다.
 
 ```
 ENTRY(_start)
@@ -469,20 +425,16 @@ SECTIONS
 
 `ENTRY(_start)`는 커널 이미지의 진입점을 선언합니다. 이 심볼은 `boot.S` 파일에서 선언되었습니다.
 
-`SECTIONS`은 섹션을 선언합니다. 이것은 코드와 데이터의 비트가 어디로 갈지 결정하고 각 섹션의 크기를
-추적하는데 도움이 되는 몇 가지 심볼을 설정합니다.
+`SECTIONS`은 섹션을 선언합니다. 이것은 코드와 데이터의 비트가 어디로 갈지 결정하고 각 섹션의 크기를추적하는데 도움이 되는 몇 가지 심볼을 설정합니다.
 
 ```assembly
     . = 0x8000;
     __start = .;
 ```
 
-첫 번째 줄의 "`.`"은 현재 주소를 커널이 시작되는 `0x8000`(또는 `0x80000`)으로 설정하도록 Linker에 알
-리기 위해 현재 주소를 나타냅니다. Linker가 데이터를 추가하면 현재 주소가 자동으로 증가합니다. 두 번
-째 줄은 "`__start`" 심볼을 만들고 현재 주소로 설정합니다.
+첫 번째 줄의 "`.`"은 현재 주소를 커널이 시작되는 `0x8000`(또는 `0x80000`)으로 설정하도록 Linker에 알리기 위해 현재 주소를 나타냅니다. Linker가 데이터를 추가하면 현재 주소가 자동으로 증가합니다. 두 번째 줄은 "`__start`" 심볼을 만들고 현재 주소로 설정합니다.
 
-이후 섹션은 Text(Code), Read-Only Data, Read-Write Data 그리고 BSS(0으로 초기화된 메모리)로 정의됩니
-다.
+이후 섹션은 Text(Code), Read-Only Data, Read-Write Data 그리고 BSS(0으로 초기화된 메모리)로 정의됩니다.
 
 ```assembly
     __text_start = .;
@@ -494,31 +446,17 @@ SECTIONS
     __text_end = .;
 ```
 
-첫 번째 행은 섹션에 `__text_start` 심볼을 만듭니다. 두 번째 줄부터 다섯 번째 줄까지는 `.text` 섹션입
-니다. 3행과 4행은 파일의 어떤 섹션이 `.text` 섹션에 배치될지 선언합니다. 여기서는 "`.text.boot`"이
-먼저 배치되고 그 뒤에 일반적인 "`.text`"가 옵니다. "`.text.boot`"는 `boot.S`에서만 사용되며 커널 이
-미지의 시작 부분에서 끝납니다. "`.text`"는 나머지 코드 모두를 포함합니다. Linker에서 추가한 모든 데
-이터는 현재 주소("`.`")를 자동으로 증가시킵니다. 6행에서는 4096 바이트씩(Raspberry Pi에 대한 페이지
-크기) 정렬되도록 설정합니다. 그리고 마지막 7행에서는 `__text_end` 심볼을 만들어서 섹션이 끝나는 곳을
-알 수 있습니다.
+첫 번째 행은 섹션에 `__text_start` 심볼을 만듭니다. 두 번째 줄부터 다섯 번째 줄까지는 `.text` 섹션입니다. 3행과 4행은 파일의 어떤 섹션이 `.text` 섹션에 배치될지 선언합니다. 여기서는 "`.text.boot`"이먼저 배치되고 그 뒤에 일반적인 "`.text`"가 옵니다. "`.text.boot`"는 `boot.S`에서만 사용되며 커널 이미지의 시작 부분에서 끝납니다. "`.text`"는 나머지 코드 모두를 포함합니다. Linker에서 추가한 모든 데이터는 현재 주소("`.`")를 자동으로 증가시킵니다. 6행에서는 4096 바이트씩(Raspberry Pi에 대한 페이지크기) 정렬되도록 설정합니다. 그리고 마지막 7행에서는 `__text_end` 심볼을 만들어서 섹션이 끝나는 곳을알 수 있습니다.
 
-`__text_start`와 `__text_end`는 무엇이고 페이지 정렬을 사용하는 이유는 무엇일까요? 심볼
-`__text_start`와 `__text_end`는 커널 소스에서 사용될 수 있으며, Linker는 올바른 주소를 바이너리에 저
-장합니다. 예를 들어 `__bss_start` 와 `__bss_end`는 `boot.S`에서 사용하고 있습니다. 원한다면 C에서
-`extern`으로 선언하여 사용할 수도 있습니다. 필요하진 않지만 모든 섹션을 페이지 크기에 맞게 정렬했습
-니다. 나중에 겹쳐서(한 페이지에 2개의 섹션) 처리할 필요 없이 Executable, Read-Only, Read-Write 권한
-을 사용하여 [페이지 테이블](https://ko.wikipedia.org/wiki/페이지_테이블)에 매핑할 수 있습니다.
+`__text_start`와 `__text_end`는 무엇이고 페이지 정렬을 사용하는 이유는 무엇일까요? 심볼 `__text_start`와 `__text_end`는 커널 소스에서 사용될 수 있으며, Linker는 올바른 주소를 바이너리에 저장합니다. 예를 들어 `__bss_start` 와 `__bss_end`는 `boot.S`에서 사용하고 있습니다. 원한다면 C에서 `extern`으로 선언하여 사용할 수도 있습니다. 필요하진 않지만 모든 섹션을 페이지 크기에 맞게 정렬했습니다. 나중에 겹쳐서(한 페이지에 2개의 섹션) 처리할 필요 없이 Executable, Read-Only, Read-Write 권한을 사용하여 [페이지 테이블](https://ko.wikipedia.org/wiki/페이지_테이블)에 매핑할 수 있습니다.
 
 ```assembly
     __end = .;
 ```
 
-모든 섹션이 선언된 후 `__end` 심볼을 만듭니다. 런타임 중에 커널의 크기를 알고 싶다면 `__start`와
-`__end`를 사용하여 구할 수 있습니다.
+모든 섹션이 선언된 후 `__end` 심볼을 만듭니다. 런타임 중에 커널의 크기를 알고 싶다면 `__start`와 `__end`를 사용하여 구할 수 있습니다.
 
-이러한 구성요소를 통해 실제로 최종적인 커널을 빌드 할 수 있습니다. Linker는 Link Process를 보다 잘
-할 수 있도록 Compiler를 Linker로 사용합니다. 커널이 C++로 작성되었다면, C++ 컴파일러를 사용해야 합니
-다.
+이러한 구성요소를 통해 실제로 최종적인 커널을 빌드 할 수 있습니다. Linker는 Link Process를 보다 잘할 수 있도록 Compiler를 Linker로 사용합니다. 커널이 C++로 작성되었다면, C++ 컴파일러를 사용해야 합니다.
 
 아래와 같이 커널을 빌드 합니다:
 
@@ -550,25 +488,17 @@ cmdline.txt   fixup_cd.dat  kernel_cutdown.img    start_cd.elf
 config.txt    issue.txt     kernel_emergency.img
 ```
 
-만약 Raspbian 이미지가 없으면, FAT32 파티션을 만들고
-[공식 저장소에서 펌웨어 파일을 다운로드](https://github.com/raspberrypi/firmware/tree/master/boot)
-할 수 있습니다. 3개의 파일만 필요합니다.
+만약 Raspbian 이미지가 없으면, FAT32 파티션을 만들고 [공식 저장소에서 펌웨어 파일을 다운로드](https://github.com/raspberrypi/firmware/tree/master/boot) 할 수 있습니다. 3개의 파일만 필요합니다.
 
 - `bootcode.bin`: 이 파일이 제일 먼저 로드되고, GPU에서 실행되는 파일입니다.
 - `fixup.dat`: 이 데이터 파일에는 중요한 하드웨어 관련 정보가 들어있습니다.
 - `start.elf`: Raspberry Pi 펌웨어입니다. (IBM PC의 BIOS와 동일합니다) 이것 또한 GPU에서 실행됩니다.
 
-Raspberry Pi의 전원이 켜지면 ARM CPU가 중지되고 GPU가 실행됩니다. GPU는 ROM에서 부트로더를 로드하고
-실행합니다. 그리고 SD카드를 찾아 `bootcode.bin`을 로드합니다. bootcode는 `config.txt`와
-`cmdline.txt`를 처리하는 `start.elf` 펌웨어를 로드합니다. `start.elf`는 `kernel*.img`를 로드하고 해
-당 커널 이미지를 실행하는 ARM CPU가 실행됩니다.
+Raspberry Pi의 전원이 켜지면 ARM CPU가 중지되고 GPU가 실행됩니다. GPU는 ROM에서 부트로더를 로드하고실행합니다. 그리고 SD카드를 찾아 `bootcode.bin`을 로드합니다. bootcode는 `config.txt`와 `cmdline.txt`를 처리하는 `start.elf` 펌웨어를 로드합니다. `start.elf`는 `kernel*.img`를 로드하고 해당 커널 이미지를 실행하는 ARM CPU가 실행됩니다.
 
-ARM 모드 간을 전환하려면 `kernel.img` 파일의 이름을 변경해야 합니다. `kernel7.img`로 이름을 바꾸면
-AArch32 모드 (ARMv7)에서 실행됩니다. AArch64 모드(ARMv8)의 경우 `kernel8.img`로 이름을 변경해야 합니
-다.
+ARM 모드 간을 전환하려면 `kernel.img` 파일의 이름을 변경해야 합니다. `kernel7.img`로 이름을 바꾸면 AArch32 모드 (ARMv7)에서 실행됩니다. AArch64 모드(ARMv8)의 경우 `kernel8.img`로 이름을 변경해야 합니다.
 
-이제 원래 있던 `kernel.img`를 자신이 만든 커널 파일로 교체하고, SD카드를 Raspberry Pi에 꽂아 전원을
-켭니다. Minicom에서는 다음을 보여주게 됩니다.
+이제 원래 있던 `kernel.img`를 자신이 만든 커널 파일로 교체하고, SD카드를 Raspberry Pi에 꽂아 전원을켭니다. Minicom에서는 다음을 보여주게 됩니다.
 
 ```
 Hello, kernel World!
@@ -577,8 +507,7 @@ Hello, kernel World!
 ## Testing your operating system (QEMU)
 
 QEMU는 Raspberry Pi 2 에뮬레이팅을 지원합니다. Machine type를 "raspi2"로 사용하면 됩니다.  
-QEMU를 사용하면 일반적으로 커널을 바이너리로 objcopy 할 필요가 없습니다. QEMU는 ELF 커널도 지원합니
-다.
+QEMU를 사용하면 일반적으로 커널을 바이너리로 objcopy 할 필요가 없습니다. QEMU는 ELF 커널도 지원합니다.
 
 ```sh
 qemu-system-arm -m 256 -M raspi2 -serial stdio -kernel kernel.elf

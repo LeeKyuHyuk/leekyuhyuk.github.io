@@ -6,13 +6,10 @@ category: NestJS
 
 # MariaDB Installation
 
-> MariaDB는 Oracle 소유의 불확실한 MySQL의 라이선스 상태에 반발하여 만들어졌습니다. MySQL의 소스코드
-> 를 Fork하여 만들어졌으므로 사용방법과 구조가 MySQL과 동일합니다.  
-> MySQL은 상업용으로 사용하면 유료이지만, MariaDB는 상업용으로 사용해도 비용을 지불하지 않아도 되는
-> 장점이 있습니다.
+> MariaDB는 Oracle 소유의 불확실한 MySQL의 라이선스 상태에 반발하여 만들어졌습니다. MySQL의 소스코드를 Fork하여 만들어졌으므로 사용방법과 구조가 MySQL과 동일합니다.  
+> MySQL은 상업용으로 사용하면 유료이지만, MariaDB는 상업용으로 사용해도 비용을 지불하지 않아도 되는장점이 있습니다.
 
-[Download MariaDB Server](https://mariadb.org/download/)에 접속하여 MariaDB Server 설치 파일을 다운
-로드하고 설치합니다.  
+[Download MariaDB Server](https://mariadb.org/download/)에 접속하여 MariaDB Server 설치 파일을 다운로드하고 설치합니다.  
 ![Download MariaDB Server](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_1.png)
 
 MariaDB에 `address_book` 데이터베이스와 `contact` 테이블을 추가합니다.
@@ -42,8 +39,7 @@ cd address-book
 npm init
 ```
 
-`npm`의 [workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces)를 사용하여 `backend`와
-`frontend` 프로젝트를 추가합니다.
+`npm`의 [workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces)를 사용하여 `backend`와 `frontend` 프로젝트를 추가합니다.
 
 ```bash
 npm init -w backend
@@ -84,8 +80,7 @@ npm install --save-dev @nestjs/cli @nestjs/schematics @types/express @types/node
 },
 ```
 
-`backend/nest-cli.json`, `backend/tsconfig.build.json`, `backend/tsconfig.json`을 아래와 같이 작성하
-여 저장합니다.
+`backend/nest-cli.json`, `backend/tsconfig.build.json`, `backend/tsconfig.json`을 아래와 같이 작성하여 저장합니다.
 
 **`backend/nest-cli.json` :**
 
@@ -160,8 +155,7 @@ bootstrap();
 ```
 
 MySQL과 연동하기 위해 `ormconfig.json`를 작성합니다.  
-<span style="color:red;">Backend 프로젝트에 생성하지 않고, Address Book 프로젝트에 생성합니다
-.</span>
+<span style="color:red;">Backend 프로젝트에 생성하지 않고, Address Book 프로젝트에 생성합니다 .</span>
 
 **`ormconfig.json` :**
 
@@ -239,8 +233,7 @@ export type ContactResponse = {
 };
 ```
 
-TypeORM을 사용하여 Repository Design Pattern을 정의합니다. 아래와 같이 `Contact` Entity를 정의합니다
-.
+TypeORM을 사용하여 Repository Design Pattern을 정의합니다. 아래와 같이 `Contact` Entity를 정의합니다 .
 
 **`backend/src/repository/contact.entity.ts` :**
 
@@ -263,8 +256,7 @@ export class Contact {
 }
 ```
 
-`backend/src/models` 폴더를 만들고, `contact.service.ts`, `contact.resolver.ts`,
-`contact.module.ts`를 작성합니다.
+`backend/src/models` 폴더를 만들고, `contact.service.ts`, `contact.resolver.ts`, `contact.module.ts`를 작성합니다.
 
 **`backend/src/models/contact.service.ts` :**
 
@@ -406,8 +398,7 @@ GraphQL Playground를 통하여 원하는 대로 동작하는지 확인을 해�
 npm run start:dev --workspace=backend
 ```
 
-위의 명령어로 Nest.js Dev Server를 실행하고,
-[http://localhost:8081/graphql](http://localhost:8081/graphql)에 접속합니다.  
+위의 명령어로 Nest.js Dev Server를 실행하고, [http://localhost:8081/graphql](http://localhost:8081/graphql)에 접속합니다.  
 접속하면 아래와 같이 우리가 구현한 Query와 Mutation이 Docs에 출력되는 것을 확인할 수 있습니다.  
 ![GraphQL Playground](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_2.png)
 
@@ -443,8 +434,7 @@ query {
 위에 출력된 `id`를 사용하여 `getContact` Query를 테스트해봅시다.  
 ![getContact Query](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_5.png)
 
-정상적으로 작동되는 것을 확인했으니, 마지막으로 `removeContact` Mutation을 사용하여 정상적으로 삭제
-되는지도 확인해 봅시다.  
+정상적으로 작동되는 것을 확인했으니, 마지막으로 `removeContact` Mutation을 사용하여 정상적으로 삭제되는지도 확인해 봅시다.  
 ![removeContact Mutation](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_6.png)
 
 `getAllContact` Query를 사용하여 주소록을 확인해 봅시다.  
@@ -470,8 +460,7 @@ npm install --save-dev @types/react @types/react-dom @types/react-router @types/
 },
 ```
 
-`frontend/apollo.config.js`, `frontend/tsconfig.json`, `frontend/webpack.config.js`을 아래와 같이 작
-성하여 저장합니다.
+`frontend/apollo.config.js`, `frontend/tsconfig.json`, `frontend/webpack.config.js`을 아래와 같이 작성하여 저장합니다.
 
 **`frontend/apollo.config.js` :**
 
@@ -655,8 +644,7 @@ npm run apollo:codegen --workspace=frontend
 <span style="color:red;">2021년 12월 5일 기준으로 아래와 같은 오류가 발생하고 있습니다.</span>  
 ![apollo:codegen Error](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_8.png)
 
-`node_modules/apollo-language-server/node_modules/graphql` 폴더를 삭제하면 아래와 같이 정상적으로 생
-성됩니다.  
+`node_modules/apollo-language-server/node_modules/graphql` 폴더를 삭제하면 아래와 같이 정상적으로 생성됩니다.  
 ![apollo:codegen](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_9.png)
 
 # List, Add, Detail 컴포넌트 만들기
@@ -838,8 +826,7 @@ Add 버튼을 눌러 주소록을 추가해 봅시다.
 입력한 정보가 정상적으로 출력되고 있음을 확인할 수 있습니다.  
 ![Detail](/assets/image/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book/2021-12-05-NestJS-GraphQL-MySQL-React-Address-Book_13.png)
 
-> 삭제 기능은 `Detail.tsx`에 추가해 봅시다. `Add.tsx`에 있는 `useMutation()`를 참고하여 구현할 수 있
-> 습니다.
+> 삭제 기능은 `Detail.tsx`에 추가해 봅시다. `Add.tsx`에 있는 `useMutation()`를 참고하여 구현할 수 있습니다.
 
 # 마무리
 
@@ -862,5 +849,4 @@ npm install --save concurrently rimraf
 ```
 
 - `postinstall`은 현재(2021년 12월 5일 기준) 발생되는 GraphQL의 문제를 해결하기 위해 넣었습니다.
-- `dev`를 위와 같이 설정하면, `address-book`에서 `npm run dev` 명령어 한 번으로 Backend, Frontend의
-  Dev Server를 동시에 실행할 수 있습니다.
+- `dev`를 위와 같이 설정하면, `address-book`에서 `npm run dev` 명령어 한 번으로 Backend, Frontend의 Dev Server를 동시에 실행할 수 있습니다.

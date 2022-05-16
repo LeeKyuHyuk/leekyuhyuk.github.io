@@ -4,8 +4,7 @@ date: '2020-07-19 23:21:24'
 category: Spring-Boot
 ---
 
-이번 시간에는 Spring Boot와 MySQL를 연동하고 게시판 기능의 글 작성과 글 목록 출력을 구현해보겠습니다
-.
+이번 시간에는 Spring Boot와 MySQL를 연동하고 게시판 기능의 글 작성과 글 목록 출력을 구현해보겠습니다 .
 
 # MySQL Installation
 
@@ -40,16 +39,13 @@ Root 암호를 설정하고, 'Next'를 누릅니다.
 'Execute'를 눌러 MySQL 설정을 하고, 완료되면 'Finish'를 눌러 설치를 완료합니다.  
 ![Install MySQL Step 6](/assets/image/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post_10.png)
 
-'시스템 환경변수'의 `PATH`에 `C:\Program Files\MySQL\MySQL Server 8.0\bin`를 추가하고, '명령 프롬프
-트'에서 아래와 같이 잘 작동하는지 확인해봅니다.  
+'시스템 환경변수'의 `PATH`에 `C:\Program Files\MySQL\MySQL Server 8.0\bin`를 추가하고, '명령 프롬프트'에서 아래와 같이 잘 작동하는지 확인해봅니다.  
 ![MySQL Command Line](/assets/image/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post_11.png)
 
 # 프로젝트 생성하기
 
-[Spring Initializr](https://start.spring.io)에 접속하여 아래와 같이 설정하여 프로젝트를 생성합니다
-.  
-Dependencies에는 'Spring Web', 'Spring Data JPA', 'MySQL Driver', 'Thymeleaf', 'Lombok'을 추가합니다
-.  
+[Spring Initializr](https://start.spring.io)에 접속하여 아래와 같이 설정하여 프로젝트를 생성합니다 .  
+Dependencies에는 'Spring Web', 'Spring Data JPA', 'MySQL Driver', 'Thymeleaf', 'Lombok'을 추가합니다 .  
 ![Spring Initializr](/assets/image/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post_12.png)
 
 `build.gradle`를 보면 아래와 같이 작성이 되어 있을 것입니다.
@@ -123,8 +119,7 @@ IntelliJ IDEA에서 'File'→'Settings'에 들어갑니다.
 
 # MySQL에 데이터베이스 만들고 설정하기
 
-'명령 프롬프트'에서 아래 명령어를 입력하여 `example` 데이터베이스를 만들고, `user` 계정(비밀번호는
-`UserPassword`입니다)을 만듭니다.
+'명령 프롬프트'에서 아래 명령어를 입력하여 `example` 데이터베이스를 만들고, `user` 계정(비밀번호는 `UserPassword`입니다)을 만듭니다.
 
 ```
 mysql -u root -p
@@ -136,8 +131,7 @@ mysql> grant all on example.* to 'user'@'%'; -- user 사용자에게 example 데
 
 ![MySQL Create Database and User](/assets/image/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post_15.png)
 
-데이터베이스와 사용자를 생성했으면, `src\main\resources`에 있는 `application.properties`를 아래와 같
-이 작성합니다.
+데이터베이스와 사용자를 생성했으면, `src\main\resources`에 있는 `application.properties`를 아래와 같이 작성합니다.
 
 ```
 spring.jpa.hibernate.ddl-auto=update
@@ -146,17 +140,13 @@ spring.datasource.username=user
 spring.datasource.password=UserPassword
 ```
 
-- `spring.jpa.hibernate.ddl-auto` : JAVA의 Entity를 참고하여, Spring Boot 실행 시점에 자동으로 필요
-  한 데이터베이스의 테이블 설정을 자동으로 해줍니다.
+- `spring.jpa.hibernate.ddl-auto` : JAVA의 Entity를 참고하여, Spring Boot 실행 시점에 자동으로 필요한 데이터베이스의 테이블 설정을 자동으로 해줍니다.
   - `none` : 아무것도 실행하지 않습니다.
   - `create` : SessionFactory 시작 시점에 Drop을 실행하고 Create를 실행합니다.
-  - `create-drop` : SessionFactory 시작 시점에 Drop 후 Create를 실행하며, SessionFactory 종료 시
-    Drop 합니다.
+  - `create-drop` : SessionFactory 시작 시점에 Drop 후 Create를 실행하며, SessionFactory 종료 시 Drop 합니다.
   - `update` : 변경된 Schema를 적용합니다. (데이터는 유지됩니다)
-  - `validate` : `update`처럼 Object를 검사하지만, Schema는 아무것도 건들지 않습니다. 변경된 Schema
-    가 존재하면 변경사항을 출력하고 서버를 종료합니다.
-- `spring.datasource.url` : 데이터베이스의 URL입니다. 위의 URL은 example 데이터베이스를 입력했습니다
-  .
+  - `validate` : `update`처럼 Object를 검사하지만, Schema는 아무것도 건들지 않습니다. 변경된 Schema 가 존재하면 변경사항을 출력하고 서버를 종료합니다.
+- `spring.datasource.url` : 데이터베이스의 URL입니다. 위의 URL은 example 데이터베이스를 입력했습니다 .
   - `serverTimezone` : 데이터베이스 서버의 시간을 'Asia/Seoul'로 설정합니다.
   - `characterEncoding` : 인코딩 방식을 'UTF-8'로 설정합니다.
 - `spring.datasource.username` : 데이터베이스에 접근할 사용자명 입니다.
@@ -165,11 +155,9 @@ spring.datasource.password=UserPassword
 # 게시물 목록 및 작성 페이지 만들기
 
 `src\main\resources\templates`에 `board`와 `common` 폴더를 만듭니다.  
-`board` 폴더에는 게시판과 관련된 `html` 파일이 저장되고, `common` 폴더에는 `board`에서 사용하는 공통
-적인 파일들을 관리할 것입니다.
+`board` 폴더에는 게시판과 관련된 `html` 파일이 저장되고, `common` 폴더에는 `board`에서 사용하는 공통적인 파일들을 관리할 것입니다.
 
-`common` 폴더에 `header.html` 파일을 만들고, 아래와 같이 작성합니다. 이 파일은 각 페이지의 헤더
-(Header)를 담당할 것입니다.
+`common` 폴더에 `header.html` 파일을 만들고, 아래와 같이 작성합니다. 이 파일은 각 페이지의 헤더 (Header)를 담당할 것입니다.
 
 ```html
 <div class="navbar navbar-dark bg-dark shadow-sm mb-3">
@@ -289,11 +277,9 @@ spring.datasource.password=UserPassword
 
 ## Controller 구현하기
 
-Controller는 사용자의 HTTP 요청이 진입하는 지점이며, 사용자에게 서버에서 처리된 데이터를 View와 함께
-응답하게 해줍니다.
+Controller는 사용자의 HTTP 요청이 진입하는 지점이며, 사용자에게 서버에서 처리된 데이터를 View와 함께응답하게 해줍니다.
 
-`controller` 패키지를 만들고, 그 안에 `BoardController`라는 클래스를 생성하고 아래의 내용을 입력합니
-다.
+`controller` 패키지를 만들고, 그 안에 `BoardController`라는 클래스를 생성하고 아래의 내용을 입력합니다.
 
 ```java
 package kr.kyuhyuk.board.controller;
@@ -322,8 +308,7 @@ public class BoardController {
 
 ![Board - Write Post](/assets/image/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post_17.png)
 
-제목, 작성자, 내용을 작성하면 입력한 데이터가 데이터베이스에 저장되어야 합니다. 글쓰기 페이지에서 '
-글쓰기' 버튼을 누르면, Post 방식으로 `/post`에 요청이 옵니다.
+제목, 작성자, 내용을 작성하면 입력한 데이터가 데이터베이스에 저장되어야 합니다. 글쓰기 페이지에서 ' 글쓰기' 버튼을 누르면, Post 방식으로 `/post`에 요청이 옵니다.
 
 우리는 Post 방식의 요청을 받아서, Service에서 처리되도록 할 것입니다.
 
@@ -386,8 +371,7 @@ public class Board {
 }
 ```
 
-JPA Auditing 기능을 사용하기 위해 main 클래스(`BoardApplication`)에 `@EnableJpaAuditing` 어노테이션
-을 붙여줍니다.
+JPA Auditing 기능을 사용하기 위해 main 클래스(`BoardApplication`)에 `@EnableJpaAuditing` 어노테이션을 붙여줍니다.
 
 ```java
 package kr.kyuhyuk.board;
@@ -476,8 +460,7 @@ public class BoardDto {
 ## Service 구현하기
 
 위에서 만들어준 Repository를 사용하여 Service를 구현합니다.  
-글쓰기 Form에서 내용을 입력한 뒤, '글쓰기' 버튼을 누르면 Post 형식으로 요청이 오고, BoardService의
-`savePost()`를 실행하게 됩니다.  
+글쓰기 Form에서 내용을 입력한 뒤, '글쓰기' 버튼을 누르면 Post 형식으로 요청이 오고, BoardService의 `savePost()`를 실행하게 됩니다.  
 `service` 패키지를 만들고, 그 안에 `BoardService` 클래스를 만듭니다.
 
 ```java
@@ -508,8 +491,7 @@ public class BoardService {
 ## Controller 수정하기
 
 글쓰기 Form에서 받은 데이터는 '글쓰기' 버튼을 누르면 `/post`로 Post 요청을 하게 됩니다.  
-Entity, Repository, DTO, Service를 구현했으니 `BoardController`에 Post로 받은 데이터를 데이터베이스
-에 추가하는 것을 추가해 줍니다.
+Entity, Repository, DTO, Service를 구현했으니 `BoardController`에 Post로 받은 데이터를 데이터베이스에 추가하는 것을 추가해 줍니다.
 
 ```java
 package kr.kyuhyuk.board.controller;
@@ -546,8 +528,7 @@ public class BoardController {
 }
 ```
 
-Controller를 수정하고, 서버를 실행한 뒤 글쓰기에서 데이터를 입력하면 MySQL에 데이터가 기록된 것을 확
-인할 수 있습니다.  
+Controller를 수정하고, 서버를 실행한 뒤 글쓰기에서 데이터를 입력하면 MySQL에 데이터가 기록된 것을 확인할 수 있습니다.  
 ![SQL Data Check](/assets/image/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post_18.png)
 
 # 게시물 목록 구현하기
@@ -608,8 +589,7 @@ public class BoardService {
 
 ## Controller 수정하기
 
-게시물의 목록을 가져오는 `getBoardList()`를 만들었으니, 가져온 데이터를 Model을 통해 View에 전달해줍
-니다.  
+게시물의 목록을 가져오는 `getBoardList()`를 만들었으니, 가져온 데이터를 Model을 통해 View에 전달해줍니다.  
 `BoardController` 클래스의 `list()`를 아래와 같이 수정합니다.
 
 ```java
@@ -652,8 +632,7 @@ public class BoardController {
 }
 ```
 
-`model.addAttribute("postList", boardDtoList);`를 통하여 `boardDtoList`를 `board/list.html`에
-`postList`로 전달해 줍니다.  
+`model.addAttribute("postList", boardDtoList);`를 통하여 `boardDtoList`를 `board/list.html`에 `postList`로 전달해 줍니다.  
 아래는 `board/list.html`의 일부입니다.
 
 ```html
@@ -677,7 +656,6 @@ public class BoardController {
 
 위와 같이 `board/list.html`에서 `postList`를 받아, 데이터베이스에 있는 내용들을 출력해 줍니다.
 
-서버를 실행하고 글목록을 보면 아래와 같이 MySQL에 있는 데이터들이 목록으로 출력되는 것을 확인할 수있
-습니다.
+서버를 실행하고 글목록을 보면 아래와 같이 MySQL에 있는 데이터들이 목록으로 출력되는 것을 확인할 수있습니다.
 
 ![Board List](/assets/image/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post/2020-07-20-Spring-Boot-JPA-MySQL-Board-Write-Post_19.png)

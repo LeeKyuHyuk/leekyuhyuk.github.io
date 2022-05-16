@@ -4,8 +4,7 @@ date: '2020-07-22 23:48:39'
 category: Spring-Boot
 ---
 
-[앞의 글](https://kyuhyuk.kr/article/spring-boot/2020/07/21/Spring-Boot-JPA-MySQL-Board-Post-Update-Delete)에
-서 글을 수정하고 삭제하는 기능을 만들었습니다.  
+[앞의 글](https://kyuhyuk.kr/article/spring-boot/2020/07/21/Spring-Boot-JPA-MySQL-Board-Post-Update-Delete)에서 글을 수정하고 삭제하는 기능을 만들었습니다.  
 이번 시간에는 파일을 업로드하고 다운로드하는 기능을 구현해보겠습니다.
 
 ## 파일 업로드 구현하기
@@ -18,8 +17,7 @@ category: Spring-Boot
 - '글쓰기' 화면에 파일 업로드 추가하기
 - 업로드한 파일의 정보가 기록될 `file` 테이블 만들기 (Entity, Repository, DTO, Service 만들기)
 - 업로드한 파일 정보의 고유 ID가 `board` 테이블에 기록되도록 변경하기
-- `BoardController`의 `write()`에서 업로드한 파일이 서버에 저장되게 하고 `board`, `file` 테이블에 업
-  데이트 되도록 하기
+- `BoardController`의 `write()`에서 업로드한 파일이 서버에 저장되게 하고 `board`, `file` 테이블에 업데이트 되도록 하기
 
 구현할 목록을 보면서 하나하나 진행해봅시다.
 
@@ -85,8 +83,7 @@ category: Spring-Boot
 </html>
 ```
 
-파일이 업로드되면 '업로드된 실제 파일명', '서버에 저장된 파일명', '파일이 서버에 저장된 위치'가 데이
-터 베이스에 기록되게 프로그램을 작성할 것입니다.  
+파일이 업로드되면 '업로드된 실제 파일명', '서버에 저장된 파일명', '파일이 서버에 저장된 위치'가 데이터 베이스에 기록되게 프로그램을 작성할 것입니다.  
 우선 업로드된 파일에 대한 데이터가 저장되게 Entity, Repository, DTO, Service를 만들어줍니다.
 
 아래는 `domain.entity` 패키지의 `File` 클래스의 내용입니다.
@@ -183,8 +180,7 @@ public class FileDto {
 ```
 
 아래는 `service` 패키지의 `FileService` 클래스의 내용입니다.  
-`saveFile()`은 업로드한 파일에 대한 정보를 기록하고, `getFile()`는 `id` 값을 사용하여 파일에 대한 정
-보를 가져옵니다.
+`saveFile()`은 업로드한 파일에 대한 정보를 기록하고, `getFile()`는 `id` 값을 사용하여 파일에 대한 정보를 가져옵니다.
 
 ```java
 package kr.kyuhyuk.board.service;
@@ -348,8 +344,7 @@ public BoardDto getPost(Long id) {
 ```
 
 파일이 업로드되면, MD5 체크섬의 값으로 서버에 저장되게 구현할 것입니다.  
-문자열을 MD5 체크섬으로 변환하는 기능을 구현하기 위해, `util` 패키지를 만들고 `MD5Generator` 클래스
-를 아래와 같이 작성합니다.
+문자열을 MD5 체크섬으로 변환하는 기능을 구현하기 위해, `util` 패키지를 만들고 `MD5Generator` 클래스를 아래와 같이 작성합니다.
 
 ```java
 package kr.kyuhyuk.board.util;
@@ -379,8 +374,7 @@ public class MD5Generator {
 }
 ```
 
-이제 모든 것이 다 준비되었습니다. `controller` 패키지의 `BoardController` 클래스에 있는 `write()`를
-아래와 같이 수정하여, 업로드한 파일을 서버에 저장하고 데이터베이스에 업데이트하게 구현해보겠습니다.
+이제 모든 것이 다 준비되었습니다. `controller` 패키지의 `BoardController` 클래스에 있는 `write()`를아래와 같이 수정하여, 업로드한 파일을 서버에 저장하고 데이터베이스에 업데이트하게 구현해보겠습니다.
 
 ```java
 public class BoardController {
@@ -496,8 +490,7 @@ MySQL에서 `file` 테이블을 조회해보면, 아래와 같이 업로드한 �
 서버를 실행하면, 아래와 같이 첨부파일이 표시되고 URL은 `/download/{fileId}`로 설정됩니다.  
 ![Post Attachments](/assets/image/2020-07-22-Spring-Boot-JPA-MySQL-Board-Post-File-Upload-Download/2020-07-22-Spring-Boot-JPA-MySQL-Board-Post-File-Upload-Download_5.png)
 
-이제 `/download/{fileId}`에 대해 구현하기 위해 `controller` 패키지에 있는 `BoardController` 클래스에
-아래 내용을 추가합니다.
+이제 `/download/{fileId}`에 대해 구현하기 위해 `controller` 패키지에 있는 `BoardController` 클래스에아래 내용을 추가합니다.
 
 ```java
 @GetMapping("/download/{fileId}")
@@ -519,8 +512,7 @@ public ResponseEntity<Resource> fileDownload(@PathVariable("fileId") Long fileId
 ## 업로드 파일 용량 설정하기
 
 Spring Boot에서 업로드 파일 용량의 기본값은 1MB입니다.  
-업로드 파일 용량을 늘리고 싶다면, `spring.servlet.multipart.maxFileSize`와
-`spring.servlet.multipart.maxRequestSize`를 `application.properties`에 설정해 주면 됩니다.
+업로드 파일 용량을 늘리고 싶다면, `spring.servlet.multipart.maxFileSize`와 `spring.servlet.multipart.maxRequestSize`를 `application.properties`에 설정해 주면 됩니다.
 
 예를 들면, 아래와 같이 설정할 수 있습니다.
 

@@ -4,14 +4,12 @@ date: '2020-07-21 21:09:51'
 category: Spring-Boot
 ---
 
-[앞의 글](https://kyuhyuk.kr/article/spring-boot/2020/07/20/Spring-Boot-JPA-MySQL-Board-Post-View)에
-서 글을 조회하는 기능을 만들었습니다.  
+[앞의 글](https://kyuhyuk.kr/article/spring-boot/2020/07/20/Spring-Boot-JPA-MySQL-Board-Post-View)에서 글을 조회하는 기능을 만들었습니다.  
 이번 시간에는 글을 수정하고 삭제하는 기능을 구현해보겠습니다.
 
 ## 게시글 수정 구현하기
 
-글을 조회하는 페이지에서 '수정' 버튼을 누르면, `/post/edit/{id}`으로 Get 요청을 합니다. (만약 1번 글
-에서 '수정' 버튼을 클릭하면 `/post/edit/1`로 접속됩니다.)
+글을 조회하는 페이지에서 '수정' 버튼을 누르면, `/post/edit/{id}`으로 Get 요청을 합니다. (만약 1번 글에서 '수정' 버튼을 클릭하면 `/post/edit/1`로 접속됩니다.)
 
 우선 게시글을 수정하는 페이지부터 만들어봅시다.  
 `src\main\resources\templates\board`에 `edit.html`을 아래와 같이 작성합니다.
@@ -140,8 +138,7 @@ public class BoardController {
 서버를 실행하고 '수정' 버튼을 클릭해 보면 아래와 같이 출력되는 것을 확인할 수 있습니다.  
 ![Post Edit Page](/assets/image/2020-07-21-Spring-Boot-JPA-MySQL-Board-Post-Update-Delete/2020-07-21-Spring-Boot-JPA-MySQL-Board-Post-Update-Delete_1.png)
 
-위의 화면에서 변경한 후, '수정' 버튼을 누르면 Put 형식으로 `/post/edit/{id}`로 서버에게 요청이 가게
-됩니다.  
+위의 화면에서 변경한 후, '수정' 버튼을 누르면 Put 형식으로 `/post/edit/{id}`로 서버에게 요청이 가게됩니다.  
 서버에게 Put 요청이 오게되면, 데이터베이스에 변경된 데이터를 저장해야합니다.  
 `BoardController` 클래스에 `update()`를 구현하여 구현해보겠습니다.
 
@@ -207,8 +204,7 @@ public class BoardController {
 }
 ```
 
-위의 작업을 마친 후 `HiddenHttpMethodFilter`를 Bean으로 등록하여, `@PutMapping`과 `@DeleteMapping`이
-작동할 수 있도록 해줍니다.  
+위의 작업을 마친 후 `HiddenHttpMethodFilter`를 Bean으로 등록하여, `@PutMapping`과 `@DeleteMapping`이작동할 수 있도록 해줍니다.  
 main 클래스(`BoardApplication`)에 아래와 같이 `hiddenHttpMethodFilter()` 추가해줍니다.
 
 ```java
@@ -240,8 +236,7 @@ public class BoardApplication {
 
 ## 게시글 삭제 구현하기
 
-글을 조회하는 페이지에서 '삭제' 버튼을 누르면, `/post/{id}`으로 Delete 요청을 합니다. (만약 1번 글에
-서 '삭제' 버튼을 클릭하면 `/post/1`로 접속됩니다.)  
+글을 조회하는 페이지에서 '삭제' 버튼을 누르면, `/post/{id}`으로 Delete 요청을 합니다. (만약 1번 글에서 '삭제' 버튼을 클릭하면 `/post/1`로 접속됩니다.)  
 `id` 값을 사용하여, 해당 글을 데이터베이스에서 삭제하는 것을 구현해보겠습니다.
 
 `BoardService` 클래스에 `deletePost()`를 추가합니다.
@@ -310,8 +305,7 @@ public class BoardService {
 }
 ```
 
-그리고, `BoardController` 클래스에 `delete()`를 추가하여 `/post/{id}`에 Delete로 요청 오는 것을 처리
-합니다.
+그리고, `BoardController` 클래스에 `delete()`를 추가하여 `/post/{id}`에 Delete로 요청 오는 것을 처리합니다.
 
 ```java
 package kr.kyuhyuk.board.controller;

@@ -6,18 +6,13 @@ category: Simple-ARM-Operating-System
 
 ### Build Cross Compiler
 
-> 크로스 컴파일러(Cross Compiler)는 컴파일러가 실행되는 플랫폼이 아닌 다른 플랫폼에서 실행 가능한 코
-> 드를 생성할 수 있는 컴파일러이다.  
-> 크로스 컴파일러 툴은 임베디드 시스템 혹은 여러 플랫폼에서 실행파일을 생성하는데 사용된다. 이것은운
-> 영 체제를 지원하지 않는 마이크로컨트롤러와 같이 컴파일이 실현 불가능한 플랫폼에 컴파일하는데 사용
-> 된다.  
-> 이것은 시스템이 사용하는데 하나 이상의 플랫폼을 쓰는 반가상화에 이 도구를 사용하는 것이 더 일반적
-> 이게 되었다.  
+> 크로스 컴파일러(Cross Compiler)는 컴파일러가 실행되는 플랫폼이 아닌 다른 플랫폼에서 실행 가능한 코드를 생성할 수 있는 컴파일러이다.  
+> 크로스 컴파일러 툴은 임베디드 시스템 혹은 여러 플랫폼에서 실행파일을 생성하는데 사용된다. 이것은운영 체제를 지원하지 않는 마이크로컨트롤러와 같이 컴파일이 실현 불가능한 플랫폼에 컴파일하는데 사용된다.  
+> 이것은 시스템이 사용하는데 하나 이상의 플랫폼을 쓰는 반가상화에 이 도구를 사용하는 것이 더 일반적이게 되었다.  
 > [Wikipedia - 크로스 컴파일러](https://ko.wikipedia.org/wiki/크로스%20컴파일러)
 
 ![GNU GCC Cross Compiler](/assets/image/2019-03-04-Simple-ARM-Operating-System-Chapter-1/2019-03-04-Simple-ARM-Operating-System-Chapter-1_1.png)  
-Picture Source :
-_[Preshing on Programming - How to Build a GCC Cross-Compiler ](https://preshing.com/20141119/how-to-build-a-gcc-cross-compiler)_
+Picture Source : _[Preshing on Programming - How to Build a GCC Cross-Compiler ](https://preshing.com/20141119/how-to-build-a-gcc-cross-compiler)_
 
 ### Step 1. Download Source code
 
@@ -31,8 +26,7 @@ $ wget https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
 
 ### Step 2. Build GNU Binutils
 
-> GNU 바이너리 유틸리티(GNU Binary Utilities) 또는 GNU Binutils는 여러 종류의 오브젝트 파일 형식들을
-> 조작하기 위한 프로그래밍 도구 모음이다.  
+> GNU 바이너리 유틸리티(GNU Binary Utilities) 또는 GNU Binutils는 여러 종류의 오브젝트 파일 형식들을조작하기 위한 프로그래밍 도구 모음이다.  
 > [Wikipedia - GNU 바이너리 유틸리티](https://ko.wikipedia.org/wiki/GNU_바이너리_유틸리티)
 
 ```
