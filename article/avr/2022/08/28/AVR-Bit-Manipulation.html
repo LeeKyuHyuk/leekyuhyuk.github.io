@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="ko"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width"/><meta property="og:image" content="https://kyuhyuk.kr/thumbnail.png"/><title>[AVR] 비트 연산</title><meta name="author" content="KyuHyuk Lee"/><meta name="generator" content="KyuHyuk Lee"/><meta name="description" content=" 각각의 비트를 조작하는 것은 마이크로컨트롤러를 프로그래밍할 때 이해해야 할 가장 중요하고 기본적인 개념 중 하나입니다. 구성요소의 상태를 읽고, 매개 변수를 설정하고, 출력 핀의 상태를 변경하려면 비트 조작이 필요합니다. 특정 비트의 상태를 개별적으로 변경하고 바른 비트는 변경하지 않"/><meta itemProp="url" content="https://kyuhyuk.kr/article/avr/2022/08/28/AVR-Bit-Manipulation"/><meta itemProp="headline" content="[AVR] 비트 연산"/><meta property="og:type" content="article"/><meta property="og:url" content="https://kyuhyuk.kr/article/avr/2022/08/28/AVR-Bit-Manipulation"/><meta property="og:title" content="[AVR] 비트 연산"/><meta property="og:description" content=" 각각의 비트를 조작하는 것은 마이크로컨트롤러를 프로그래밍할 때 이해해야 할 가장 중요하고 기본적인 개념 중 하나입니다. 구성요소의 상태를 읽고, 매개 변수를 설정하고, 출력 핀의 상태를 변경하려면 비트 조작이 필요합니다. 특정 비트의 상태를 개별적으로 변경하고 바른 비트는 변경하지 않"/><meta property="og:site_name" content="KyuHyuk Blog"/><meta property="og:locale" content="ko_KR"/><meta name="next-head-count" content="15"/><style id="stitches">--sxs{--sxs:2 c-opBYf c-bHyrwK c-uBnvQ c-hehuMV c-bjkCdF c-hAoZGi c-jfcKOQ c-ezyKJG c-iAzQif c-bvdusc c-ezRQNp c-iosjjB c-jYwCTI c-iOPkYY c-cpkrrK c-fiqONv c-iUFgVP c-cshSRb c-fxvkZv c-dIcdES}@media{.c-opBYf{display:flex;align-items:center;background:#FFFFFF;height:60px;justify-content:space-between;-webkit-box-align:center;-webkit-box-pack:justify}.c-bHyrwK{display:flex;align-items:center;justify-content:center;-webkit-box-align:center;-webkit-box-pack:center}.c-uBnvQ{width:32px;height:32px;color:#FFFFFF;background:#000000;border-radius:4px;display:flex;align-items:center;justify-content:center;margin-right:12px;font-weight:700;cursor:default;-webkit-box-align:center;-webkit-box-pack:center}.c-hehuMV{font-weight:900;font-size:18px;letter-spacing:0.5px;color:#000000;cursor:default}.c-bjkCdF{list-style:none;padding:0;margin:0;display:flex;justify-content:center;align-items:center;font-size:24px;color:rgb(134, 142, 150);transition:all 0.3s ease 0s;-webkit-box-pack:center;-webkit-box-align:center}.c-hAoZGi{font-size:28px;color:inherit;text-decoration:none;margin:8px}.c-jfcKOQ{max-width:768px;margin-top:2rem;margin-left:auto;margin-right:auto}.c-ezyKJG{min-width:72px;display:flex;flex-direction:row;justify-content:center;align-items:center;padding:6px 16px;background:#12B886;box-shadow:0px 1px 2px rgba(98, 16, 204, 0.3);border:none;border-radius:14px;vertical-align:middle;color:#FFFFFF;font-size:1rem;height:2rem;float:right}.c-iAzQif{display:inline-block;margin-top:2rem}.c-bvdusc{font-size:2rem;line-height:1.5;letter-spacing:-0.004em;margin-top:0;margin-bottom:2rem;font-weight:700;color:#212529;word-break:keep-all;transition:color 0.125s ease-in 0s;}.c-ezRQNp{font-size:1.125rem;color:#212529;transition:color 0.125s ease-in 0s;;line-height:1.7;letter-spacing:-0.004em;word-break:break-all;overflow-wrap:break-word}.c-iosjjB{background:#F8F9FA;padding:0 1rem;height:2rem;border-radius:1rem;display:inline-flex;align-items:center;margin-right:0.875rem;color:#12B886;text-decoration:none;font-weight:400;font-size:1rem}.c-jYwCTI{font-size:1rem;color:#495057}.c-iOPkYY{margin-top:3rem;background-color:rgba(51,51,51,.1);border:0;height:1px}.c-cpkrrK{width:100%;height:300px;display:flex;align-items:center;justify-content:center;flex-direction:column;-webkit-box-align:center;-webkit-box-pack:center}.c-fiqONv{color:rgb(206, 212, 218);margin-bottom:8px;font-size:22px;font-weight:700}.c-iUFgVP{width:32px;height:32px;color:#FFFFFF;background:rgb(206, 212, 218);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-right:12px;font-weight:700;cursor:default;-webkit-box-align:center;-webkit-box-pack:center}.c-cshSRb{font-weight:900;font-size:18px;letter-spacing:0.5px;color:rgb(206, 212, 218);cursor:default;text-transform:uppercase}.c-fxvkZv{font-size:2.5rem;line-height:1.5;letter-spacing:-0.004em;margin-top:0;margin-bottom:2rem;font-weight:700;color:#212529;word-break:keep-all;transition:color 0.125s ease-in 0s;}.c-dIcdES{margin-top:2rem;font-size:1.125rem;color:#212529;transition:color 0.125s ease-in 0s;;line-height:1.7;letter-spacing:-0.004em;word-break:keep-all;overflow-wrap:break-word}}</style><link rel="preload" href="/_next/static/css/98b299b94b0a7962.css" as="style"/><link rel="stylesheet" href="/_next/static/css/98b299b94b0a7962.css" data-n-g=""/><link rel="preload" href="/_next/static/css/c2a527101433f11d.css" as="style"/><link rel="stylesheet" href="/_next/static/css/c2a527101433f11d.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js"></script><script src="/_next/static/chunks/webpack-69bfa6990bb9e155.js" defer=""></script><script src="/_next/static/chunks/framework-4556c45dd113b893.js" defer=""></script><script src="/_next/static/chunks/main-c354a30bda3d62a6.js" defer=""></script><script src="/_next/static/chunks/pages/_app-8265bb1a072646d3.js" defer=""></script><script src="/_next/static/chunks/776-f277552409ab147f.js" defer=""></script><script src="/_next/static/chunks/305-e325b960616dc0fd.js" defer=""></script><script src="/_next/static/chunks/pages/article/%5Bcategory%5D/%5Byear%5D/%5Bmonth%5D/%5Bday%5D/%5Bslug%5D-aa033f8eb8939164.js" defer=""></script><script src="/_next/static/EflnYjmq0r01niKZjLBAU/_buildManifest.js" defer=""></script><script src="/_next/static/EflnYjmq0r01niKZjLBAU/_ssgManifest.js" defer=""></script></head><body><div id="__next"><header class="c-opBYf"><a href="https://kyuhyuk.kr"><div class="c-bHyrwK"><div class="c-uBnvQ">Kh.</div><div class="c-hehuMV">KyuHyuk Blog</div></div></a><ul class="c-bjkCdF"><li><a href="https://github.com/LeeKyuHyuk" class="c-hAoZGi"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></a></li><li><a href="https://linkedin.com/in/leekyuhyuk" class="c-hAoZGi"><span role="img" aria-label="linkedin" class="anticon anticon-linkedin"><svg viewBox="64 64 896 896" focusable="false" data-icon="linkedin" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1168.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z"></path></svg></span></a></li><li><a href="mailto:lee@kyuhyuk.kr" class="c-hAoZGi"><span role="img" aria-label="mail" class="anticon anticon-mail"><svg viewBox="64 64 896 896" focusable="false" data-icon="mail" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32zm-80.8 108.9L531.7 514.4c-7.8 6.1-18.7 6.1-26.5 0L189.6 268.9A7.2 7.2 0 01194 256h648.8a7.2 7.2 0 014.4 12.9z"></path></svg></span></a></li></ul></header><main class="c-jfcKOQ"><article><h1 class="c-fxvkZv"><a href="https://kyuhyuk.kr/article/avr/2022/08/28/AVR-Bit-Manipulation">[AVR] 비트 연산</a></h1><a href="https://kyuhyuk.kr/category/AVR" class="c-iosjjB">AVR</a><time dateTime="2022-08-28 09:39:22" class="c-jYwCTI">Aug 28, 2022 09:39:22 AM</time><div id="post" class="c-dIcdES"><p>각각의 비트를 조작하는 것은 마이크로컨트롤러를 프로그래밍할 때 이해해야 할 가장 중요하고 기본적인 개념 중 하나입니다.</p>
+<p>구성요소의 상태를 읽고, 매개 변수를 설정하고, 출력 핀의 상태를 변경하려면 비트 조작이 필요합니다.</p>
+<p>특정 비트의 상태를 개별적으로 변경하고 바른 비트는 변경하지 않는 방법을 아는 것이 중요합니다.</p>
+<p>이 글에서는 C언어를 사용할 수 있는 비트 연산자 중 일부를 소개하고 예시로 LED를 제어하는 방법을 보여줍니다.</p>
+<h1>개별 비트 설정</h1>
+<p>레지스터의 비트 설정은 OR 연산자(<code>|</code>)를 사용합니다.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>A | B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>위와 같이 OR 연산자(<code>|</code>)는 특정 비트를 <code>1</code>로 설정하고 다른 비트는 변경하지 않습니다. 예를 들어 <code>0bxxxxxxxx | 0b00000001</code>를 하면 <code>0bxxxxxxx1</code>이 됩니다. 여기서 <code>0b00000001</code>를 비트 마스크(Bitmask)라고 합니다. 비트 마스크에서 <code>0</code>인 부분은 변경되지 않고 <code>1</code>인 부분만 변경됩니다.</p>
+<p>한 번의 OR 연산자로 여러 개의 비트도 설정할 수 있습니다. <code>0bxxxxxxxx | 0b01010101</code>를 하면 <code>0bx1x1x1x1</code>가 됩니다.</p>
+<h1>개별 비트 지우기</h1>
+<p>비트를 지우는 것은 AND 연산자(<code>&amp;</code>)를 사용합니다.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>A &amp; B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>AND 연산자의 사용법은 위에서 설명한 OR 연산자와 유사하지만, 비트 마스크에 <code>0</code>이 있는 부분의 비트가 지워지고 <code>1</code>이 있는 부분은 변경되지 않고 유지됩니다. 예를 들어 <code>0bxxxxxxxx | 0b11111110</code>를 하면 <code>0bxxxxxxx0</code>이 됩니다.</p>
+<h1>LED 깜빡이기</h1>
+<p>AVR의 <code>PINB0</code>에 LED를 연결했다면, 가장 먼저 <code>PINB0</code>을 출력핀으로 만들기 위해 <code>DDRB</code>의 0번째 Bit를 1로 설정해야 합니다. 그리고 <code>PORTB</code>의 0번째 Bit를 변경하여 <code>PINB0</code>을 LOW로 하거나 HIGH로 변경합니다.</p>
+<pre><code class="language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;avr/io.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;util/delay.h&gt;</span></span>
+
+<span class="hljs-comment">/*
+  ----------------------------------------------
+    DDRx  : 입출력 방향을 결정하는 레지스터
+    PORTx : 출력 신호를 결정하는 레지스터
+    PINx  : 입력된 값이 저장되어 있는 레지스터
+  ----------------------------------------------
+*/</span>
+<span class="hljs-type">void</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>
+{
+    <span class="hljs-comment">// PINB0을 DDRB로 출력하도록 설정</span>
+    DDRB |= <span class="hljs-number">0b00000001</span>; <span class="hljs-comment">// DDRB = DDRB | 0b00000001;로 사용할 수도 있습니다.</span>
+
+    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)
+    {
+        <span class="hljs-comment">// PINB0을 HIGH로 설정</span>
+        PORTB |= <span class="hljs-number">0b00000001</span>;
+        _delay_ms(<span class="hljs-number">500</span>);
+
+        <span class="hljs-comment">// PINB0을 LOW로 설정</span>
+        PORTB &amp;= <span class="hljs-number">0b11111110</span>;
+        _delay_ms(<span class="hljs-number">500</span>);
+    }
+}
+</code></pre>
+<h1>개별 비트 뒤집기</h1>
+<p>XOR 연산자(<code>^</code>)를 사용하면 개별 비트를 뒤집을 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>A ^ B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>XOR 연산자(<code>^</code>)를 사용하면 특정 비트의 값을 뒤집고 다른 비트는 변경하지 않고 그대로 유지할 수 있습니다. 임의의 비트 <code>x</code>와 <code>0</code>을 XOR 연산하면 <code>x</code>가 생성되며, <code>x</code>와 <code>1</code>을 XOR 연산하면 <code>¬x</code>가 생성됩니다.</p>
+<p>예를 들면, <code>0bxxxxxxxx1 ^ 0b00000001</code>은 <code>0bxxxxxxx0</code>이고 반대로 <code>0bxxxxxxx0 ^ 0b00000001</code>은 <code>0bxxxxxxx1</code> 입니다.</p>
+<p>XOR 연산자를 사용하면 위에서 작성한 LED를 500ms마다 켰다 끄는 코드를 아래와 같이 개선할 수 있습니다.</p>
+<pre><code class="language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;avr/io.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;util/delay.h&gt;</span></span>
+
+<span class="hljs-comment">/*
+  ----------------------------------------------
+    DDRx  : 입출력 방향을 결정하는 레지스터
+    PORTx : 출력 신호를 결정하는 레지스터
+    PINx  : 입력된 값이 저장되어 있는 레지스터
+  ----------------------------------------------
+*/</span>
+<span class="hljs-type">void</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>
+{
+    <span class="hljs-comment">// PINB0을 DDRB로 출력하도록 설정</span>
+    DDRB |= <span class="hljs-number">0b00000001</span>; <span class="hljs-comment">// DDRB = DDRB | 0b00000001;로 사용할 수도 있습니다.</span>
+
+    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)
+    {
+        <span class="hljs-comment">// PINB0를 토글(Toggle)합니다</span>
+        PORTB ^= <span class="hljs-number">0b00000001</span>;
+        _delay_ms(<span class="hljs-number">500</span>);
+    }
+}
+</code></pre>
+<h1>비트 이동하기</h1>
+<p><code>&lt;&lt;</code>와 <code>&gt;&gt;</code> 연산자를 사용하면 비트를 이동할 수 있습니다. 비트를 이동하게 되면, 지정된 양만큼 모든 비트를 이동하고 빈 공간을 <code>0</code>으로 채웁니다. 예를 들면, <code>0b1110101 &lt;&lt; 2</code>은 <code>0b11010100</code>가 되며 <code>0b11110000 &gt;&gt; 3</code>은 <code>0b00011110</code>가 됩니다.</p>
+<p>비트의 이동을 레지스터의 특정 비트를 지정할 때 표기법으로 유용하게 사용됩니다.</p>
+<pre><code class="language-c">    <span class="hljs-comment">// DDRB에 PINB4를 출력 모드로 설정합니다.</span>
+    <span class="hljs-comment">// 1 &lt;&lt; 4 = 0b00010000</span>
+    DDRB |= (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">4</span>);
+</code></pre>
+<p>AVR 마이크로컨트롤러 핀에 대한 정의를 가지고 있는 <code>#include &lt;avr/io.h&gt;</code>를 코드에 추가하면, <code>DDRB</code>에서 <code>PINB4</code>를 출력 모드로 설정할 때 아래와 같이 간편하게 할 수 있습니다.</p>
+<pre><code class="language-c">    <span class="hljs-comment">// DDRB에 PINB4를 출력 모드로 설정합니다.</span>
+    DDRB |= (<span class="hljs-number">1</span> &lt;&lt; PINB4);
+</code></pre>
+<h1>NOT 연산자</h1>
+<p>마지막으로 소개할 비트 연산자는 NOT 연산자(<code>~</code>)입니다. NOT은 앞에서 설명한 OR, AND, XOR 연산자와 달리 단항 연산자입니다. NOT은 주어진 값에 대해 <code>0</code>은 <code>1</code>로, <code>1</code>은 <code>0</code>으로 변경합니다. AND 연산자와 결합하여 사용하면 특정 비트를 지울 때 유용하게 사용할 수 있습니다. 예를 들어 처음에 작성한 LED 코드에서 PINB0의 0번째 비트를 지우려고 할 때 아래와 같은 표현식을 사용했습니다.</p>
+<pre><code class="language-c">    <span class="hljs-comment">// PINB0을 LOW로 설정</span>
+    PORTB &amp;= <span class="hljs-number">0b11111110</span>;
+</code></pre>
+<p>위의 코드는 보기에도 헷갈리고, 코드를 작성하는 것 또한 힘듭니다. 아래와 같이 NOT 연산자를 사용하여 개선할 수 있습니다.</p>
+<pre><code class="language-c">    <span class="hljs-comment">// PINB0을 LOW로 설정</span>
+    PORTB &amp;= ~(<span class="hljs-number">1</span> &lt;&lt; PINB0);
+</code></pre>
+<h1>복합적으로 사용하기</h1>
+<p>위에서 소개한 모든 연산자들은 결합하여 사용할 수 있습니다. 예를 들어 3개의 다른 핀을 동시에 Set 할 수 있습니다.</p>
+<pre><code class="language-c">    <span class="hljs-comment">// PINB0, PINB2, PINB4를 HIGH로 설정</span>
+    PORTB |= (<span class="hljs-number">1</span> &lt;&lt; PINB0)|(<span class="hljs-number">1</span> &lt;&lt; PINB2)|(<span class="hljs-number">1</span> &lt;&lt; PINB4);
+</code></pre>
+<p>또는 아래와 같이 세 개의 핀을 Clear 할 수 있습니다.</p>
+<pre><code class="language-c">    <span class="hljs-comment">// PINB0, PINB2, PINB4를 LOW로 설정</span>
+    PORTB &amp;= ~((<span class="hljs-number">1</span> &lt;&lt; PINB0)|(<span class="hljs-number">1</span> &lt;&lt; PINB2)|(<span class="hljs-number">1</span> &lt;&lt; PINB4));
+</code></pre>
+<p>그러나 논리 연산자로 다른 핀을 동시에 Set 하면서 Clear 할 수는 없습니다. 이 경우에는 각각 별도의 작업이 필요합니다.</p>
+</div></article></main><footer class="c-cpkrrK"><div class="c-fiqONv">© <!-- -->2022</div><div class="c-bHyrwK"><div class="c-iUFgVP">Kh.</div><div class="c-cshSRb">KyuHyuk Lee</div></div></footer></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"excerpt":" 각각의 비트를 조작하는 것은 마이크로컨트롤러를 프로그래밍할 때 이해해야 할 가장 중요하고 기본적인 개념 중 하나입니다. 구성요소의 상태를 읽고, 매개 변수를 설정하고, 출력 핀의 상태를 변경하려면 비트 조작이 필요합니다. 특정 비트의 상태를 개별적으로 변경하고 바른 비트는 변경하지 않","url":"/article/avr/2022/08/28/AVR-Bit-Manipulation","frontmatter":{"title":"[AVR] 비트 연산","date":"2022-08-28 09:39:22","category":"AVR"},"content":"\n각각의 비트를 조작하는 것은 마이크로컨트롤러를 프로그래밍할 때 이해해야 할 가장 중요하고 기본적인 개념 중 하나입니다.\n\n구성요소의 상태를 읽고, 매개 변수를 설정하고, 출력 핀의 상태를 변경하려면 비트 조작이 필요합니다.\n\n특정 비트의 상태를 개별적으로 변경하고 바른 비트는 변경하지 않는 방법을 아는 것이 중요합니다.\n\n이 글에서는 C언어를 사용할 수 있는 비트 연산자 중 일부를 소개하고 예시로 LED를 제어하는 방법을 보여줍니다.\n\n# 개별 비트 설정\n\n레지스터의 비트 설정은 OR 연산자(`|`)를 사용합니다.\n\n| A   | B   | A \\| B |\n| --- | --- | ------ |\n| 1   | 0   | 1      |\n| 1   | 1   | 1      |\n| 0   | 0   | 0      |\n| 0   | 1   | 1      |\n\n위와 같이 OR 연산자(`|`)는 특정 비트를 `1`로 설정하고 다른 비트는 변경하지 않습니다. 예를 들어 `0bxxxxxxxx | 0b00000001`를 하면 `0bxxxxxxx1`이 됩니다. 여기서 `0b00000001`를 비트 마스크(Bitmask)라고 합니다. 비트 마스크에서 `0`인 부분은 변경되지 않고 `1`인 부분만 변경됩니다.\n\n한 번의 OR 연산자로 여러 개의 비트도 설정할 수 있습니다. `0bxxxxxxxx | 0b01010101`를 하면 `0bx1x1x1x1`가 됩니다.\n\n# 개별 비트 지우기\n\n비트를 지우는 것은 AND 연산자(`\u0026`)를 사용합니다.\n\n| A   | B   | A \u0026 B |\n| --- | --- | ----- |\n| 1   | 0   | 0     |\n| 1   | 1   | 1     |\n| 0   | 0   | 0     |\n| 0   | 1   | 0     |\n\nAND 연산자의 사용법은 위에서 설명한 OR 연산자와 유사하지만, 비트 마스크에 `0`이 있는 부분의 비트가 지워지고 `1`이 있는 부분은 변경되지 않고 유지됩니다. 예를 들어 `0bxxxxxxxx | 0b11111110`를 하면 `0bxxxxxxx0`이 됩니다.\n\n# LED 깜빡이기\n\nAVR의 `PINB0`에 LED를 연결했다면, 가장 먼저 `PINB0`을 출력핀으로 만들기 위해 `DDRB`의 0번째 Bit를 1로 설정해야 합니다. 그리고 `PORTB`의 0번째 Bit를 변경하여 `PINB0`을 LOW로 하거나 HIGH로 변경합니다.\n\n```c\n#include\u003cavr/io.h\u003e\n#include\u003cutil/delay.h\u003e\n\n/*\n  ----------------------------------------------\n    DDRx  : 입출력 방향을 결정하는 레지스터\n    PORTx : 출력 신호를 결정하는 레지스터\n    PINx  : 입력된 값이 저장되어 있는 레지스터\n  ----------------------------------------------\n*/\nvoid\nint main()\n{\n    // PINB0을 DDRB로 출력하도록 설정\n    DDRB |= 0b00000001; // DDRB = DDRB | 0b00000001;로 사용할 수도 있습니다.\n\n    while(1)\n    {\n        // PINB0을 HIGH로 설정\n        PORTB |= 0b00000001;\n        _delay_ms(500);\n\n        // PINB0을 LOW로 설정\n        PORTB \u0026= 0b11111110;\n        _delay_ms(500);\n    }\n}\n```\n\n# 개별 비트 뒤집기\n\nXOR 연산자(`^`)를 사용하면 개별 비트를 뒤집을 수 있습니다.\n\n| A   | B   | A ^ B |\n| --- | --- | ----- |\n| 1   | 0   | 1     |\n| 1   | 1   | 0     |\n| 0   | 0   | 0     |\n| 0   | 1   | 1     |\n\nXOR 연산자(`^`)를 사용하면 특정 비트의 값을 뒤집고 다른 비트는 변경하지 않고 그대로 유지할 수 있습니다. 임의의 비트 `x`와 `0`을 XOR 연산하면 `x`가 생성되며, `x`와 `1`을 XOR 연산하면 `¬x`가 생성됩니다.\n\n예를 들면, `0bxxxxxxxx1 ^ 0b00000001`은 `0bxxxxxxx0`이고 반대로 `0bxxxxxxx0 ^ 0b00000001`은 `0bxxxxxxx1` 입니다.\n\nXOR 연산자를 사용하면 위에서 작성한 LED를 500ms마다 켰다 끄는 코드를 아래와 같이 개선할 수 있습니다.\n\n```c\n#include\u003cavr/io.h\u003e\n#include\u003cutil/delay.h\u003e\n\n/*\n  ----------------------------------------------\n    DDRx  : 입출력 방향을 결정하는 레지스터\n    PORTx : 출력 신호를 결정하는 레지스터\n    PINx  : 입력된 값이 저장되어 있는 레지스터\n  ----------------------------------------------\n*/\nvoid\nint main()\n{\n    // PINB0을 DDRB로 출력하도록 설정\n    DDRB |= 0b00000001; // DDRB = DDRB | 0b00000001;로 사용할 수도 있습니다.\n\n    while(1)\n    {\n        // PINB0를 토글(Toggle)합니다\n        PORTB ^= 0b00000001;\n        _delay_ms(500);\n    }\n}\n```\n\n# 비트 이동하기\n\n`\u003c\u003c`와 `\u003e\u003e` 연산자를 사용하면 비트를 이동할 수 있습니다. 비트를 이동하게 되면, 지정된 양만큼 모든 비트를 이동하고 빈 공간을 `0`으로 채웁니다. 예를 들면, `0b1110101 \u003c\u003c 2`은 `0b11010100`가 되며 `0b11110000 \u003e\u003e 3`은 `0b00011110`가 됩니다.\n\n비트의 이동을 레지스터의 특정 비트를 지정할 때 표기법으로 유용하게 사용됩니다.\n\n```c\n    // DDRB에 PINB4를 출력 모드로 설정합니다.\n    // 1 \u003c\u003c 4 = 0b00010000\n    DDRB |= (1 \u003c\u003c 4);\n```\n\nAVR 마이크로컨트롤러 핀에 대한 정의를 가지고 있는 `#include \u003cavr/io.h\u003e`를 코드에 추가하면, `DDRB`에서 `PINB4`를 출력 모드로 설정할 때 아래와 같이 간편하게 할 수 있습니다.\n\n```c\n    // DDRB에 PINB4를 출력 모드로 설정합니다.\n    DDRB |= (1 \u003c\u003c PINB4);\n```\n\n# NOT 연산자\n\n마지막으로 소개할 비트 연산자는 NOT 연산자(`~`)입니다. NOT은 앞에서 설명한 OR, AND, XOR 연산자와 달리 단항 연산자입니다. NOT은 주어진 값에 대해 `0`은 `1`로, `1`은 `0`으로 변경합니다. AND 연산자와 결합하여 사용하면 특정 비트를 지울 때 유용하게 사용할 수 있습니다. 예를 들어 처음에 작성한 LED 코드에서 PINB0의 0번째 비트를 지우려고 할 때 아래와 같은 표현식을 사용했습니다.\n\n```c\n    // PINB0을 LOW로 설정\n    PORTB \u0026= 0b11111110;\n```\n\n위의 코드는 보기에도 헷갈리고, 코드를 작성하는 것 또한 힘듭니다. 아래와 같이 NOT 연산자를 사용하여 개선할 수 있습니다.\n\n```c\n    // PINB0을 LOW로 설정\n    PORTB \u0026= ~(1 \u003c\u003c PINB0);\n```\n\n# 복합적으로 사용하기\n\n위에서 소개한 모든 연산자들은 결합하여 사용할 수 있습니다. 예를 들어 3개의 다른 핀을 동시에 Set 할 수 있습니다.\n\n```c\n    // PINB0, PINB2, PINB4를 HIGH로 설정\n    PORTB |= (1 \u003c\u003c PINB0)|(1 \u003c\u003c PINB2)|(1 \u003c\u003c PINB4);\n```\n\n또는 아래와 같이 세 개의 핀을 Clear 할 수 있습니다.\n\n```c\n    // PINB0, PINB2, PINB4를 LOW로 설정\n    PORTB \u0026= ~((1 \u003c\u003c PINB0)|(1 \u003c\u003c PINB2)|(1 \u003c\u003c PINB4));\n```\n\n그러나 논리 연산자로 다른 핀을 동시에 Set 하면서 Clear 할 수는 없습니다. 이 경우에는 각각 별도의 작업이 필요합니다.\n"},"__N_SSG":true},"page":"/article/[category]/[year]/[month]/[day]/[slug]","query":{"category":"avr","year":"2022","month":"08","day":"28","slug":"AVR-Bit-Manipulation"},"buildId":"EflnYjmq0r01niKZjLBAU","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>

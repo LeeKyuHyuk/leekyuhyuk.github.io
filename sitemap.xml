@@ -7,6 +7,18 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://kyuhyuk.kr/avr/2022/08/28/AVR-ATmega328P-UART</loc>
+    <lastmod>2022‑08‑28T10:35:33+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://kyuhyuk.kr/avr/2022/08/28/AVR-Bit-Manipulation</loc>
+    <lastmod>2022‑08‑28T09:39:22+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://kyuhyuk.kr/blockchain/2021/12/11/Building-Blockchain-in-NodeJS-Part-1-Basic-Prototype</loc>
     <lastmod>2021‑12‑11T22:22:43+09:00</lastmod>
     <changefreq>weekly</changefreq>
