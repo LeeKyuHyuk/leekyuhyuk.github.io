@@ -88,7 +88,12 @@ void sdPowerUpSeq()
     // SDCard에 전원이 공급되는데 최소로 필요한 1msec의 Dealy 실행
     _delay_ms(1);
 
-    // 동기화하기 위해 80개의 클럭사이클을 보냅니다
+    /*
+      동기화하기 위해 80개의 클럭사이클을 보냅니다
+      SPI는 직렬 통신이기 때문에 각 클럭 사이클당 1비트의 데이터가 전송됩니다
+      0xFF(11111111b)는 8비트이기 때문에 10번을 보내면
+      80개의 클럭 사이클을 보내는 것과 같습니다
+    */
     for(uint8_t i = 0; i < 10; i++)
         spiTransfer(0xFF);
 
@@ -246,8 +251,13 @@ int main(void)
 }
 ```
 
-Logic Analyzer를 사용하면 아래와 같은 내용이 출력됩니다.
+Logic Analyzer를 사용하여 의도한 대로 작동하는지 봐봅시다.  
+아래와 같이 Logic Analyzer를 설정했습니다.
 
-![Logic Analyzer](/assets/image/2022-08-28-AVR-ATmega328P-SDCard-1/AVR-ATmega328P-SDCard-1_8.png)
+![Logic Analyzer Setting](/assets/image/2022-08-28-AVR-ATmega328P-SDCard-1/AVR-ATmega328P-SDCard-1_8.png)
+
+Logic Analyzer를 사용하면 아래와 같은 화면이 출력됩니다.
+
+![Logic Analyzer](/assets/image/2022-08-28-AVR-ATmega328P-SDCard-1/AVR-ATmega328P-SDCard-1_9.png)
 
 전송된 첫 번째 바이트는 `0x40`(`CMD0 | 0x40`)이고 Argument는 모두 `0`이며 마지막 바이트는 `0x95` 입니다. 응답하기 위해 명령을 보낸 후 SDCard에 8 Clock Cycle이 전송됩니다. 일단 실행되면 `0x01`을 보내며, R1에 대한 정의를 다시 확인하면 SDCard가 IDLE 상태(오류가 없는)인 것을 확인할 수 있으며 정상적으로 Command 전달이 작동한 것을 알 수 있습니다.
