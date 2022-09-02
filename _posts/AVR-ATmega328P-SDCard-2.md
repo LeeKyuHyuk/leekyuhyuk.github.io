@@ -398,7 +398,7 @@ int main(void)
 
     if (c == '0')
     {
-      // send CMD0 and read response
+      // CMD0을 보내고 응답을 읽습니다
       uartPuts("Sending CMD0...\r\n");
       CS_ENABLE();
       sdCommand(CMD0, CMD0_ARG, CMD0_CRC);
@@ -406,13 +406,13 @@ int main(void)
       CS_DISABLE();
       spiTransfer(0xFF);
 
-      // print R1
+      // R1 출력
       uartPuts("Response: \r\n");
       sdPrintR1(res[0]);
     }
     else if (c == '1')
     {
-      // send CMD8 and read response
+      // CMD8을 보내고 응답을 읽습니다
       uartPuts("Sending CMD8...\r\n");
       CS_ENABLE();
       sdCommand(CMD8, CMD8_ARG, CMD8_CRC);
@@ -420,13 +420,13 @@ int main(void)
       CS_DISABLE();
       spiTransfer(0xFF);
 
-      // print R7
+      // R7 출력
       uartPuts("Response: \r\n");
       sdPrintR7(res);
     }
     else if (c == '2')
     {
-      // send CMD58 and read response
+      // CMD58을 보내고 응답을 읽습니다.
       uartPuts("Sending CMD58...\r\n");
       CS_ENABLE();
       sdCommand(CMD58, CMD58_ARG, CMD58_CRC);
@@ -434,7 +434,7 @@ int main(void)
       CS_DISABLE();
       spiTransfer(0xFF);
 
-      // print R3
+      // R3 출력
       uartPuts("Response: \r\n");
       sdPrintR3(res);
     }
