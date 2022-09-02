@@ -281,10 +281,10 @@ sdCommand(CMD58, CMD58_ARG, CMD_CRC);
 
 # `CMD58` 함수 구현하기
 
-아래와 같이 `CMD58`을 전송하고, Response를 받는 `sdReadOCR()`를 구현해 봅시다.
+아래와 같이 `CMD58`을 전송하고, Response를 받는 `sdReadOcr()`를 구현해 봅시다.
 
 ```c
-void sdReadOCR(uint8_t *res)
+void sdReadOcr(uint8_t *res)
 {
     // SDCard CS Assert
     spiTransfer(0xFF);
