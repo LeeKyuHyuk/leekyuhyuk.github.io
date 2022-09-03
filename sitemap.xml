@@ -25,6 +25,12 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://kyuhyuk.kr/avr/2022/09/03/AVR-ATmega328P-SDCard-4</loc>
+    <lastmod>2022‑09‑03T04:32:01+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://kyuhyuk.kr/avr/2022/08/28/AVR-ATmega328P-SPI</loc>
     <lastmod>2022‑08‑28T15:21:12+09:00</lastmod>
     <changefreq>weekly</changefreq>
