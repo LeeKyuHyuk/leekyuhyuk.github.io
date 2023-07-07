@@ -60,7 +60,7 @@ export default function Layout({ children }: LayoutProps) {
         ]}
       />
       <Main>{children}</Main>
-      <Footer year="2022" initial={INITIAL} name={AUTHOR} />
+      <Footer year="2023" initial={INITIAL} name={AUTHOR} />
     </>
   );
 }
