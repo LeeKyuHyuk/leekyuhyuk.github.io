@@ -79,6 +79,12 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://kyuhyuk.kr/macos/2023/07/08/Debugging-using-GDB-on-Apple-M1-Mac</loc>
+    <lastmod>2023‑07‑08T02:10:31+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://kyuhyuk.kr/django/2020/08/15/Django-Board-Post-View</loc>
     <lastmod>2020‑08‑15T17:22:10+09:00</lastmod>
     <changefreq>weekly</changefreq>
