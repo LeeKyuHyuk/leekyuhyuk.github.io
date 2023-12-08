@@ -26,7 +26,6 @@ jobs:
           node-version: 20.10.0
       - run: npm install
       - run: npm run build
-      - run: npm run export
         env:
           CI: true
           DEPLOY_TARGET: gh-pages
