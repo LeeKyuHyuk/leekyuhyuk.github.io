@@ -1,11 +1,9 @@
-import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
 import * as fs from 'fs';
 import matter from 'gray-matter';
 import md from 'markdown-it';
 import Head from 'next/head';
 import path from 'path';
 import React from 'react';
-import Button from '../../core/Button';
 import Categories from '../../core/Categories';
 import Category from '../../core/Category';
 import Excerpt from '../../core/Excerpt';
@@ -64,12 +62,6 @@ export async function getStaticProps({ params: { slug } }: any) {
 }
 
 export default function CategoryPage({ category, categories, posts }: any) {
-  const [isShowCategories, setIsShowCategories] = React.useState<boolean>(false);
-
-  function categoriesHandler() {
-    setIsShowCategories(!isShowCategories);
-  }
-
   return (
     <>
       <Head>
@@ -77,25 +69,13 @@ export default function CategoryPage({ category, categories, posts }: any) {
           {TITLE} - {category.replaceAll('-', ' ')}
         </title>
       </Head>
-      <>
-        <Button onClick={categoriesHandler}>
-          Categories
-          {isShowCategories ? (
-            <CaretDownOutlined style={{ marginLeft: '0.3rem' }} />
-          ) : (
-            <CaretRightOutlined style={{ marginLeft: '0.3rem' }} />
-          )}
-        </Button>
-        {isShowCategories && (
-          <Categories>
-            {categories.map((item: string) => (
-              <Category key={item} href={`${URL}/category/${item}`}>
-                {item.replaceAll('-', ' ')}
-              </Category>
-            ))}
-          </Categories>
-        )}
-      </>
+      <Categories>
+        {categories.map((item: string) => (
+          <Category key={item} href={`${URL}/category/${item}`}>
+            {item.replaceAll('-', ' ')}
+          </Category>
+        ))}
+      </Categories>
       {posts
         .filter(({ frontmatter }: any) => category === frontmatter.category)
         .sort((a: any, b: any) => {
