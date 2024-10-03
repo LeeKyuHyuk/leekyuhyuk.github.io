@@ -7,16 +7,14 @@ const URL = 'https://kyuhyuk.kr';
 const TIMEZONE = 'Asia/Seoul';
 
 function getTime(date) {
+  const parseDate = dateFns.parse(date, 'yyyy-MM-dd HH:mm:ss', new Date());
   return {
     text: dateFnsTz.formatInTimeZone(
-      dateFns.parse(date, 'yyyy-MM-dd HH:mm:ss', new Date()),
+      parseDate,
       TIMEZONE,
-      "yyyy‑MM‑dd'T'HH:mm:ssxxxxx"
+      "yyyy-MM-dd'T'HH:mm:ssxxxxx"
     ),
-    date: dateFnsTz.zonedTimeToUtc(
-      dateFns.parse(date, 'yyyy-MM-dd HH:mm:ss', new Date()),
-      TIMEZONE
-    ),
+    date: dateFnsTz.toZonedTime(parseDate, TIMEZONE, { timeZone: TIMEZONE }),
   };
 }
 
