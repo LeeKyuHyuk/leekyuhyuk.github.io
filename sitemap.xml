@@ -2,301 +2,307 @@
   <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
     <loc>https://kyuhyuk.kr/raspberry-pi/2019/05/15/ARM-Assembly</loc>
-    <lastmod>2019‑05‑15T20:36:56+09:00</lastmod>
+    <lastmod>2019-05-15T20:36:56+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/avr/2022/08/28/AVR-ATmega328P-SDCard-1</loc>
-    <lastmod>2022‑08‑28T16:49:27+09:00</lastmod>
+    <lastmod>2022-08-28T16:49:27+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/avr/2022/09/01/AVR-ATmega328P-SDCard-2</loc>
-    <lastmod>2022‑09‑01T22:50:19+09:00</lastmod>
+    <lastmod>2022-09-01T22:50:19+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/avr/2022/09/02/AVR-ATmega328P-SDCard-3</loc>
-    <lastmod>2022‑09‑02T23:57:51+09:00</lastmod>
+    <lastmod>2022-09-02T23:57:51+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/avr/2022/09/03/AVR-ATmega328P-SDCard-4</loc>
-    <lastmod>2022‑09‑03T04:32:01+09:00</lastmod>
+    <lastmod>2022-09-03T04:32:01+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/avr/2022/08/28/AVR-ATmega328P-SPI</loc>
-    <lastmod>2022‑08‑28T15:21:12+09:00</lastmod>
+    <lastmod>2022-08-28T15:21:12+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/avr/2022/08/28/AVR-ATmega328P-UART</loc>
-    <lastmod>2022‑08‑28T10:35:33+09:00</lastmod>
+    <lastmod>2022-08-28T10:35:33+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/avr/2022/08/28/AVR-Bit-Manipulation</loc>
-    <lastmod>2022‑08‑28T09:39:22+09:00</lastmod>
+    <lastmod>2022-08-28T09:39:22+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/blockchain/2021/12/11/Building-Blockchain-in-NodeJS-Part-1-Basic-Prototype</loc>
-    <lastmod>2021‑12‑11T22:22:43+09:00</lastmod>
+    <lastmod>2021-12-11T22:22:43+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/blockchain/2021/12/11/Building-Blockchain-in-NodeJS-Part-2-Proof-of-Work</loc>
-    <lastmod>2021‑12‑11T23:51:12+09:00</lastmod>
+    <lastmod>2021-12-11T23:51:12+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/graphql/2021/09/16/Building-a-GraphQL-Server-with-NestJS</loc>
-    <lastmod>2021‑09‑16T00:12:10+09:00</lastmod>
+    <lastmod>2021-09-16T00:12:10+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2013/11/05/COSMOCAMPUS-2013-11</loc>
-    <lastmod>2013‑11‑05T00:47:01+09:00</lastmod>
+    <lastmod>2013-11-05T00:47:01+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/spring-boot/2020/07/19/Create-Spring-Project</loc>
-    <lastmod>2020‑07‑19T19:10:30+09:00</lastmod>
+    <lastmod>2020-07-19T19:10:30+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/macos/2023/07/08/Debugging-using-GDB-on-Apple-M1-Mac</loc>
-    <lastmod>2023‑07‑08T02:10:31+09:00</lastmod>
+    <lastmod>2023-07-08T02:10:31+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/django/2020/08/15/Django-Board-Post-View</loc>
-    <lastmod>2020‑08‑15T17:22:10+09:00</lastmod>
+    <lastmod>2020-08-15T17:22:10+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/django/2020/08/14/Django-Board-Write-Post</loc>
-    <lastmod>2020‑08‑14T15:38:56+09:00</lastmod>
+    <lastmod>2020-08-14T15:38:56+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/javascript/2021/05/13/ESLint-Prettier-Airbnb-Javascript-Style-Setting</loc>
-    <lastmod>2021‑05‑13T22:44:38+09:00</lastmod>
+    <lastmod>2021-05-13T22:44:38+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/react/2021/12/09/Frontend-Clean-Code</loc>
-    <lastmod>2021‑12‑09T21:52:16+09:00</lastmod>
+    <lastmod>2021-12-09T21:52:16+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/file-system/2019/05/06/GUID-Partition-Table</loc>
-    <lastmod>2019‑05‑06T20:02:16+09:00</lastmod>
+    <lastmod>2019-05-06T20:02:16+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2022/09/24/Growing-Lemon-Tree-1</loc>
-    <lastmod>2022‑09‑24T20:35:32+09:00</lastmod>
+    <lastmod>2022-09-24T20:35:32+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2022/11/06/How-to-Build-GnuPG2-from Source-on-macOS</loc>
-    <lastmod>2022‑11‑06T22:16:14+09:00</lastmod>
+    <lastmod>2022-11-06T22:16:14+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/review/2022/05/19/JONSBO-N1-For-NAS-Review</loc>
-    <lastmod>2022‑05‑19T00:18:58+09:00</lastmod>
+    <lastmod>2022-05-19T00:18:58+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2016/09/30/KFC-개인정보-80만-건-노출-뻥뚫린-보안</loc>
-    <lastmod>2016‑09‑30T19:24:00+09:00</lastmod>
+    <lastmod>2016-09-30T19:24:00+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/arm-cortex-m0/2023/04/07/Make-Your-Own-NXP-LPC812-Board</loc>
-    <lastmod>2023‑04‑07T23:08:11+09:00</lastmod>
+    <lastmod>2023-04-07T23:08:11+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/blockchain/2021/12/11/Make-a-Simple-Cryptocurrency-Blockchain-using-NodeJS</loc>
-    <lastmod>2021‑12‑11T00:39:22+09:00</lastmod>
+    <lastmod>2021-12-11T00:39:22+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/review/2021/09/25/Moment-Tripod-Mount-with-MagSafe</loc>
-    <lastmod>2021‑09‑25T17:00:39+09:00</lastmod>
+    <lastmod>2021-09-25T17:00:39+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://kyuhyuk.kr/ordinary-life/2024/10/04/My-first-SFF-case-NCASE-M2</loc>
+    <lastmod>2024-10-04T00:14:03+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2013/12/02/NHN-아이들을-위한-소프트웨어-교육-프로젝트-CF</loc>
-    <lastmod>2013‑12‑02T00:07:32+09:00</lastmod>
+    <lastmod>2013-12-02T00:07:32+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/nestjs/2021/12/05/NestJS-GraphQL-MySQL-React-Address-Book</loc>
-    <lastmod>2021‑12‑05T15:21:11+09:00</lastmod>
+    <lastmod>2021-12-05T15:21:11+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/raspberry-pi/2019/05/14/Raspberry-Pi-Bare-Bones</loc>
-    <lastmod>2019‑05‑14T19:39:57+09:00</lastmod>
+    <lastmod>2019-05-14T19:39:57+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/react/2021/10/04/React-Best-Practice</loc>
-    <lastmod>2021‑10‑04T15:56:47+09:00</lastmod>
+    <lastmod>2021-10-04T15:56:47+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/react/2021/07/22/React-Context-API</loc>
-    <lastmod>2021‑07‑22T00:49:09+09:00</lastmod>
+    <lastmod>2021-07-22T00:49:09+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-1</loc>
-    <lastmod>2019‑03‑04T23:07:01+09:00</lastmod>
+    <lastmod>2019-03-04T23:07:01+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-2</loc>
-    <lastmod>2019‑03‑04T23:07:02+09:00</lastmod>
+    <lastmod>2019-03-04T23:07:02+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-3</loc>
-    <lastmod>2019‑03‑04T23:07:03+09:00</lastmod>
+    <lastmod>2019-03-04T23:07:03+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-4</loc>
-    <lastmod>2019‑03‑04T23:07:04+09:00</lastmod>
+    <lastmod>2019-03-04T23:07:04+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/simple-arm-operating-system/2019/03/04/Simple-ARM-Operating-System-Chapter-5</loc>
-    <lastmod>2019‑03‑04T23:07:05+09:00</lastmod>
+    <lastmod>2019-03-04T23:07:05+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/spring-boot/2020/07/19/Spring-Boot-Environment-Setting</loc>
-    <lastmod>2020‑07‑19T16:08:54+09:00</lastmod>
+    <lastmod>2020-07-19T16:08:54+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/spring-boot/2020/07/22/Spring-Boot-JPA-MySQL-Board-Post-File-Upload-Download</loc>
-    <lastmod>2020‑07‑22T23:48:39+09:00</lastmod>
+    <lastmod>2020-07-22T23:48:39+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/spring-boot/2020/07/21/Spring-Boot-JPA-MySQL-Board-Post-Update-Delete</loc>
-    <lastmod>2020‑07‑21T21:09:51+09:00</lastmod>
+    <lastmod>2020-07-21T21:09:51+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/spring-boot/2020/07/20/Spring-Boot-JPA-MySQL-Board-Post-View</loc>
-    <lastmod>2020‑07‑20T11:01:06+09:00</lastmod>
+    <lastmod>2020-07-20T11:01:06+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/spring-boot/2020/07/19/Spring-Boot-JPA-MySQL-Board-Write-Post</loc>
-    <lastmod>2020‑07‑19T23:21:24+09:00</lastmod>
+    <lastmod>2020-07-19T23:21:24+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/spring-boot/2020/07/19/Spring-Boot-RESTful-Web-Service</loc>
-    <lastmod>2020‑07‑19T22:21:24+09:00</lastmod>
+    <lastmod>2020-07-19T22:21:24+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/review/2020/12/04/TEX-Shinobi</loc>
-    <lastmod>2020‑12‑04T20:50:50+09:00</lastmod>
+    <lastmod>2020-12-04T20:50:50+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/react/2022/05/24/Use-react-error-boundary-to-handle-errors-in-React</loc>
-    <lastmod>2022‑05‑24T02:46:33+09:00</lastmod>
+    <lastmod>2022-05-24T02:46:33+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/graphql/2021/09/17/Using-GraphQL-in-React-and-Electron</loc>
-    <lastmod>2021‑09‑17T03:27:23+09:00</lastmod>
+    <lastmod>2021-09-17T03:27:23+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2021/10/01/Wedding-Invitation-Development-Story</loc>
-    <lastmod>2021‑10‑01T23:29:24+09:00</lastmod>
+    <lastmod>2021-10-01T23:29:24+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2021/09/05/iHEIC-Development-Story</loc>
-    <lastmod>2021‑09‑05T00:49:09+09:00</lastmod>
+    <lastmod>2021-09-05T00:49:09+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2021/09/05/iHEIC-v1.0.0</loc>
-    <lastmod>2021‑09‑05T00:32:14+09:00</lastmod>
+    <lastmod>2021-09-05T00:32:14+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2016/05/13/결정맨</loc>
-    <lastmod>2016‑05‑13T21:26:00+09:00</lastmod>
+    <lastmod>2016-05-13T21:26:00+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://kyuhyuk.kr/ordinary-life/2011/11/07/한국의-스티브-잡스를-꿈꾼다</loc>
-    <lastmod>2011‑11‑07T16:34:29+09:00</lastmod>
+    <lastmod>2011-11-07T16:34:29+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
