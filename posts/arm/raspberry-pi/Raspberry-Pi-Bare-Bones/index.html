@@ -1,0 +1,908 @@
+<!DOCTYPE html><html dir="ltr" lang="en" class="overflow-y-scroll scroll-smooth"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" href="/favicon.ico"><link rel="canonical" href="https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/"><meta name="generator" content="Astro v7.3.4"><!-- Font --><style>@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/9344e1e6ba3134db.woff") format("woff"), url("/_astro/fonts/4b36ecaec8861e3e.ttf") format("truetype");font-display:swap;font-weight:300;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/8f4ae94aecd98e20.woff") format("woff"), url("/_astro/fonts/82b0269728335a0a.ttf") format("truetype");font-display:swap;font-weight:400;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/20c20d9068c60dd0.woff") format("woff"), url("/_astro/fonts/b576f4f05c9dbc87.ttf") format("truetype");font-display:swap;font-weight:500;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/5a6c2a0b85de9ba1.woff") format("woff"), url("/_astro/fonts/4b0ae898a7afcd37.ttf") format("truetype");font-display:swap;font-weight:600;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/30d0dcc4d81c0020.woff") format("woff"), url("/_astro/fonts/e8acb21fdbc37b03.ttf") format("truetype");font-display:swap;font-weight:700;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/bf976bcffafeb084.woff") format("woff"), url("/_astro/fonts/8436f9847213f651.ttf") format("truetype");font-display:swap;font-weight:300;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/8a34d92a2a36603b.woff") format("woff"), url("/_astro/fonts/ccba4fb3766b1b6e.ttf") format("truetype");font-display:swap;font-weight:400;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/a20ca4cd312f40ca.woff") format("woff"), url("/_astro/fonts/ec093fff40157157.ttf") format("truetype");font-display:swap;font-weight:500;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/b74e6fc4049d0d63.woff") format("woff"), url("/_astro/fonts/dab775c12e1996fc.ttf") format("truetype");font-display:swap;font-weight:600;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/d9c1254858362ad4.woff") format("woff"), url("/_astro/fonts/a5f75c165e55a648.ttf") format("truetype");font-display:swap;font-weight:700;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:300;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:400;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:500;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:600;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:700;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:300;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:400;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:500;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:600;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:700;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}:root{--font-google-sans-code:"Google Sans Code-1a30c214885cb404","Google Sans Code-1a30c214885cb404 fallback: Courier New",monospace;}</style><!-- Primary meta --><title>Raspberry Pi Bare Bones | KyuHyuk Blog</title><meta name="title" content="Raspberry Pi Bare Bones | KyuHyuk Blog"><meta name="description" content="Raspberry Pi Model B/2/3에서 OS를 개발하는 가이드: 크로스 컴파일러 빌드, 부트 어셈블리, UART UART 기반 커널 구현, 리눅커 스크립트, 부팅까지 전 과정을 설명합니다."><meta name="author" content="KyuHyuk Lee"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:site_name" content="KyuHyuk Blog"><meta property="og:title" content="Raspberry Pi Bare Bones | KyuHyuk Blog"><meta property="og:description" content="Raspberry Pi Model B/2/3에서 OS를 개발하는 가이드: 크로스 컴파일러 빌드, 부트 어셈블리, UART UART 기반 커널 구현, 리눅커 스크립트, 부팅까지 전 과정을 설명합니다."><meta property="og:url" content="https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/"><meta property="og:image" content="https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/index.png"><!-- Twitter / X --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/"><meta property="twitter:title" content="Raspberry Pi Bare Bones | KyuHyuk Blog"><meta property="twitter:description" content="Raspberry Pi Model B/2/3에서 OS를 개발하는 가이드: 크로스 컴파일러 빌드, 부트 어셈블리, UART UART 기반 커널 구현, 리눅커 스크립트, 부팅까지 전 과정을 설명합니다."><meta property="twitter:image" content="https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/index.png"><!-- RSS autodiscovery --><link rel="alternate" type="application/rss+xml" title="KyuHyuk Blog" href="https://kyuhyuk.kr/rss.xml/"><!-- Filled at runtime by theme.ts to match the current background colour --><meta name="theme-color" content=""><!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) --><meta property="og:type" content="article"><meta property="article:published_time" content="2019-05-14T19:39:57.000Z"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Raspberry Pi Bare Bones | KyuHyuk Blog","image":"https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/index.png","datePublished":"2019-05-14T19:39:57.000Z","author":[{"@type":"Person","name":"KyuHyuk Lee","url":"https://avatars.githubusercontent.com/u/6347277"}]}</script><!--
+      Inline FOUC-prevention script: sets data-theme on <html> before
+      the browser paints. Runs synchronously, no defer/async.
+    --><script>
+      (function () {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = stored ?? (prefersDark ? "dark" : "light");
+        const root = document.firstElementChild;
+        root?.setAttribute("data-theme", theme);
+        root?.classList.toggle("dark", theme === "dark");
+        // Expose value so theme.ts can skip re-detection.
+        window.__theme = { value: theme };
+      })();
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js"></script><link rel="stylesheet" href="/_astro/Footer.BJLVQ-Bs.css"><style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media (prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*),[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-bztu2lml-1"] { view-transition-name: arm-architecture; }@layer astro { ::view-transition-old(arm-architecture) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(arm-architecture) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(arm-architecture) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(arm-architecture) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-bztu2lml-2"] { view-transition-name: raspberry-pi; }@layer astro { ::view-transition-old(raspberry-pi) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(raspberry-pi) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(raspberry-pi) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(raspberry-pi) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head><body class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"><a id="skip-to-content" href="#main-content" class="bg-background text-accent absolute inset-s-16 -top-full z-50 px-3 py-2 backdrop-blur-lg transition-all focus:top-4">Skip to content</a><header class="app-layout flex flex-col items-center justify-between sm:flex-row"><div class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6"><a href="/" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none">KyuHyuk Blog</a><nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"><button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="menu-items" data-label-open="Open menu" data-label-close="Close menu"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden" viewBox="0 0 24 24" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M18 6 6 18M6 6l12 12" /></svg><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" viewBox="0 0 24 24" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 6h16M7 12h13M10 18h10" /></svg></button><ul id="menu-items" class="[&amp;&gt;li&gt;a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 sm:[&amp;&gt;li]:h-8 [&amp;&gt;li&gt;a]:block [&amp;&gt;li&gt;a]:px-4 [&amp;&gt;li&gt;a]:py-3 [&amp;&gt;li&gt;a]:text-center [&amp;&gt;li&gt;a]:font-medium sm:[&amp;&gt;li&gt;a]:px-2 sm:[&amp;&gt;li&gt;a]:py-1"><li class="col-span-2"><a href="/posts/" class="active-nav">Posts</a></li><li class="col-span-2"><a href="/tags/">Tags</a></li><li class="col-span-2"><a href="/archives/" title="Archives" aria-label="Archives" class="group inline-flex items-center gap-1 hover:text-accent focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M10 12h4" /></svg><span class="sm:sr-only">Archives</span></a></li><li class="col-span-1 flex items-center justify-center"><a href="/search/" title="Search" aria-label="Search" class="group inline-flex items-center gap-1 hover:text-accent focus-outline relative size-8"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-1/2 left-1/2 size-6 -translate-x-1/2 -translate-y-1/2" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6" /></svg><span class="sr-only">Search</span></a></li><li class="col-span-1 flex items-center justify-center"><button id="theme-btn" class="focus-outline hover:[&amp;&gt;svg]:stroke-accent relative size-12 p-4 sm:size-8" title="Toggle theme" aria-label="auto" aria-live="polite"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] translate-[-50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" /></svg><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] translate-[-50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M14.828 14.828a4 4 0 1 0-5.656-5.656 4 4 0 0 0 5.656 5.656M6.343 17.657l-1.414 1.414M6.343 6.343 4.929 4.929M17.657 6.343l1.414-1.414M17.657 17.657l1.414 1.414M4 12H2M12 4V2M20 12h2M12 20v2" /></svg></button></li></ul></nav></div></header><script type="module">function e(){let e=document.querySelector(`#menu-btn`),t=document.querySelector(`#menu-items`),n=document.querySelector(`#menu-icon`),r=document.querySelector(`#close-icon`);if(!e||!t||!n||!r)return;let i=e.dataset.labelOpen??`Open menu`,a=e.dataset.labelClose??`Close menu`;e.addEventListener(`click`,()=>{let o=e.getAttribute(`aria-expanded`)===`true`;e.setAttribute(`aria-expanded`,o?`false`:`true`),e.setAttribute(`aria-label`,o?i:a),t.classList.toggle(`hidden`),t.classList.toggle(`grid`),n.classList.toggle(`hidden`),r.classList.toggle(`hidden`)})}function t(){let e=document.getElementById(`skip-to-content`);e&&e.addEventListener(`click`,e=>{if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0)return;e.preventDefault();let t=document.getElementById(`main-content`);t&&(t.setAttribute(`tabindex`,`-1`),t.addEventListener(`blur`,()=>t.removeAttribute(`tabindex`),{once:!0}),t.focus(),t.scrollIntoView({behavior:`smooth`}))})}e(),document.addEventListener(`astro:after-swap`,e),t(),document.addEventListener(`astro:after-swap`,t);</script><script type="module">function e(){let e=document.querySelector(`#back-button`),t=sessionStorage.getItem(`backUrl`);t&&e&&(e.href=t)}document.addEventListener(`astro:page-load`,e),e();</script><main id="main-content" class="app-layout mt-8" data-pagefind-body><h1 style="view-transition-name:raspberry-pi-bare-bones" class="text-accent inline-block text-2xl font-bold sm:text-3xl">Raspberry Pi Bare Bones</h1><div class="my-2 flex items-center gap-2"><div class="text-muted-foreground flex items-center gap-x-2"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 min-w-5.5" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005" /></svg><time class="text-sm sm:text-base" datetime="2019-05-14T19:39:57.000Z">15 May, 2019</time></div><span aria-hidden="true" class="text-muted-foreground max-sm:hidden hidden">|</span></div><article id="article" style="word-break: keep-all; overflow-wrap: break-word;" class="mt-8 w-full app-prose max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"><p>Raspberry Pi의 운영 체제 개발에 대한 글입니다. 이 글은 테스트할 다른 하드웨어가 없기 때문에 Raspberry Pi Model B Rev 2에 맞춰져 작성되었습니다. 하지만 지금까지의 모델들은 Memory-Mapped I/O 위치 이외에는 대부분 동일합니다. 이것은 최소한의 시스템을 만드는 방법의 예를 보여주지만, 프로젝트를 적절하게 구조화하는 방법의 예는 아닙니다.</p>
+<h1 id="prepare">Prepare</h1>
+<p>여러분은 이제 스스로 운영체제 개발을 시작하려고 합니다. 아마도 언젠가는 스스로 새로운 운영체제를 개발할 수도 있습니다. 이것은 Bootstrap 또는 Self-hosting으로 알려진 과정입니다. 우선은 기존 운영 체제에서 새 운영 체제를 컴파일 할 수 있는 시스템을 환경을 만들기만 하면 됩니다. 이 과정은 <a href="https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F">Cross-Compile</a>으로 알려져 있으며 운영체제개발의 첫 번째 단계입니다.</p>
+<p>이 글에서는 운영체제 개발을 원활하게 할 수 있는 Linux와 같은 Unix 계열 운영체제를 사용합니다. Windows 사용자는 <a href="https://wiki.osdev.org/MinGW">MinGW</a> 또는 <a href="https://wiki.osdev.org/Cygwin">Cygwin</a> 환경에서 진행할 수 있습니다.</p>
+<h1 id="building-a-cross-compiler">Building a Cross-Compiler</h1>
+<blockquote><p>Main article: <a href="https://wiki.osdev.org/GCC_Cross-Compiler">GCC Cross-Compiler</a>, <a href="https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F">Why do I need a Cross Compiler?</a></p></blockquote>
+<p>우선해야 할 일은 <strong>arm-none-eabi</strong> 용 GCC Cross-Compiler를 준비하는 것입니다. 아직 운영체제를 만들기위해 컴파일러를 수정하지 않았기 때문에, arm-none-eabi라는 일반적인 타겟을 사용할 것입니다. 이 타겟은 System V ABI를 대상으로 하는 Toolchain을 제공합니다. Cross-Compiler 없이 운영체제를 올바르게 컴파일할 수 없습니다.</p>
+<p>만약 64비트 커널이 필요하다면, aarch64-elf를 타겟으로 사용하면 됩니다. 동일한 System V ABI 인터페이스를 제공하지만 64비트 용입니다. elf를 사용하는 것은 필수가 아니지만 작업을 간편하게 해줍니다.</p>
+<h1 id="overview">Overview</h1>
+<p>이제 여러분은 크로스 컴파일러를 가지고 있어야 합니다. 이 글은 간단한 운영체제를 만드는데 필요한 최소한의 방법을 제공하고 있습니다. 이는 프로젝트 구조에 대한 권장 구조로 사용되지는 않지만 최소한의 커널에 대한 예로서는 사용되고 있습니다. 이런 간단한 커널을 개발하는 경우에는 3개의 파일만 있으면 됩니다.</p>
+<ol>
+<li><code>boot.S</code> - 커널이 CPU 환경에서 동작할 수 있도록 만들어 주기 위한 커널의 진입점입니다.</li>
+<li><code>kernel.c</code> - 여러분이 만들게 될 커널 루틴입니다.</li>
+<li><code>linker.ld</code> - 위에 두 소스코드를 컴파일한 후 Linking 할 때 사용하게 될 Linker Script입니다.</li>
+</ol>
+<h1 id="booting-the-operating-system">Booting the Operating System</h1>
+<p>이제 <code>boot.S</code>라는 파일을 만들고 그 내용을 설명할 것입니다. 이 예제에서는 앞에서 빌드 한 Cross-Compiler Toolchain의 일부인 GNU Assembler를 사용합니다. 이 어셈블러는 나머지 GNU Toolchain과잘 호환됩니다.</p>
+<h2 id="raspberry-pi-model-a-b-a-b-and-zero">Raspberry Pi Model A, B, A+, B+, and Zero</h2>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>// AArch32 mode</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>// To keep this in the first portion of the binary.</span></span>
+<span class="line"><span>.section ".text.boot"</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>// Make _start global.</span></span>
+<span class="line"><span>.globl _start</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.org 0x8000</span></span>
+<span class="line"><span>// Entry point for the kernel.</span></span>
+<span class="line"><span>// r15 -> should begin execution at 0x8000.</span></span>
+<span class="line"><span>// r0 -> 0x00000000</span></span>
+<span class="line"><span>// r1 -> 0x00000C42</span></span>
+<span class="line"><span>// r2 -> 0x00000100 - start of ATAGS</span></span>
+<span class="line"><span>// preserve these registers as argument for kernel_main</span></span>
+<span class="line"><span>_start:</span></span>
+<span class="line"><span>	// Setup the stack.</span></span>
+<span class="line"><span>	mov sp, #0x8000</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>	// Clear out bss.</span></span>
+<span class="line"><span>	ldr r4, =__bss_start</span></span>
+<span class="line"><span>	ldr r9, =__bss_end</span></span>
+<span class="line"><span>	mov r5, #0</span></span>
+<span class="line"><span>	mov r6, #0</span></span>
+<span class="line"><span>	mov r7, #0</span></span>
+<span class="line"><span>	mov r8, #0</span></span>
+<span class="line"><span>	b       2f</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>1:</span></span>
+<span class="line"><span>	// store multiple at r4.</span></span>
+<span class="line"><span>	stmia r4!, {r5-r8}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>	// If we are still below bss_end, loop.</span></span>
+<span class="line"><span>2:</span></span>
+<span class="line"><span>	cmp r4, r9</span></span>
+<span class="line"><span>	blo 1b</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>	// Call kernel_main</span></span>
+<span class="line"><span>	ldr r3, =kernel_main</span></span>
+<span class="line"><span>	blx r3</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>	// halt</span></span>
+<span class="line"><span>halt:</span></span>
+<span class="line"><span>	wfe</span></span>
+<span class="line"><span>	b halt</span></span></code></pre>
+<p>Linker Script에서 <code>.text.boot</code> 섹션을 사용하여 <code>boot.S</code>를 커널 이미지의 맨 처음에 배치합니다. 이 코드는 <code>kernel_main</code> 함수를 호출하기 전에 최소의 C 환경을 초기화합니다. 즉, 스택이 있고 BSS 세그먼트를 0으로 만드는 것을 의미합니다. 이 코드는 <code>r0</code>~<code>r2</code>를 사용하지 않으므로 <code>kernel_main</code> 호출에 유효합니다.</p>
+<p>아래와 같이 <code>boot.S</code>를 assemble 할 수 있습니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="sh"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">arm-none-eabi-gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -mcpu=arm1176jzf-s</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -fpic</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -ffreestanding</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -c</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> boot.S</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -o</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> boot.o</span></span></code></pre>
+<h2 id="raspberry-pi-2">Raspberry Pi 2</h2>
+<p>최신 버전의 Raspberry Pi를 사용하면 더 많은 작업을 수행할 수 있습니다. Raspberry Pi 2와 3에는 4개의코어가 있습니다. 부팅 할 때 모든 코어가 실행 중이며 동일한 부팅 코드를 실행합니다. 따라서 코어를 구별하고 그중 하나만 실행할 수 있게 하고 나머지는 무한 루프에 넣어야 합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>// AArch32 mode</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>// To keep this in the first portion of the binary.</span></span>
+<span class="line"><span>.section ".text.boot"</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>// Make _start global.</span></span>
+<span class="line"><span>.globl _start</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.org 0x8000</span></span>
+<span class="line"><span>// Entry point for the kernel.</span></span>
+<span class="line"><span>// r15 -> should begin execution at 0x8000.</span></span>
+<span class="line"><span>// r0 -> 0x00000000</span></span>
+<span class="line"><span>// r1 -> 0x00000C42</span></span>
+<span class="line"><span>// r2 -> 0x00000100 - start of ATAGS</span></span>
+<span class="line"><span>// preserve these registers as argument for kernel_main</span></span>
+<span class="line"><span>_start:</span></span>
+<span class="line"><span>	// Shut off extra cores</span></span>
+<span class="line"><span>	mrc p15, 0, r5, c0, c0, 5</span></span>
+<span class="line"><span>	and r5, r5, #3</span></span>
+<span class="line"><span>	cmp r5, #0</span></span>
+<span class="line"><span>	bne halt</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>	// Setup the stack.</span></span>
+<span class="line"><span>	ldr r5, =_start</span></span>
+<span class="line"><span>	mov sp, r5</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>	// Clear out bss.</span></span>
+<span class="line"><span>	ldr r4, =__bss_start</span></span>
+<span class="line"><span>	ldr r9, =__bss_end</span></span>
+<span class="line"><span>	mov r5, #0</span></span>
+<span class="line"><span>	mov r6, #0</span></span>
+<span class="line"><span>	mov r7, #0</span></span>
+<span class="line"><span>	mov r8, #0</span></span>
+<span class="line"><span>	b       2f</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>1:</span></span>
+<span class="line"><span>	// store multiple at r4.</span></span>
+<span class="line"><span>	stmia r4!, {r5-r8}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>	// If we are still below bss_end, loop.</span></span>
+<span class="line"><span>2:</span></span>
+<span class="line"><span>	cmp r4, r9</span></span>
+<span class="line"><span>	blo 1b</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>	// Call kernel_main</span></span>
+<span class="line"><span>	ldr r3, =kernel_main</span></span>
+<span class="line"><span>	blx r3</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>	// halt</span></span>
+<span class="line"><span>halt:</span></span>
+<span class="line"><span>	wfe</span></span>
+<span class="line"><span>	b halt</span></span></code></pre>
+<p>아래와 같이 <code>boot.S</code>를 assemble 할 수 있습니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="sh"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">arm-none-eabi-gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -mcpu=cortex-a7</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -fpic</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -ffreestanding</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -c</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> boot.S</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -o</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> boot.o</span></span></code></pre>
+<h2 id="raspberry-pi-3">Raspberry Pi 3</h2>
+<p>64비트 모드에서 부팅 코드는 <code>0x8000</code>이 아닌 <code>0x80000</code>에 로드됩니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>// AArch64 mode</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>// To keep this in the first portion of the binary.</span></span>
+<span class="line"><span>.section ".text.boot"</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>// Make _start global.</span></span>
+<span class="line"><span>.globl _start</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    .org 0x80000</span></span>
+<span class="line"><span>// Entry point for the kernel. Registers are not defined as in AArch32.</span></span>
+<span class="line"><span>_start:</span></span>
+<span class="line"><span>    // read cpu id, stop slave cores</span></span>
+<span class="line"><span>    mrs     x1, mpidr_el1</span></span>
+<span class="line"><span>    and     x1, x1, #3</span></span>
+<span class="line"><span>    cbz     x1, 2f</span></span>
+<span class="line"><span>    // cpu id > 0, stop</span></span>
+<span class="line"><span>1:  wfe</span></span>
+<span class="line"><span>    b       1b</span></span>
+<span class="line"><span>2:  // cpu id == 0</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    // set stack before our code</span></span>
+<span class="line"><span>    ldr     x1, =_start</span></span>
+<span class="line"><span>    mov     sp, x1</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    // clear bss</span></span>
+<span class="line"><span>    ldr     x1, =__bss_start</span></span>
+<span class="line"><span>    ldr     w2, =__bss_size</span></span>
+<span class="line"><span>3:  cbz     w2, 4f</span></span>
+<span class="line"><span>    str     xzr, [x1], #8</span></span>
+<span class="line"><span>    sub     w2, w2, #1</span></span>
+<span class="line"><span>    cbnz    w2, 3b</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    // jump to C code, should not return</span></span>
+<span class="line"><span>4:  bl      kernel_main</span></span>
+<span class="line"><span>    // for failsafe, halt this core too</span></span>
+<span class="line"><span>    b 1b</span></span></code></pre>
+<p>코드를 다음과 같이 컴파일합니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="sh"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">aarch64-elf-gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -ffreestanding</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -nostdinc</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -nostdlib</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -nostartfiles</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -c</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> boot.S</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -o</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> boot.o</span></span></code></pre>
+<h1 id="implementing-the-kernel">Implementing the Kernel</h1>
+<p>지금까지는 C와 같은 고급 언어를 사용할 수 있도록 프로세서를 설정하는 Bootstrap Assembly Stub를 작성했습니다. C++와 같은 다른 언어를 사용할 수도 있습니다.</p>
+<h2 id="freestanding-and-hosted-environments">Freestanding and Hosted Environments</h2>
+<p>일반적인 사용자 공간에서 C 또는 C++로 프로그래밍을 하는 경우에는 호스팅 환경(Hosted Environment)을사용했습니다. 호스팅 환경이란 C 표준 라이브러리 및 기타 기능이 있는 환경을 말합니다. 또는 독립적인 (Freestanding) 환경이 있습니다. 이것은 우리가 여기서 사용하는 환경입니다. Freestanding은 C 표준 라이브러리가 없고, 우리가 제공하는 것만 사용할 수 있는 것을 의미합니다. 그러나 일부 헤더 파일은 실제로 C 표준 라이브러리의 일부가 아니라 컴파일러에서 제공하는 헤더 파일입니다. 이러한 것들은 독립적인 C 소스코드에서도 사용할 수 있습니다. 이 경우 <code>&#x3C;stddef.h></code>를 사용하여 <code>size_t</code>와 <code>NULL</code> 및 <code>&#x3C;stdint.h></code>를가져와서 운영체제 개발에 매우 중요한 <code>intx_t</code> 및 <code>uintx_t</code> 자료형을 가져옵니다. 여기서 변수가 정확한크기인지 확인해야 합니다. (우리가 <code>uint16_t</code> 대신 <code>short</code>를 사용하고 <code>short</code>의 크기를 변경하면, 여기에 있는 VGA 드라이버가 깨질 것입니다!) 또한 <code>&#x3C;float.h></code>, <code>&#x3C;iso646.h></code>, <code>&#x3C;limits.h></code>, <code>&#x3C;stdarg.h></code> 헤더도 사용이 가능합니다. GCC는 실제로 몇 가지 헤더를 추가로 제공하지만 이들은 특별한 목적으로 사용됩니다.</p>
+<h2 id="writing-a-kernel-in-c">Writing a kernel in C</h2>
+<p>다음은 C로 간단한 커널을 만드는 방법을 보여줍니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">include</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#x3C;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">stddef.h</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">></span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">include</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#x3C;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">stdint.h</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">></span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Memory-Mapped I/O output</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">static</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic"> inline</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> mmio_write</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint32_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> reg</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint32_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> data</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">	*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">volatile</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint32_t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)reg </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> data;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Memory-Mapped I/O input</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">static</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic"> inline</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint32_t</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> mmio_read</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint32_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> reg</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">	return</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">volatile</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint32_t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)reg;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Loop &#x3C;delay> times in a way that the compiler won't optimize away</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">static</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic"> inline</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> delay</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">int32_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> count</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">	asm</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic"> volatile</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">__delay_%=: subs %[count], %[count], #1; bne __delay_%=</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span>
+<span class="line"><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">		 :</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">=r</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(count)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">count</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(count) </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">cc</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">enum</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // The GPIO registers base address.</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    GPIO_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">3F200000</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // for raspi2 &#x26; 3, 0x20200000 for raspi1</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // The offsets for reach register.</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Controls actuation of pull up/down to ALL GPIO pins.</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    GPPUD </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (GPIO_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">94</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Controls actuation of pull up/down for specific GPIO pin.</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    GPPUDCLK0 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (GPIO_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">98</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // The base address for UART.</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">3F201000</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // for raspi2 &#x26; 3, 0x20201000 for raspi1</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // The offsets for reach register for the UART.</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_DR     </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_RSRECR </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">04</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_FR     </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">18</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_ILPR   </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">20</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_IBRD   </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">24</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_FBRD   </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">28</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_LCRH   </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">2C</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_CR     </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">30</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_IFLS   </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">34</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_IMSC   </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">38</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_RIS    </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">3C</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_MIS    </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">40</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_ICR    </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">44</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_DMACR  </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">48</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_ITCR   </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">80</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_ITIP   </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">84</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_ITOP   </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">88</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UART0_TDR    </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (UART0_BASE </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">8C</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uart_init</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">()</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Disable UART0.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_CR</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00000000</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Setup the GPIO pin 14 &#x26;&#x26; 15.</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Disable pull up/down for all GPIO pins &#x26; delay for 150 cycles.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(GPPUD</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00000000</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	delay</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">150</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Disable pull up/down for pin 14,15 &#x26; delay for 150 cycles.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(GPPUDCLK0</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 14</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 15</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">))</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	delay</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">150</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Write 0 to GPPUDCLK0 to make it take effect.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(GPPUDCLK0</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00000000</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Clear pending interrupts.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_ICR</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">7FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Set integer &#x26; fractional part of baud rate.</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Divider = UART_CLOCK/(16 * Baud)</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Fraction part register = (Fractional part * 64) + 0.5</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// UART_CLOCK = 3000000; Baud = 115200.</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Divider = 3000000 / (16 * 115200) = 1.627 = ~1.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_IBRD</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Fractional part register = (.627 * 64) + 0.5 = 40.6 = ~40.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_FBRD</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 40</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Enable FIFO &#x26; 8 bit data transmissio (1 stop bit, no parity).</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_LCRH</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 4</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 5</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 6</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">))</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Mask all interrupts.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_IMSC</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 4</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 5</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 6</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">	                       (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 7</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 9</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">))</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Enable UART0, receive &#x26; transfer part of UART.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_CR</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 9</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">))</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uart_putc</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> char</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> c</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Wait for UART to become ready to transmit.</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">	while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> ( </span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mmio_read</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_FR)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x26;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 5</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) ) { }</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	mmio_write</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_DR</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> c)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> char</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uart_getc</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">()</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Wait for UART to have received something.</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> ( </span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mmio_read</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_FR)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x26;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &#x3C;&#x3C;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 4</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) ) { }</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    return</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> mmio_read</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(UART0_DR)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uart_puts</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">const</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> char</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> str</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">	for</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">size_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; </span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">str</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[i] </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> '</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">'</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">		uart_putc</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">((</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> char</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">str</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">[i])</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">if</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic"> defined</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">__cplusplus</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">extern</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">C</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> /* Use C linkage for kernel_main. */</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">endif</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> kernel_main</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint32_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> r0</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint32_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> r1</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint32_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> atags</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">	// Declare as unused</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">	(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) r0;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">	(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) r1;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">	(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) atags;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	uart_init</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">	uart_puts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Hello, kernel World!</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">	while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">		uart_putc</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uart_getc</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">())</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>GPU 부트로더는 <code>r0</code>~<code>r2</code>를 통해 커널에 인수(Argument)를 전달하고 <code>boot.S</code>는 이러한 3개의 레지스터를보존합니다. 이것들은 C 함수 호출에서 사용되는 3개의 인수입니다. <code>r0</code>은 Raspberry Pi가 부팅된 장치의코드를 포함합니다. 일반적으로 <code>0</code>이지만 실제 값은 보드의 펌웨어에 따라 다릅니다. <code>r1</code>은 ‘ARM Linux Machine Type’이 들어있으며, Raspberry Pi의 경우 BCM2708 CPU를 식별하는 <code>3138</code>(<code>0xC42</code>)입니다. <a href="https://www.arm.linux.org.uk/developer/machines/">여기에서</a> ARM Machine 유형의 전체 목록을 볼 수 있습니다. <code>r2</code>는 ATAG(ARM TAG)의 주소를 가지고 있습니다.</p>
+<p>GPIO와 UART의 주소는 Peripheral Base Address의 offset이며, Raspberry Pi 1은 <code>0x20000000</code>이고 Raspberry Pi 2와 Raspberry Pi 3은 <code>0x3F000000</code>입니다. 레지스터 주소와 사용 방법은 BCM2835 설명서에서확인할 수 있습니다.</p>
+<p>다음과 같이 컴파일합니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="sh"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">arm-none-eabi-gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -mcpu=arm1176jzf-s</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -fpic</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -ffreestanding</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -std=gnu99</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -c</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> kernel.c</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -o</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> kernel.o</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -O2</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -Wall</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -Wextra</span></span></code></pre>
+<p>64비트로는 다음과 같이 컴파일합니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="sh"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">aarch64-elf-gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -ffreestanding</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -nostdinc</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -nostdlib</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -nostartfiles</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -c</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> kernel.c</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -o</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> kernel.o</span></span></code></pre>
+<p>위의 코드는 몇 가지 확장 기능을 사용하므로, C99의 GNU 버전으로 빌드 합니다.</p>
+<h1 id="linking-the-kernel">Linking the Kernel</h1>
+<p>마지막으로 커널을 생성하기 위해 오브젝트 파일들을 Link 해야 합니다. 일반적인 프로그래밍을 할 때 Toolchain은 프로그램을 Link 하기 위한 기본 스크립트를 제공합니다. 하지만 커널 개발에는 적합하지 않으며 사용자 정의된 Linker Script를 사용해야 합니다. 64비트 모드의 Linker Script는 시작 주소를 제외하고는 똑같습니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>ENTRY(_start)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>SECTIONS</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>    /* Starts at LOADER_ADDR. */</span></span>
+<span class="line"><span>    . = 0x8000;</span></span>
+<span class="line"><span>    /* For AArch64, use . = 0x80000; */</span></span>
+<span class="line"><span>    __start = .;</span></span>
+<span class="line"><span>    __text_start = .;</span></span>
+<span class="line"><span>    .text :</span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        KEEP(*(.text.boot))</span></span>
+<span class="line"><span>        *(.text)</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>    . = ALIGN(4096); /* align to page size */</span></span>
+<span class="line"><span>    __text_end = .;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    __rodata_start = .;</span></span>
+<span class="line"><span>    .rodata :</span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        *(.rodata)</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>    . = ALIGN(4096); /* align to page size */</span></span>
+<span class="line"><span>    __rodata_end = .;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    __data_start = .;</span></span>
+<span class="line"><span>    .data :</span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        *(.data)</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>    . = ALIGN(4096); /* align to page size */</span></span>
+<span class="line"><span>    __data_end = .;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    __bss_start = .;</span></span>
+<span class="line"><span>    .bss :</span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>        bss = .;</span></span>
+<span class="line"><span>        *(.bss)</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>    . = ALIGN(4096); /* align to page size */</span></span>
+<span class="line"><span>    __bss_end = .;</span></span>
+<span class="line"><span>    __end = .;</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p><code>ENTRY(_start)</code>는 커널 이미지의 진입점을 선언합니다. 이 심볼은 <code>boot.S</code> 파일에서 선언되었습니다.</p>
+<p><code>SECTIONS</code>은 섹션을 선언합니다. 이것은 코드와 데이터의 비트가 어디로 갈지 결정하고 각 섹션의 크기를추적하는데 도움이 되는 몇 가지 심볼을 설정합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>    . = 0x8000;</span></span>
+<span class="line"><span>    __start = .;</span></span></code></pre>
+<p>첫 번째 줄의 “<code>.</code>”은 현재 주소를 커널이 시작되는 <code>0x8000</code>(또는 <code>0x80000</code>)으로 설정하도록 Linker에 알리기 위해 현재 주소를 나타냅니다. Linker가 데이터를 추가하면 현재 주소가 자동으로 증가합니다. 두 번째 줄은 “<code>__start</code>” 심볼을 만들고 현재 주소로 설정합니다.</p>
+<p>이후 섹션은 Text(Code), Read-Only Data, Read-Write Data 그리고 BSS(0으로 초기화된 메모리)로 정의됩니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>    __text_start = .;</span></span>
+<span class="line"><span>    .text : {</span></span>
+<span class="line"><span>        KEEP(*(.text.boot))</span></span>
+<span class="line"><span>        *(.text)</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>    . = ALIGN(4096); /* align to page size */</span></span>
+<span class="line"><span>    __text_end = .;</span></span></code></pre>
+<p>첫 번째 행은 섹션에 <code>__text_start</code> 심볼을 만듭니다. 두 번째 줄부터 다섯 번째 줄까지는 <code>.text</code> 섹션입니다. 3행과 4행은 파일의 어떤 섹션이 <code>.text</code> 섹션에 배치될지 선언합니다. 여기서는 “<code>.text.boot</code>”이먼저 배치되고 그 뒤에 일반적인 “<code>.text</code>”가 옵니다. “<code>.text.boot</code>”는 <code>boot.S</code>에서만 사용되며 커널 이미지의 시작 부분에서 끝납니다. “<code>.text</code>”는 나머지 코드 모두를 포함합니다. Linker에서 추가한 모든 데이터는 현재 주소(“<code>.</code>”)를 자동으로 증가시킵니다. 6행에서는 4096 바이트씩(Raspberry Pi에 대한 페이지크기) 정렬되도록 설정합니다. 그리고 마지막 7행에서는 <code>__text_end</code> 심볼을 만들어서 섹션이 끝나는 곳을알 수 있습니다.</p>
+<p><code>__text_start</code>와 <code>__text_end</code>는 무엇이고 페이지 정렬을 사용하는 이유는 무엇일까요? 심볼 <code>__text_start</code>와 <code>__text_end</code>는 커널 소스에서 사용될 수 있으며, Linker는 올바른 주소를 바이너리에 저장합니다. 예를 들어 <code>__bss_start</code> 와 <code>__bss_end</code>는 <code>boot.S</code>에서 사용하고 있습니다. 원한다면 C에서 <code>extern</code>으로 선언하여 사용할 수도 있습니다. 필요하진 않지만 모든 섹션을 페이지 크기에 맞게 정렬했습니다. 나중에 겹쳐서(한 페이지에 2개의 섹션) 처리할 필요 없이 Executable, Read-Only, Read-Write 권한을 사용하여 <a href="https://ko.wikipedia.org/wiki/%ED%8E%98%EC%9D%B4%EC%A7%80_%ED%85%8C%EC%9D%B4%EB%B8%94">페이지 테이블</a>에 매핑할 수 있습니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>    __end = .;</span></span></code></pre>
+<p>모든 섹션이 선언된 후 <code>__end</code> 심볼을 만듭니다. 런타임 중에 커널의 크기를 알고 싶다면 <code>__start</code>와 <code>__end</code>를 사용하여 구할 수 있습니다.</p>
+<p>이러한 구성요소를 통해 실제로 최종적인 커널을 빌드 할 수 있습니다. Linker는 Link Process를 보다 잘할 수 있도록 Compiler를 Linker로 사용합니다. 커널이 C++로 작성되었다면, C++ 컴파일러를 사용해야 합니다.</p>
+<p>아래와 같이 커널을 빌드 합니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="sh"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">arm-none-eabi-gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -T</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> linker.ld</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -o</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> myos.elf</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -ffreestanding</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -O2</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -nostdlib</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> boot.o</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> kernel.o</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">arm-none-eabi-objcopy</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> myos.elf</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -O</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> binary</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> kernel7.img</span></span></code></pre>
+<p>64비트용으로는 다음과 같이 합니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="sh"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">aarch64-elf-ld</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -nostdlib</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -nostartfiles</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> boot.o</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> kernel.o</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -T</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> link.ld</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -o</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> myos.elf</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">aarch64-elf-objcopy</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> myos.elf</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -O</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> binary</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> kernel8.img</span></span></code></pre>
+<h1 id="booting-the-kernel">Booting the Kernel</h1>
+<p>이제 여러분이 만든 커널을 부팅해보겠습니다.</p>
+<h2 id="testing-your-operating-system-real-hardware">Testing your operating system (Real Hardware)</h2>
+<p>Raspbian 이미지가 기록된 SD카드가 있다면, 이미 부팅 파티션과 필요한 파일이 있다는 것입니다.</p>
+<p>SD카드에서 첫 번째 파티션을 마운트 하면 아래와 같은 파일들이 있을 것입니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>bootcode.bin  fixup.dat     kernel.img            start.elf</span></span>
+<span class="line"><span>cmdline.txt   fixup_cd.dat  kernel_cutdown.img    start_cd.elf</span></span>
+<span class="line"><span>config.txt    issue.txt     kernel_emergency.img</span></span></code></pre>
+<p>만약 Raspbian 이미지가 없으면, FAT32 파티션을 만들고 <a href="https://github.com/raspberrypi/firmware/tree/master/boot">공식 저장소에서 펌웨어 파일을 다운로드</a> 할 수 있습니다. 3개의 파일만 필요합니다.</p>
+<ul>
+<li><code>bootcode.bin</code>: 이 파일이 제일 먼저 로드되고, GPU에서 실행되는 파일입니다.</li>
+<li><code>fixup.dat</code>: 이 데이터 파일에는 중요한 하드웨어 관련 정보가 들어있습니다.</li>
+<li><code>start.elf</code>: Raspberry Pi 펌웨어입니다. (IBM PC의 BIOS와 동일합니다) 이것 또한 GPU에서 실행됩니다.</li>
+</ul>
+<p>Raspberry Pi의 전원이 켜지면 ARM CPU가 중지되고 GPU가 실행됩니다. GPU는 ROM에서 부트로더를 로드하고실행합니다. 그리고 SD카드를 찾아 <code>bootcode.bin</code>을 로드합니다. bootcode는 <code>config.txt</code>와 <code>cmdline.txt</code>를 처리하는 <code>start.elf</code> 펌웨어를 로드합니다. <code>start.elf</code>는 <code>kernel*.img</code>를 로드하고 해당 커널 이미지를 실행하는 ARM CPU가 실행됩니다.</p>
+<p>ARM 모드 간을 전환하려면 <code>kernel.img</code> 파일의 이름을 변경해야 합니다. <code>kernel7.img</code>로 이름을 바꾸면 AArch32 모드 (ARMv7)에서 실행됩니다. AArch64 모드(ARMv8)의 경우 <code>kernel8.img</code>로 이름을 변경해야 합니다.</p>
+<p>이제 원래 있던 <code>kernel.img</code>를 자신이 만든 커널 파일로 교체하고, SD카드를 Raspberry Pi에 꽂아 전원을켭니다. Minicom에서는 다음을 보여주게 됩니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Hello, kernel World!</span></span></code></pre>
+<h2 id="testing-your-operating-system-qemu">Testing your operating system (QEMU)</h2>
+<p>QEMU는 Raspberry Pi 2 에뮬레이팅을 지원합니다. Machine type를 “raspi2”로 사용하면 됩니다.<br>
+QEMU를 사용하면 일반적으로 커널을 바이너리로 objcopy 할 필요가 없습니다. QEMU는 ELF 커널도 지원합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="sh"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">qemu-system-arm</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -m</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 256</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -M</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> raspi2</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -serial</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> stdio</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -kernel</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> kernel.elf</span></span></code></pre>
+<blockquote><p>원문 : <a href="https://wiki.osdev.org/Raspberry_Pi_Bare_Bones">OSDev Wiki - Raspberry Pi Bare Bones</a></p></blockquote></article><hr class="my-8 border-dashed"><div id="btt-btn-container" class="fixed inset-e-4 bottom-8 z-50 md:sticky md:inset-e-auto md:float-end md:me-1 translate-y-14 opacity-0 transition duration-500"><button data-button="back-to-top" class="group bg-background relative px-2 py-1 size-14 rounded-full shadow-xl md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg"><span id="progress-indicator" class="absolute inset-0 -z-10 block size-14 scale-110 rounded-full bg-transparent md:hidden md:h-8 md:rounded-md"></span><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block rotate-90 md:hidden" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M5 12l6 6M5 12l6-6" /></svg><span class="group-hover:text-accent sr-only text-sm md:not-sr-only"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 5v14M16 9l-4-4M8 9l4-4" /></svg>Back to top</span></button></div><script data-astro-rerun>
+  function backToTop() {
+    const rootElement = document.documentElement;
+    const btnContainer = document.querySelector("#btt-btn-container");
+    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
+    const progressIndicator = document.querySelector("#progress-indicator");
+
+    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
+      return;
+
+    backToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    });
+
+    let lastVisible = null;
+    function handleScroll() {
+      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+      const scrollTop = rootElement.scrollTop;
+      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
+
+      progressIndicator.style.setProperty(
+        "background-image",
+        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
+      );
+
+      const isVisible = scrollTop / scrollTotal > 0.3;
+
+      if (isVisible !== lastVisible) {
+        btnContainer.classList.toggle("opacity-100", isVisible);
+        btnContainer.classList.toggle("translate-y-0", isVisible);
+        btnContainer.classList.toggle("opacity-0", !isVisible);
+        btnContainer.classList.toggle("translate-y-14", !isVisible);
+        lastVisible = isVisible;
+      }
+    }
+
+    let ticking = false;
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+  backToTop();
+</script><ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8"><li><a data-astro-transition-scope="astro-bztu2lml-1" href="/tags/arm-architecture/" class="flex items-center gap-0.5 border-foreground border-b-2 border-dashed hover:border-accent hover:text-accent hover:-mt-0.5 focus-visible:text-accent focus-visible:border-none text-sm"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="opacity-80 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>ARM Architecture</a></li><li><a data-astro-transition-scope="astro-bztu2lml-2" href="/tags/raspberry-pi/" class="flex items-center gap-0.5 border-foreground border-b-2 border-dashed hover:border-accent hover:text-accent hover:-mt-0.5 focus-visible:text-accent focus-visible:border-none text-sm"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="opacity-80 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>Raspberry Pi</a></li></ul><div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start"><span class="italic">Share this post:</span><div class="text-center"><a href="https://wa.me/?text=https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/" title="Share this post on Whatsapp" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m3 21 1.65-3.8a9 9 0 1 1 3.4 2.9z" /><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0za5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" /></svg><span class="sr-only">Share this post on Whatsapp</span></a><a href="https://www.facebook.com/sharer.php?u=https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/" title="Share this post on Facebook" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M7 10v4h3v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3V3h-3a5 5 0 0 0-5 5v2z" /></svg><span class="sr-only">Share this post on Facebook</span></a><a href="https://x.com/intent/post?url=https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/" title="Share this post on X" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m4 4 11.733 16H20L8.267 4zM4 20l6.768-6.768m2.46-2.46L20 4" /></svg><span class="sr-only">Share this post on X</span></a><a href="https://t.me/share/url?url=https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/" title="Share this post on Telegram" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 10-4 4 6 6 4-16-18 7 4 2 2 6 3-4" /></svg><span class="sr-only">Share this post on Telegram</span></a><a href="https://pinterest.com/pin/create/button/?url=https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/" title="Share this post on Pinterest" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m8 20 4-9M10.7 14c.437 1.263 1.43 2 2.55 2 2.071 0 3.75-1.554 3.75-4a5 5 0 1 0-9.7 1.7" /><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" /></svg><span class="sr-only">Share this post on Pinterest</span></a><a href="mailto:?subject=See%20this%20post&amp;body=https://kyuhyuk.kr/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/" title="Share this post via email" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Share this post via email</span></a></div></div><hr class="my-8 border-dashed"><div data-pagefind-ignore class="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2"><a href="/posts/KFC-Personal-Data-Exposure-Security-Wide-Open/" class="flex w-full gap-1 hover:opacity-75"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M5 12l6 6M5 12l6-6" /></svg><div><span>Previous Post</span><div class="text-accent/85 text-sm">KFC 개인정보 80만 건 노출…‘뻥’뚫린 보안</div></div></a><a href="/posts/Basic-of-ARM-Assembly/" class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"><div><span>Next Post</span><div class="text-accent/85 text-sm">ARM Assembly 기초</div></div><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M13 18l6-6M13 6l6 6" /></svg></a></div></main><footer class="app-layout mt-auto"><div class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"><div class="flex flex-wrap items-center gap-1"><a href="https://github.com/leekyuhyuk" title="KyuHyuk Blog on Github" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg><span class="sr-only">KyuHyuk Blog on Github</span></a><a href="https://linkedin.com/in/leekyuhyuk" title="KyuHyuk Blog on Linkedin" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 1 0-4 0" /><path d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z" /></svg><span class="sr-only">KyuHyuk Blog on Linkedin</span></a><a href="mailto:lee@kyuhy.uk" title="Send an email to KyuHyuk Blog" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Send an email to KyuHyuk Blog</span></a></div><div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row"><span>Copyright &#169; 2026 KyuHyuk Lee</span><span class="hidden sm:inline">&nbsp;|&nbsp;</span><span>All rights reserved.</span></div></div></footer><script type="module">var e=`theme`,t=`light`,n=`dark`;function r(){return localStorage.getItem(e)||(window.matchMedia(`(prefers-color-scheme: dark)`).matches?n:t)}var i=window.__theme?.value??r();function a(){localStorage.setItem(e,i),o()}function o(){let e=document.firstElementChild;e?.setAttribute(`data-theme`,i),e?.classList.toggle(`dark`,i===n),document.querySelector(`#theme-btn`)?.setAttribute(`aria-label`,i);let t=window.getComputedStyle(document.body).backgroundColor;document.querySelector(`meta[name='theme-color']`)?.setAttribute(`content`,t)}function s(){o(),document.querySelector(`#theme-btn`)?.addEventListener(`click`,()=>{i=i===t?n:t,a()})}s(),document.addEventListener(`astro:after-swap`,s),document.addEventListener(`astro:before-swap`,e=>{let t=document.querySelector(`meta[name='theme-color']`)?.getAttribute(`content`);t&&e.newDocument.querySelector(`meta[name='theme-color']`)?.setAttribute(`content`,t)}),window.matchMedia(`(prefers-color-scheme: dark)`).addEventListener(`change`,({matches:e})=>{i=e?n:t,a()});</script></body></html><script data-astro-rerun>
+  function createProgressBar() {
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+
+    progressContainer.appendChild(progressBar);
+    document.body.appendChild(progressContainer);
+  }
+  createProgressBar();
+
+  function updateScrollProgress() {
+    document.addEventListener("scroll", () => {
+      const winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (document) {
+        const myBar = document.getElementById("myBar");
+        if (myBar) {
+          myBar.style.width = scrolled + "%";
+        }
+      }
+    });
+  }
+  updateScrollProgress();
+
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+
+  function attachCopyButtons() {
+    const copyButtonLabel = "Copy";
+    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+    for (const codeBlock of codeBlocks) {
+      const wrapper = document.createElement("div");
+      wrapper.style.position = "relative";
+
+      const computedStyle = getComputedStyle(codeBlock);
+      const hasFileNameOffset =
+        computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
+
+      const topClass = hasFileNameOffset
+        ? "top-(--file-name-offset)"
+        : "-top-3";
+
+      const copyButton = document.createElement("button");
+      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
+      copyButton.innerHTML = copyButtonLabel;
+      codeBlock.setAttribute("tabindex", "0");
+      codeBlock.appendChild(copyButton);
+
+      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+
+    async function copyCode(block, button) {
+      const code = block.querySelector("code");
+      const text = code?.innerText;
+
+      await navigator.clipboard.writeText(text ?? "");
+
+      button.innerText = "Copied";
+
+      setTimeout(() => {
+        button.innerText = copyButtonLabel;
+      }, 700);
+    }
+  }
+  attachCopyButtons();
+
+  /** Accessible image lightbox for article images. */
+  function initLightbox() {
+    const article = document.getElementById("article");
+    if (!article) return;
+
+    const prefersReducedMotion = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let overlay = null;
+    let lastFocused = null;
+
+    // Defer attribute mutations so they don't push the LCP timestamp.
+    // Event listeners below use delegation and don't need the attributes to exist yet.
+    requestAnimationFrame(() => {
+      const images = Array.from(article.querySelectorAll("img"));
+      for (const image of images) {
+        if (image.closest("a")) continue;
+        image.setAttribute("role", "button");
+        image.setAttribute("tabindex", "0");
+        image.setAttribute("aria-haspopup", "dialog");
+        image.setAttribute(
+          "aria-label",
+          image.alt ? `Zoom image: ${image.alt}` : "Zoom image"
+        );
+      }
+    });
+
+    function open(src, alt, trigger) {
+      if (overlay) return;
+      lastFocused = trigger ?? document.activeElement;
+
+      overlay = document.createElement("div");
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute(
+        "aria-label",
+        alt ? `Image preview: ${alt}` : "Image preview"
+      );
+      overlay.className =
+        "fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/70 backdrop-blur-sm opacity-0 transition-opacity duration-200 motion-reduce:transition-none";
+
+      const closeButton = document.createElement("button");
+      closeButton.type = "button";
+      closeButton.setAttribute("aria-label", "Close image preview");
+      closeButton.className =
+        "absolute end-4 top-4 rounded p-2 text-3xl leading-none text-white";
+      closeButton.innerHTML = "&#10005;";
+      closeButton.addEventListener("click", close);
+
+      const image = document.createElement("img");
+      image.src = src;
+      image.alt = "";
+      image.className =
+        "max-h-[90dvh] max-w-[90dvw] cursor-default object-contain";
+
+      overlay.append(closeButton, image);
+      overlay.addEventListener("click", e => {
+        if (e.target === overlay && currentScale <= 1) close();
+      });
+
+      let currentScale = 1;
+      let translateX = 0;
+      let translateY = 0;
+      let initialDist = 0;
+      let initialScale = 1;
+      let panStartX = 0;
+      let panStartY = 0;
+      let panStartTranslateX = 0;
+      let panStartTranslateY = 0;
+      let lastTapTime = 0;
+
+      function applyTransform() {
+        image.style.transform = `scale(${currentScale}) translate(${translateX}px, ${translateY}px)`;
+      }
+
+      function resetTransform() {
+        currentScale = 1;
+        translateX = 0;
+        translateY = 0;
+        image.style.transform = "";
+      }
+
+      overlay.addEventListener(
+        "touchstart",
+        e => {
+          const t = e.touches;
+          if (t.length === 2) {
+            initialDist = Math.hypot(
+              t[1].clientX - t[0].clientX,
+              t[1].clientY - t[0].clientY
+            );
+            initialScale = currentScale;
+          } else if (t.length === 1) {
+            const now = Date.now();
+            if (now - lastTapTime < 300) {
+              e.preventDefault();
+              if (currentScale > 1) {
+                resetTransform();
+              } else {
+                currentScale = 2;
+                translateX = 0;
+                translateY = 0;
+                applyTransform();
+              }
+              lastTapTime = 0;
+              panStartX = t[0].clientX;
+              panStartY = t[0].clientY;
+              panStartTranslateX = translateX;
+              panStartTranslateY = translateY;
+            } else {
+              lastTapTime = now;
+              if (currentScale > 1) {
+                panStartX = t[0].clientX;
+                panStartY = t[0].clientY;
+                panStartTranslateX = translateX;
+                panStartTranslateY = translateY;
+              }
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      overlay.addEventListener(
+        "touchmove",
+        e => {
+          const t = e.touches;
+          if (t.length === 2) {
+            e.preventDefault();
+            const dist = Math.hypot(
+              t[1].clientX - t[0].clientX,
+              t[1].clientY - t[0].clientY
+            );
+            currentScale = Math.min(
+              4,
+              Math.max(1, initialScale * (dist / initialDist))
+            );
+            applyTransform();
+          } else if (t.length === 1) {
+            if (currentScale > 1) {
+              e.preventDefault();
+              translateX =
+                panStartTranslateX + (t[0].clientX - panStartX) / currentScale;
+              translateY =
+                panStartTranslateY + (t[0].clientY - panStartY) / currentScale;
+              const maxX = Math.max(
+                0,
+                (image.clientWidth - overlay.clientWidth / currentScale) / 2
+              );
+              const maxY = Math.max(
+                0,
+                (image.clientHeight - overlay.clientHeight / currentScale) / 2
+              );
+              translateX = Math.min(maxX, Math.max(-maxX, translateX));
+              translateY = Math.min(maxY, Math.max(-maxY, translateY));
+              applyTransform();
+            } else {
+              e.preventDefault();
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      overlay.addEventListener("touchend", e => {
+        if (e.touches.length === 0 && currentScale <= 1.05) {
+          resetTransform();
+        }
+      });
+
+      overlay.addEventListener("touchcancel", e => {
+        if (e.touches.length === 0 && currentScale <= 1.05) {
+          resetTransform();
+        }
+      });
+
+      document.body.appendChild(overlay);
+      document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", onKeyDown);
+      window.__closeLightbox = close;
+
+      requestAnimationFrame(() => overlay?.classList.add("opacity-100"));
+      closeButton.focus();
+    }
+
+    function close() {
+      if (!overlay) return;
+      const el = overlay;
+      overlay = null;
+      window.__closeLightbox = null;
+
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+      lastFocused?.focus();
+      lastFocused = null;
+
+      if (prefersReducedMotion()) {
+        el.remove();
+        return;
+      }
+      const remove = () => el.remove();
+      el.addEventListener("transitionend", remove, { once: true });
+      setTimeout(remove, 250); // fallback in case transitionend never fires
+      el.classList.remove("opacity-100");
+    }
+
+    function onKeyDown(e) {
+      if (e.key === "Escape") {
+        close();
+      } else if (e.key === "Tab") {
+        trapFocus(e);
+      }
+    }
+
+    // Keep keyboard focus inside the open dialog.
+    function trapFocus(e) {
+      if (!overlay) return;
+      const focusables = overlay.querySelectorAll(
+        'a[href], button, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    function triggerFromEvent(e) {
+      const image = e.target.closest("img");
+      if (!image || !article.contains(image) || image.closest("a")) return null;
+      return image;
+    }
+
+    function activate(image) {
+      open(image.currentSrc || image.src, image.alt, image);
+    }
+
+    article.addEventListener("click", e => {
+      const image = triggerFromEvent(e);
+      if (!image) return;
+      e.preventDefault();
+      activate(image);
+    });
+
+    article.addEventListener("keydown", e => {
+      if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+      const image = triggerFromEvent(e);
+      if (!image) return;
+      e.preventDefault();
+      activate(image);
+    });
+  }
+  initLightbox();
+
+  if (!window.__lightboxSwapBound) {
+    window.__lightboxSwapBound = true;
+    document.addEventListener("astro:before-swap", () =>
+      window.__closeLightbox?.()
+    );
+  }
+
+  document.addEventListener("astro:after-swap", () =>
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  );
+</script>

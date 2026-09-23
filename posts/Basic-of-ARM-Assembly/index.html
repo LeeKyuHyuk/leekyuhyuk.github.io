@@ -1,0 +1,1045 @@
+<!DOCTYPE html><html dir="ltr" lang="en" class="overflow-y-scroll scroll-smooth"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" href="/favicon.ico"><link rel="canonical" href="https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/"><meta name="generator" content="Astro v7.3.4"><!-- Font --><style>@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/9344e1e6ba3134db.woff") format("woff"), url("/_astro/fonts/4b36ecaec8861e3e.ttf") format("truetype");font-display:swap;font-weight:300;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/8f4ae94aecd98e20.woff") format("woff"), url("/_astro/fonts/82b0269728335a0a.ttf") format("truetype");font-display:swap;font-weight:400;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/20c20d9068c60dd0.woff") format("woff"), url("/_astro/fonts/b576f4f05c9dbc87.ttf") format("truetype");font-display:swap;font-weight:500;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/5a6c2a0b85de9ba1.woff") format("woff"), url("/_astro/fonts/4b0ae898a7afcd37.ttf") format("truetype");font-display:swap;font-weight:600;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/30d0dcc4d81c0020.woff") format("woff"), url("/_astro/fonts/e8acb21fdbc37b03.ttf") format("truetype");font-display:swap;font-weight:700;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/bf976bcffafeb084.woff") format("woff"), url("/_astro/fonts/8436f9847213f651.ttf") format("truetype");font-display:swap;font-weight:300;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/8a34d92a2a36603b.woff") format("woff"), url("/_astro/fonts/ccba4fb3766b1b6e.ttf") format("truetype");font-display:swap;font-weight:400;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/a20ca4cd312f40ca.woff") format("woff"), url("/_astro/fonts/ec093fff40157157.ttf") format("truetype");font-display:swap;font-weight:500;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/b74e6fc4049d0d63.woff") format("woff"), url("/_astro/fonts/dab775c12e1996fc.ttf") format("truetype");font-display:swap;font-weight:600;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/d9c1254858362ad4.woff") format("woff"), url("/_astro/fonts/a5f75c165e55a648.ttf") format("truetype");font-display:swap;font-weight:700;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:300;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:400;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:500;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:600;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:700;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:300;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:400;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:500;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:600;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:700;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}:root{--font-google-sans-code:"Google Sans Code-1a30c214885cb404","Google Sans Code-1a30c214885cb404 fallback: Courier New",monospace;}</style><!-- Primary meta --><title>ARM Assembly 기초 | KyuHyuk Blog</title><meta name="title" content="ARM Assembly 기초 | KyuHyuk Blog"><meta name="description" content="ARM CPU 레지스터 구조, MOV/LDR/STR 명령어 (Post/Pre indexing 포함), 비트 조작 (ORR/EOR/AND/BIC), 분기 (B, CMP, 조건부 분기), 산술 연산, 서브루틴 (BL/BX) 등 ARM Assembly의 핵심 명령어와 CPSR 플래그를 설명합니다."><meta name="author" content="KyuHyuk Lee"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:site_name" content="KyuHyuk Blog"><meta property="og:title" content="ARM Assembly 기초 | KyuHyuk Blog"><meta property="og:description" content="ARM CPU 레지스터 구조, MOV/LDR/STR 명령어 (Post/Pre indexing 포함), 비트 조작 (ORR/EOR/AND/BIC), 분기 (B, CMP, 조건부 분기), 산술 연산, 서브루틴 (BL/BX) 등 ARM Assembly의 핵심 명령어와 CPSR 플래그를 설명합니다."><meta property="og:url" content="https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/"><meta property="og:image" content="https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/index.png"><!-- Twitter / X --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/"><meta property="twitter:title" content="ARM Assembly 기초 | KyuHyuk Blog"><meta property="twitter:description" content="ARM CPU 레지스터 구조, MOV/LDR/STR 명령어 (Post/Pre indexing 포함), 비트 조작 (ORR/EOR/AND/BIC), 분기 (B, CMP, 조건부 분기), 산술 연산, 서브루틴 (BL/BX) 등 ARM Assembly의 핵심 명령어와 CPSR 플래그를 설명합니다."><meta property="twitter:image" content="https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/index.png"><!-- RSS autodiscovery --><link rel="alternate" type="application/rss+xml" title="KyuHyuk Blog" href="https://kyuhyuk.kr/rss.xml/"><!-- Filled at runtime by theme.ts to match the current background colour --><meta name="theme-color" content=""><!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) --><meta property="og:type" content="article"><meta property="article:published_time" content="2019-05-15T20:36:56.000Z"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"ARM Assembly 기초 | KyuHyuk Blog","image":"https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/index.png","datePublished":"2019-05-15T20:36:56.000Z","author":[{"@type":"Person","name":"KyuHyuk Lee","url":"https://avatars.githubusercontent.com/u/6347277"}]}</script><!--
+      Inline FOUC-prevention script: sets data-theme on <html> before
+      the browser paints. Runs synchronously, no defer/async.
+    --><script>
+      (function () {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = stored ?? (prefersDark ? "dark" : "light");
+        const root = document.firstElementChild;
+        root?.setAttribute("data-theme", theme);
+        root?.classList.toggle("dark", theme === "dark");
+        // Expose value so theme.ts can skip re-detection.
+        window.__theme = { value: theme };
+      })();
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js"></script><link rel="stylesheet" href="/_astro/Footer.BJLVQ-Bs.css"><style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media (prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*),[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-bztu2lml-1"] { view-transition-name: arm-architecture; }@layer astro { ::view-transition-old(arm-architecture) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(arm-architecture) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(arm-architecture) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(arm-architecture) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head><body class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"><a id="skip-to-content" href="#main-content" class="bg-background text-accent absolute inset-s-16 -top-full z-50 px-3 py-2 backdrop-blur-lg transition-all focus:top-4">Skip to content</a><header class="app-layout flex flex-col items-center justify-between sm:flex-row"><div class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6"><a href="/" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none">KyuHyuk Blog</a><nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"><button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="menu-items" data-label-open="Open menu" data-label-close="Close menu"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden" viewBox="0 0 24 24" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M18 6 6 18M6 6l12 12" /></svg><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" viewBox="0 0 24 24" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 6h16M7 12h13M10 18h10" /></svg></button><ul id="menu-items" class="[&amp;&gt;li&gt;a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 sm:[&amp;&gt;li]:h-8 [&amp;&gt;li&gt;a]:block [&amp;&gt;li&gt;a]:px-4 [&amp;&gt;li&gt;a]:py-3 [&amp;&gt;li&gt;a]:text-center [&amp;&gt;li&gt;a]:font-medium sm:[&amp;&gt;li&gt;a]:px-2 sm:[&amp;&gt;li&gt;a]:py-1"><li class="col-span-2"><a href="/posts/" class="active-nav">Posts</a></li><li class="col-span-2"><a href="/tags/">Tags</a></li><li class="col-span-2"><a href="/archives/" title="Archives" aria-label="Archives" class="group inline-flex items-center gap-1 hover:text-accent focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M10 12h4" /></svg><span class="sm:sr-only">Archives</span></a></li><li class="col-span-1 flex items-center justify-center"><a href="/search/" title="Search" aria-label="Search" class="group inline-flex items-center gap-1 hover:text-accent focus-outline relative size-8"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-1/2 left-1/2 size-6 -translate-x-1/2 -translate-y-1/2" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6" /></svg><span class="sr-only">Search</span></a></li><li class="col-span-1 flex items-center justify-center"><button id="theme-btn" class="focus-outline hover:[&amp;&gt;svg]:stroke-accent relative size-12 p-4 sm:size-8" title="Toggle theme" aria-label="auto" aria-live="polite"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] translate-[-50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" /></svg><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] translate-[-50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M14.828 14.828a4 4 0 1 0-5.656-5.656 4 4 0 0 0 5.656 5.656M6.343 17.657l-1.414 1.414M6.343 6.343 4.929 4.929M17.657 6.343l1.414-1.414M17.657 17.657l1.414 1.414M4 12H2M12 4V2M20 12h2M12 20v2" /></svg></button></li></ul></nav></div></header><script type="module">function e(){let e=document.querySelector(`#menu-btn`),t=document.querySelector(`#menu-items`),n=document.querySelector(`#menu-icon`),r=document.querySelector(`#close-icon`);if(!e||!t||!n||!r)return;let i=e.dataset.labelOpen??`Open menu`,a=e.dataset.labelClose??`Close menu`;e.addEventListener(`click`,()=>{let o=e.getAttribute(`aria-expanded`)===`true`;e.setAttribute(`aria-expanded`,o?`false`:`true`),e.setAttribute(`aria-label`,o?i:a),t.classList.toggle(`hidden`),t.classList.toggle(`grid`),n.classList.toggle(`hidden`),r.classList.toggle(`hidden`)})}function t(){let e=document.getElementById(`skip-to-content`);e&&e.addEventListener(`click`,e=>{if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0)return;e.preventDefault();let t=document.getElementById(`main-content`);t&&(t.setAttribute(`tabindex`,`-1`),t.addEventListener(`blur`,()=>t.removeAttribute(`tabindex`),{once:!0}),t.focus(),t.scrollIntoView({behavior:`smooth`}))})}e(),document.addEventListener(`astro:after-swap`,e),t(),document.addEventListener(`astro:after-swap`,t);</script><script type="module">function e(){let e=document.querySelector(`#back-button`),t=sessionStorage.getItem(`backUrl`);t&&e&&(e.href=t)}document.addEventListener(`astro:page-load`,e),e();</script><main id="main-content" class="app-layout mt-8" data-pagefind-body><h1 style="view-transition-name:basic-of-arm-assembly" class="text-accent inline-block text-2xl font-bold sm:text-3xl">ARM Assembly 기초</h1><div class="my-2 flex items-center gap-2"><div class="text-muted-foreground flex items-center gap-x-2"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 min-w-5.5" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005" /></svg><time class="text-sm sm:text-base" datetime="2019-05-15T20:36:56.000Z">16 May, 2019</time></div><span aria-hidden="true" class="text-muted-foreground max-sm:hidden hidden">|</span></div><article id="article" style="word-break: keep-all; overflow-wrap: break-word;" class="mt-8 w-full app-prose max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"><ul>
+<li>
+<p>ARM CPU의 기본 구성</p>
+<ul>
+<li>
+<p><code>R0</code>~<code>R14</code> 총 15개의 범용 레지스터를 가지고 있습니다.</p>
+</li>
+<li>
+<p>범용 레지스터 <code>R13</code>는 특수 레지스터 <code>SP</code>로 사용됩니다.</p>
+<ul>
+<li><code>SP</code>는 C언어 사용시 스택의 주소를 저장하는 레지스터입니다.</li>
+</ul>
+</li>
+<li>
+<p>범용 레지스터 <code>R14</code>는 특수 레지스터 <code>LR</code>로 사용됩니다.</p>
+<ul>
+<li><code>LR</code>은 함수 호출 시 되돌아갈 함수의 주소가 저장되는 레지스터입니다.</li>
+</ul>
+</li>
+<li>
+<p>범용 레지스터 <code>R15</code>는 특수 레지스터 <code>PC</code>로 사용됩니다.</p>
+<ul>
+<li><code>PC</code>는 다음 실행할 프로그램의 주소를 가지고 있는 레지스터입니다.</li>
+</ul>
+</li>
+<li>
+<p><code>CPSR</code>이라는 상태 레지스터를 가지고 있습니다.<br/>
+<img src="/_astro/operand.CmsPNgYT_1baHuM.webp" alt="Operand" loading="lazy" decoding="async" width="178" height="182"></p>
+</li>
+<li>
+<p><code>Rs</code>, <code>Rd</code>는 반드시 레지스터(<code>R0</code>~<code>R15</code>)이어야 합니다.</p>
+<ul>
+<li><code>OP1</code>은 항상 레지스터 입니다.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>OP2</code>는 레지스터 일수도 있고, 레지스터가 아닐수도 있습니다.</strong></p>
+</li>
+<li>
+<p><a href="#ldr-str-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95"><code>Rs</code>, <code>Rd</code>, <code>OP2</code>의 대상으로 직접 외부 메모리를 접근할수 없습니다.</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h1 id="load-store">Load, Store</h1>
+<h2 id="mov-명령"><code>MOV</code> 명령</h2>
+<ul>
+<li>ARM에서 레지스터의 데이터 이동은 <code>MOV</code> 명령을 사용합니다.
+<ul>
+<li>예) <code>MOV R0, R1</code> : <code>R1</code>의 내용을 <code>R0</code>으로 복사</li>
+<li>예) <code>MOV R0, #1</code> : 상수 <code>1</code>을 <code>R0</code>으로 복사</li>
+</ul>
+</li>
+<li>메모리→레지스터 : <code>LDR</code> (Load to Register)</li>
+<li>레지스터→메모리 : <code>STR</code> (Store to Memory)</li>
+</ul>
+<h2 id="상수-값을-레지스터에-저장">상수 값을 레지스터에 저장</h2>
+<ul>
+<li><code>LDR</code> 명령 사용 방법
+<ul>
+<li><code>LDR Rn, =Value</code></li>
+<li><strong><code>LDR</code>을 사용하여 상수의 값을 레지스터에 저장할때 <code>=Value</code>에서 <code>=</code>를 빼먹지 않게 주의합니다.</strong>
+<ul>
+<li>다른 명령어에서는 상수 입력에 <code>#</code>이 들어가지만 <code>LDR</code>만 <code>=</code>이 들어가니 주의합시다.</li>
+</ul>
+</li>
+<li>레지스터간 데이터 복사는 <code>MOV</code>를 사용합니다.</li>
+<li><code>Rn</code> : <code>R0</code> ~ <code>R15</code> (대소문자 구분 없음)</li>
+<li><code>=Value</code> : 상수 값 (최대 4바이트)
+<ul>
+<li>10진수 :
+<ul>
+<li><strong>예)</strong> <code>41</code>, <code>-27</code></li>
+</ul>
+</li>
+<li>16진수 :
+<ul>
+<li><strong>예)</strong> <code>0x1234</code>, <code>-0x1EF</code></li>
+</ul>
+</li>
+<li>예) <code>LDR R0, =100</code>, <code>LDR R13, =0x1234</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="상수-표현">상수 표현</h2>
+<ul>
+<li><code>OP2</code>의 상수는 8비트의 값고 짝수 비트 ROR(Rotate Right)로 표현되어야 합니다.
+<ul>
+<li>32비트 명령 안에서 상수 값을 함께 저장하다보니 범위 제한이 발생하기 때문입니다.</li>
+<li><code>0</code>~<code>255</code> 범위의 상수는 무조건 사용이 가능합니다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="사용된-상수가-mov-명령에서-사용-가능한지-불가능한지-판단해보자">사용된 상수가 <code>MOV</code> 명령에서 사용 가능한지 불가능한지 판단해보자</h2>
+<ul>
+<li>
+<p><code>MOV R0, #0x7F00</code> : <strong>가능</strong> <img src="/_astro/example1.Cqt0gOqh_Z2mL9f8.webp" alt="Example 1" loading="lazy" decoding="async" width="1409" height="318"></p>
+</li>
+<li>
+<p><code>MOV R0, #0x30C0</code> : <strong>가능</strong> <img src="/_astro/example2.Vqw9ktbE_hgWT4.webp" alt="Example 2" loading="lazy" decoding="async" width="1409" height="318"></p>
+</li>
+<li>
+<p><code>MOV R3, #0x14E</code> : <strong>불가능</strong> <img src="/_astro/example3.CH0yuSKK_Z1O08FY.webp" alt="Example 3" loading="lazy" decoding="async" width="1262" height="318"></p>
+</li>
+<li>
+<p><code>LDR</code>을 사용하면, <strong>범위 제한 없는 32비트 값으로 표현 가능</strong></p>
+<ul>
+<li>실제 상수 값은 메모리에 존재하며 레지스터 참조로 변환됩니다.</li>
+</ul>
+</li>
+</ul>
+<blockquote><p><code>MOV</code>보다 <code>LDR</code>이 느리지만, <code>LDR</code>은 32비트 데이터를 사용할 수 있습니다.</p></blockquote>
+<h2 id="레지스터-간접참조-ldr-str">레지스터 간접참조 <code>LDR</code>, <code>STR</code></h2>
+<ul>
+<li>레지스터 간접 참조 :
+<ul>
+<li><code>LDR Rd, [Rs]</code>
+<ul>
+<li><code>Rs</code> 레지스터 값을 메모리 주소로 하여 <code>Rd</code>에 저장</li>
+<li><code>Rs</code>, <code>Rd</code> : <code>R0</code> ~ <code>R15</code></li>
+</ul>
+</li>
+<li><code>STR Rs, [Rd]</code>
+<ul>
+<li><code>Rd</code> 레지스터 값을 메모리 주소로 하여 <code>Rs</code>를 저장</li>
+<li><code>Rs</code>, <code>Rd</code> : <code>R0</code> ~ <code>R15</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="예">예)</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R0, =0x1000   @ R0에 상수 0x1000 저장</span></span>
+<span class="line"><span>  LDR R1, =80       @ R1에 상수 80 저장</span></span>
+<span class="line"><span>  STR R1, [R0]      @ R0의 값인 0x1000를 메모리 주소로 참조하여</span></span>
+<span class="line"><span>                    @ 0x1000에 상수 80을 저장</span></span></code></pre>
+<h2 id="ldr-str-쉽게-이해하는-방법"><code>LDR</code>, <code>STR</code> 쉽게 이해하는 방법</h2>
+<p><img src="/_astro/ldr_str_tip.CfdghtSu_Z11iniS.webp" alt="LDR, STR 쉽게 이해하는 방법" loading="lazy" decoding="async" width="1968" height="993"></p>
+<h2 id="label">Label</h2>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>START:  MOV R0, #10       @ R0 레지스터에 상수 10을 저장</span></span>
+<span class="line"><span>        STR R0, [R1]      @ R1에 저장되어 있는 주소에 R0 값을 저장</span></span>
+<span class="line"><span>        LDR PC, =START    @ START의 주소를 PC(Program counter)에 저장</span></span></code></pre>
+<ul>
+<li>Label은 모두 주소 값(해당 Label 위치의 주소)입니다.</li>
+<li>위의 코드는 <code>START</code>의 주소 값을 PC(Program counter)에 저장하여 무한 루프를 하게 됩니다.</li>
+</ul>
+<h1 id="ldr-str-post-indexing"><code>LDR</code>, <code>STR</code> Post Indexing</h1>
+<h2 id="post-indexing-사용-방법">Post Indexing 사용 방법:</h2>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R0, [R1], #4            @ R1 주소에 있는 값을 R0에 넣고, R1에 4를 더합니다.</span></span>
+<span class="line"><span>  STR R0, [R2], #-4           @ R0의 값을 R2의 주소에 넣고, R2에 4를 뺍니다.</span></span></code></pre>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R0, [R1], R3            @ R1 주소에 있는 값을 R0에 넣고, R1에 R3의 값을 더합니다.</span></span>
+<span class="line"><span>  STR R0, [R2], -R3           @ R0의 값을 R2의 주소에 넣고, R2에 R3의 값을 뺍니다.</span></span></code></pre>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R0, [R1], R3, LSL #2    @ R1 주소에 있는 값을 R0에 넣고,</span></span>
+<span class="line"><span>                              @ R1에 R3, LSL #2한 값을 더합니다.</span></span>
+<span class="line"><span>  STR R0, [R2], -R3, ASR #2   @ R2 주소에 있는 값을 R0에 넣고,</span></span>
+<span class="line"><span>                              @ R2에 R3, ASR #2한 값을 뺍니다.</span></span></code></pre>
+<h3 id="예-1">예)</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R1, 0x1000              @ R1에 상수 0x1000을 넣습니다.</span></span>
+<span class="line"><span>                              @ R1 : 0x1000</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  LDR R0, [R1], #4            @ R0에 0x1000를 참조한 값(R1의 메모리 참조주소)을 넣고,</span></span>
+<span class="line"><span>                              @ R1에 4를 더합니다.</span></span>
+<span class="line"><span>                              @ R1 : 0x1004</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  LDR R2, [R1], #4            @ R2에 0x1004를 참조한 값(R1의 메모리 참조주소)을 넣고,</span></span>
+<span class="line"><span>                              @ R1에 4를 더합니다.</span></span>
+<span class="line"><span>                              @ R1 : 0x1008</span></span></code></pre>
+<h1 id="ldr-str-pre-indexing"><code>LDR</code>, <code>STR</code> Pre Indexing</h1>
+<h2 id="pre-indexing-사용-방법">Pre Indexing 사용 방법:</h2>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R0, [R1], #4            @ R1에 4를 더한것을 참조하여 R0에 넣습니다.</span></span>
+<span class="line"><span>  STR R0, [R2], #-4           @ R0의 값을 R2에 4를 뺀 주소에 넣습니다.</span></span></code></pre>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R0, [R1], R3            @ R1에 R3의 값을 더한것을 참조하여 R0에 넣습니다.</span></span>
+<span class="line"><span>  STR R0, [R2], -R3           @ R0의 값을 R2에 R3의 값을 뺀 주소에 넣습니다.</span></span></code></pre>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R0, [R1], R3, LSL #2    @ R1에 R3, LSL #2한 값을 더한뒤,</span></span>
+<span class="line"><span>                              @ 주소에 있는 값을 R0에 넣습니다.</span></span>
+<span class="line"><span>  STR R0, [R2], -R3, ASR #2   @ R2에 R3, ASR #2한 값을 뺀뒤,</span></span>
+<span class="line"><span>                              @ R0의 값을 변경된 주소로 넣습니다.</span></span></code></pre>
+<h3 id="예-2">예)</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R1, 0x1000              @ R1에 상수 0x1000을 넣습니다.</span></span>
+<span class="line"><span>                              @ R1 : 0x1000</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  LDR R0, [R1, #4]            @ R1에 4를 더한 주소의 참조한 값(0x1004)을 R0에 넣습니다.</span></span>
+<span class="line"><span>                              @ R1 : 0x1000</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  LDR R2, [R1, #4]            @ R1에 4를 더한 주소의 참조한 값(0x1004)을 R2에 넣습니다.</span></span>
+<span class="line"><span>                              @ R1 : 0x1000</span></span></code></pre>
+<blockquote><p>Pre Indexing에서는 <strong>값이 업데이트 되지 않습니다!</strong> 만약 값을 업데이트하고 싶다면 아래의 <code>!</code>(Auto Update) 옵션을 사용해야합니다.</p></blockquote>
+<h3 id="auto-update-suffix-사용-예시">‘<code>!</code>(Auto Update) suffix’ 사용 예시)</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R1, 0x1000              @ R1에 상수 0x1000을 넣습니다.</span></span>
+<span class="line"><span>                              @ R1 : 0x1000</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  LDR R0, [R1, #4]!           @ R1에 4를 더한 주소의 참조한 값(0x1004)을 R0에 넣습니다.</span></span>
+<span class="line"><span>                              @ ! suffix가 있으므로, 자동으로 값이 업데이트 됩니다.</span></span>
+<span class="line"><span>                              @ R1 : 0x1004</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  LDR R2, [R1, #4]            @ R1에 4를 더한 주소의 참조한 값(0x1008)을 R2에 넣습니다.</span></span>
+<span class="line"><span>                              @ ! suffix가 없으므로, 자동으로 값이 업데이트 되지 않습니다.</span></span>
+<span class="line"><span>                              @ R1 : 0x1004</span></span></code></pre>
+<h2 id="lsl-lsr-shift"><code>LSL</code>, <code>LSR</code> Shift</h2>
+<ul>
+<li><code>LSL #n</code> : 최후에 밀려난 비트가 <code>CPSR</code>(상태레지스터)의 C(Carry) flag에 저장
+<ul>
+<li>Logical Shift Left</li>
+<li><code>LSL</code> : <code>signed/unsigned</code> 곱하기 2</li>
+</ul>
+</li>
+<li><code>LSR #n</code> : 최후에 밀려난 비트가 <code>CPSR</code>(상태레지스터)의 C(Carry) flag에 저장
+<ul>
+<li>Logical Shift Right</li>
+<li><code>LSR</code> : <code>unsigned</code> 나누기 2</li>
+</ul>
+</li>
+</ul>
+<h2 id="asr-shift"><code>ASR</code> Shift</h2>
+<ul>
+<li><code>ASR #n</code> : MSB(부호)를 유지하고, 밀려난 비트가 <code>CPSR</code>(상태레지스터)의 C(Carry) flag에 저장
+<ul>
+<li>레지스터를 우측으로 지정한 비트 수 만큼 <strong>부호를 유지하며</strong> Shift합니다.</li>
+<li><code>ASR</code>은 <code>signed int</code>의 나누기 2 동작을 수행합니다.</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h1 id="비트제어-명령어">비트제어 명령어</h1>
+<ul>
+<li>
+<p><code>ORR</code> : 원하는 비트만 1로 설정합니다.</p>
+<ul>
+<li>예) <code>ORR R0, R0, #0x1F</code> , <code>ORR R0, R1, R2, LSL #2</code></li>
+</ul>
+</li>
+<li>
+<p><code>EOR</code> : 원하는 비트만 반전 시킵니다.</p>
+<ul>
+<li>예) <code>EOR R0, R0, #0x1F</code> , <code>EOR R0, R1, R2, LSL #2</code></li>
+</ul>
+</li>
+<li>
+<p><code>AND</code> : 원하는 비트만 0으로 설정합니다.</p>
+<ul>
+<li><strong>0인 비트에 0으로 설정합니다.</strong></li>
+<li>예) <code>AND R0, R0, #0x1F</code> , <code>AND R0, R1, R2, LSL #2</code></li>
+</ul>
+</li>
+<li>
+<p><code>BIC</code> : 원하는 비트만 0으로 설정합니다.</p>
+<ul>
+<li><strong>1인 비트에 0으로 설정합니다.</strong></li>
+<li><code>AND</code>보다 편리한 장점이 있습니다.</li>
+<li>예) <code>BIC R0, R0, #0x1F</code> , <code>BIC R0, R1, R2, LSL #2</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="다양한-비트연산">다양한 비트연산</h2>
+<ul>
+<li><strong>[문제]</strong> <code>0x1000</code>의 4~7번 비트를 <code>1010</code>으로 변경하는 어셈블리 코드를 작성하세요.</li>
+</ul>
+<p><img src="/_astro/example4.DtAkGl3C_1BinEF.webp" alt="Example 4" loading="lazy" decoding="async" width="497" height="195"></p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  LDR R0, =0x1000           @ R0에 상수 0x1000을 넣습니다.</span></span>
+<span class="line"><span>  LDR R1, [R0]              @ R1에 R0을 참조한 값을 넣습니다.</span></span>
+<span class="line"><span>  BIC R1, R1, 0xF &lt;&lt; 4      @ &#39;1111&#39;을 4번 Left Shift하면 &#39;11110000&#39;가 됩니다.</span></span>
+<span class="line"><span>                            @ BIC로 R1의 4~7 비트를 0으로 설정합니다.</span></span>
+<span class="line"><span>  ORR R1, R1, 0xA &lt;&lt; 4      @ &#39;1010&#39;을 4번 Left Shift하면 &#39;10100000&#39;가 됩니다.</span></span>
+<span class="line"><span>                            @ ORR로 R1의 5, 7번 비트를 1로 설정합니다.</span></span>
+<span class="line"><span>  STR R1, [R0]              @ R1의 데이터를 R0에 저장되어있는 메모리주소에 저장합니다.</span></span></code></pre>
+<hr/>
+<h1 id="분기-명령어">분기 명령어</h1>
+<ul>
+<li><code>B</code> 명령 사용 예시:
+<ol>
+<li><code>B add</code> : Global Label</li>
+<li><code>B 1f</code> : Local Label</li>
+<li><code>B . </code> : 무한 루프 (<code>.</code>은 제자리를 말합니다.)</li>
+</ol>
+</li>
+<li><code>B R0</code>와 같이 <code>B</code> 명령은 분기 주소로 레지스터를 쓸수 없습니다.</li>
+</ul>
+<hr/>
+<h2 id="비교-연산-명령어">비교 연산 명령어</h2>
+<ul>
+<li><code>CMP</code> : <code>CMP Rs, OP2</code>
+<ul>
+<li><code>Rn - OP2</code> 연산을 하여 <code>CPSR</code>(상태레지스터)의 Flag만 변경합니다.</li>
+</ul>
+</li>
+<li><code>CMN</code> : <code>CMN Rs, OP2</code>
+<ul>
+<li><code>Rn + OP2</code> 연산을 하여 <code>CPSR</code>(상태레지스터)의 Flag만 변경합니다.</li>
+<li>컴파일러단에서 주로 사용되니, 되도록이면 <code>CMP</code>를 사용하자.</li>
+</ul>
+</li>
+<li><code>TST</code> : <code>TST Rs, OP2</code>
+<ul>
+<li><code>Rn &amp; OP2</code> 연산을 하여 <code>CPSR</code>(상태레지스터)의 Flag만 변경합니다.</li>
+<li><strong>특정비트를 확인하기 위해 사용됩니다.</strong></li>
+<li>비교 비트가 <strong>1이면, Z clear, 0이면 Z set</strong></li>
+</ul>
+</li>
+<li><code>TEQ</code> : <code>TEQ Rs, OP2</code>
+<ul>
+<li><code>Rn ^ OP2</code> 연산을 하여 <code>CPSR</code>(상태레지스터)의 Flag만 변경합니다.</li>
+<li><strong>두 데이터의 비트가 완전 똑같은지 확인하기 위해 사용됩니다</strong></li>
+<li>비트 패턴이 <strong>동일하면, Zero set</strong></li>
+</ul>
+</li>
+</ul>
+<blockquote><p>비교연산은 레지스터에 변화가 없으며, Flag만 변합니다.</p></blockquote>
+<ul>
+<li>
+<p><strong>[문제]</strong> <code>R0</code>의 7번 비트가 <code>1</code>이면 <code>R1</code> 레지스터에 2를 기록하고, <code>0</code>이면 <code>R1</code> 레지스터에 3을 기록하는 프로그램을 작성하시오.</p>
+</li>
+<li>
+<p><code>AND</code>를 사용하여 해결:</p>
+</li>
+</ul>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  AND R0, R0, #1 &lt;&lt; 7</span></span>
+<span class="line"><span>  CMP R0, #0</span></span>
+<span class="line"><span>  MOVEQ R1, #3</span></span>
+<span class="line"><span>  MOVNE R1, #2</span></span></code></pre>
+<ul>
+<li><code>TST</code>를 사용하여 해결:</li>
+</ul>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  TST R0, #1 &lt;&lt; 7</span></span>
+<span class="line"><span>  MOVEQ R1, #3</span></span>
+<span class="line"><span>  MOVNE R1, #2</span></span></code></pre>
+<hr/>
+<h1 id="cpsr상태레지스터과-flag"><code>CPSR</code>(상태레지스터)과 Flag</h1>
+<p><img src="/_astro/cpsr.DNjiU8Bi_1JkFwL.webp" alt="CPSR - https://www.wikinote.org/Main/Savitribai-Phule-Pune-University/ENTC/AP-TE/Unit-1/Registers-CPSR-SPSR/" loading="lazy" decoding="async" width="961" height="335"></p>
+<p>비교 연산을 할때는 NZCV만 사용한다</p>
+<ul>
+<li>N (Negative) : 연산결과가 음수인 경우</li>
+<li>Z (Zero) : 연산결과가 0인 경우</li>
+<li>C (Carry) : 덧셈 Carry에 Set, 뺄셈 Borrow에 Clear, Rotate시 밀린 비트 저장</li>
+<li>V (oVerflow) : <code>signed</code> 덧셈, 뺄셈 연산 결과로 값의 초과가 발생한 경우</li>
+</ul>
+<blockquote><p>Carry는 덧셈을 했을때 범위를 초과해서 자리 올림이 발생했을때를 말하는것입니다. Overflow와는 다릅니다.</p></blockquote>
+<h2 id="상태-플래그와-조건">상태 플래그와 조건</h2>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  CMP R0, R1</span></span>
+<span class="line"><span>  B□□ LOOP</span></span></code></pre>
+<p>□ 부분에 아래의 16가지 조건식이 들어가게 됩니다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>약어</th><th>뜻</th><th>Flag 상태</th></tr></thead><tbody><tr><td><strong><code>EQ</code></strong></td><td><strong>Eq</strong>ual / Equals zero (False)</td><td>Z set</td></tr><tr><td><strong><code>NE</code></strong></td><td><strong>N</strong>ot <strong>E</strong>qual (True)</td><td>Z clear</td></tr><tr><td><strong><code>CS</code></strong>/<code>HS</code></td><td>Carry Set / Unsigned higher or same</td><td><strong>C set</strong></td></tr><tr><td><strong><code>CC</code></strong>/<code>LO</code></td><td>Carry Clear / Unsigned Lower</td><td><strong>C clear</strong></td></tr><tr><td><strong><code>MI</code></strong></td><td><strong>Mi</strong>nus / Negative</td><td>N set</td></tr><tr><td><strong><code>PL</code></strong></td><td><strong>Pl</strong>us / Positive or zero</td><td>N clear</td></tr><tr><td><strong><code>VS</code></strong></td><td>Overflow</td><td><strong>V s</strong>et</td></tr><tr><td><strong><code>VC</code></strong></td><td>No Overflow</td><td><strong>V c</strong>lear</td></tr><tr><td><strong><code>HI</code></strong></td><td><code>Unsigned</code> <strong>hi</strong>gher</td><td>C set and Z clear</td></tr><tr><td><strong><code>LS</code></strong></td><td><code>Unsigned</code> <strong>l</strong>ower or <strong>s</strong>ame</td><td>C clear and Z set</td></tr><tr><td><strong><code>GE</code></strong></td><td><code>Signed</code> <strong>g</strong>reater then or <strong>e</strong>qual</td><td>N equals V</td></tr><tr><td><strong><code>LT</code></strong></td><td><code>Signed</code> <strong>l</strong>ess <strong>t</strong>han</td><td>N is not equals V</td></tr><tr><td><strong><code>GT</code></strong></td><td><code>Signed</code> <strong>g</strong>reater <strong>t</strong>han</td><td>Z clear and N equals V</td></tr><tr><td><strong><code>LE</code></strong></td><td><code>Signed</code> <strong>l</strong>ess than or <strong>e</strong>qual</td><td>Z set or N is not equal to V</td></tr><tr><td><strong><code>AL</code></strong></td><td><strong>Al</strong>ways</td><td>Any state</td></tr><tr><td><strong><code>NV</code></strong></td><td><strong>N</strong>e<strong>v</strong>er</td><td>None</td></tr></tbody></table>
+<ul>
+<li>주소 연산을 할때는 <code>HI</code>, <code>LO</code>, <code>HS</code>, <code>LS</code>와 같은 <code>Unsigned</code> 비교를 사용합니다.</li>
+</ul>
+<hr/>
+<h1 id="산술-명령어">산술 명령어</h1>
+<ul>
+<li>
+<p><strong>ADD</strong> : <code>ADD Rd, Rs, OP2</code></p>
+<ul>
+<li><code>Rd := Rs + OP2</code></li>
+</ul>
+</li>
+<li>
+<p><strong>ADC</strong> : <code>ADC Rd, Rs, OP2</code></p>
+<ul>
+<li><code>Rd := Rs + OP2 + Carry</code></li>
+</ul>
+</li>
+<li>
+<p><strong>SUB</strong> : <code>SUB Rd, Rs, OP2</code></p>
+<ul>
+<li><code>Rd := Rs - OP2</code></li>
+</ul>
+</li>
+<li>
+<p><strong>SBC</strong> : <code>SBC Rd, Rs, OP2</code></p>
+<ul>
+<li><code>Rd := Rs - OP2 - !Carry</code></li>
+</ul>
+</li>
+<li>
+<p><strong>RSB</strong> : <code>RSB Rd, Rs, OP2</code></p>
+<ul>
+<li><code>Rd := OP2 - Rs</code></li>
+</ul>
+</li>
+<li>
+<p><strong>RSC</strong> : <code>RSC Rd, Rs, OP2</code></p>
+<ul>
+<li><code>Rd := OP2 - Rs - !Carry</code></li>
+</ul>
+</li>
+<li>
+<p><code>RSB</code>, <code>RSC</code>에 있는 R은 Reverse라고 생각합시다.</p>
+</li>
+</ul>
+<h2 id="일정-횟수를-반복하는-프로그램">일정 횟수를 반복하는 프로그램</h2>
+<ol>
+<li><code>for(i=0; i&lt;10; i++)</code> 방식</li>
+</ol>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  MOV R0, #0</span></span>
+<span class="line"><span>1:</span></span>
+<span class="line"><span>  @ 이곳에 코드 작성</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  ADD R0, R0, #1</span></span>
+<span class="line"><span>  CMP R0, #10</span></span>
+<span class="line"><span>  BLT 1b</span></span></code></pre>
+<ol start="2">
+<li><code>for(i=10; i&gt;0; i--)</code> 방식</li>
+</ol>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  MOV R0, #10</span></span>
+<span class="line"><span>1:</span></span>
+<span class="line"><span>  @ 이곳에 코드 작성</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  SUB R0, R0, #1</span></span>
+<span class="line"><span>  CMP R0, #0</span></span>
+<span class="line"><span>  BGT 1b</span></span></code></pre>
+<p>위의 두 방법도 좋지만, Down Count 방식에 S-Suffix를 사용하는게 더 효율적입니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="plaintext"><code><span class="line"><span>  MOV R0, #10</span></span>
+<span class="line"><span>1:</span></span>
+<span class="line"><span>  @ 이곳에 코드 작성</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  SUBS R0, R0, #1</span></span>
+<span class="line"><span>  BGT 1b</span></span></code></pre>
+<hr/>
+<h1 id="서브루틴-호출">서브루틴 호출</h1>
+<ul>
+<li><code>BL label</code> : Branch and Link
+<ul>
+<li><code>BL</code> : 서브루틴 호출 명령</li>
+<li><code>label</code> : 서브루틴의 상대주소 값</li>
+<li><code>B</code>와 달리 복귀한 주소(따음 명령 주소) 값을 <code>R14</code>에 저장합니다.<br/>
+<img src="/_astro/subroutine.BAmbpeSM_GFCSp.webp" alt="Subroutine" loading="lazy" decoding="async" width="439" height="204"></li>
+<li><code>BL</code>은 분기 주소로 레지스터를 사용하지 못합니다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="서브루틴-호출과-복귀">서브루틴 호출과 복귀</h2>
+<ul>
+<li>
+<p><strong>서브루틴 호출</strong> (<code>BL label</code>):</p>
+<ol>
+<li>복귀할 주소를 <code>LR</code>(<code>R14</code>)에 저장합니다.</li>
+<li>서브루틴의 주소를 <code>PC</code>(<code>R15</code>)에 저장합니다.</li>
+</ol>
+</li>
+<li>
+<p><strong>서브루틴 복귀</strong> (<code>BX LR</code>):</p>
+<ul>
+<li><code>LR</code>(<code>R14</code>)의 값을 <code>PC</code>(<code>R15</code>)에 저장하여 복귀합니다.</li>
+</ul>
+</li>
+<li>
+<p>왜 함수라고 하지 않고 서브루틴이라고 부를까?</p>
+<ul>
+<li>함수는 다른 값들에 영향을 주지 않지만, 서브루틴은 다른 값들에 영향을 줄수 있습니다.</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h1 id="특수용도-레지스터">특수용도 레지스터</h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>레지스터</th><th>설명</th><th>용도</th></tr></thead><tbody><tr><td><code>SP</code> / <code>R13</code></td><td>Stack Pointer</td><td>C언어 사용시 스택의 주소를 저장</td></tr><tr><td><code>LR</code> / <code>R14</code></td><td>Link Register</td><td>함수 호출 시 되돌아갈 함수의 주소가 저장</td></tr><tr><td><code>PC</code> / <code>R15</code></td><td>Program Counter</td><td>프로그램 수행 시 읽어오는 명령의 주소를 저장</td></tr><tr><td>CPSR</td><td>Current Program Status Register</td><td>연산결과, IRQ, FIQ금지, 동작모드 등을 저장</td></tr></tbody></table></article><hr class="my-8 border-dashed"><div id="btt-btn-container" class="fixed inset-e-4 bottom-8 z-50 md:sticky md:inset-e-auto md:float-end md:me-1 translate-y-14 opacity-0 transition duration-500"><button data-button="back-to-top" class="group bg-background relative px-2 py-1 size-14 rounded-full shadow-xl md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg"><span id="progress-indicator" class="absolute inset-0 -z-10 block size-14 scale-110 rounded-full bg-transparent md:hidden md:h-8 md:rounded-md"></span><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block rotate-90 md:hidden" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M5 12l6 6M5 12l6-6" /></svg><span class="group-hover:text-accent sr-only text-sm md:not-sr-only"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 5v14M16 9l-4-4M8 9l4-4" /></svg>Back to top</span></button></div><script data-astro-rerun>
+  function backToTop() {
+    const rootElement = document.documentElement;
+    const btnContainer = document.querySelector("#btt-btn-container");
+    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
+    const progressIndicator = document.querySelector("#progress-indicator");
+
+    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
+      return;
+
+    backToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    });
+
+    let lastVisible = null;
+    function handleScroll() {
+      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+      const scrollTop = rootElement.scrollTop;
+      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
+
+      progressIndicator.style.setProperty(
+        "background-image",
+        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
+      );
+
+      const isVisible = scrollTop / scrollTotal > 0.3;
+
+      if (isVisible !== lastVisible) {
+        btnContainer.classList.toggle("opacity-100", isVisible);
+        btnContainer.classList.toggle("translate-y-0", isVisible);
+        btnContainer.classList.toggle("opacity-0", !isVisible);
+        btnContainer.classList.toggle("translate-y-14", !isVisible);
+        lastVisible = isVisible;
+      }
+    }
+
+    let ticking = false;
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+  backToTop();
+</script><ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8"><li><a data-astro-transition-scope="astro-bztu2lml-1" href="/tags/arm-architecture/" class="flex items-center gap-0.5 border-foreground border-b-2 border-dashed hover:border-accent hover:text-accent hover:-mt-0.5 focus-visible:text-accent focus-visible:border-none text-sm"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="opacity-80 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>ARM Architecture</a></li></ul><div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start"><span class="italic">Share this post:</span><div class="text-center"><a href="https://wa.me/?text=https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/" title="Share this post on Whatsapp" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m3 21 1.65-3.8a9 9 0 1 1 3.4 2.9z" /><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0za5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" /></svg><span class="sr-only">Share this post on Whatsapp</span></a><a href="https://www.facebook.com/sharer.php?u=https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/" title="Share this post on Facebook" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M7 10v4h3v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3V3h-3a5 5 0 0 0-5 5v2z" /></svg><span class="sr-only">Share this post on Facebook</span></a><a href="https://x.com/intent/post?url=https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/" title="Share this post on X" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m4 4 11.733 16H20L8.267 4zM4 20l6.768-6.768m2.46-2.46L20 4" /></svg><span class="sr-only">Share this post on X</span></a><a href="https://t.me/share/url?url=https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/" title="Share this post on Telegram" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 10-4 4 6 6 4-16-18 7 4 2 2 6 3-4" /></svg><span class="sr-only">Share this post on Telegram</span></a><a href="https://pinterest.com/pin/create/button/?url=https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/" title="Share this post on Pinterest" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m8 20 4-9M10.7 14c.437 1.263 1.43 2 2.55 2 2.071 0 3.75-1.554 3.75-4a5 5 0 1 0-9.7 1.7" /><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" /></svg><span class="sr-only">Share this post on Pinterest</span></a><a href="mailto:?subject=See%20this%20post&amp;body=https://kyuhyuk.kr/posts/Basic-of-ARM-Assembly/" title="Share this post via email" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Share this post via email</span></a></div></div><hr class="my-8 border-dashed"><div data-pagefind-ignore class="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2"><a href="/posts/arm/raspberry-pi/Raspberry-Pi-Bare-Bones/" class="flex w-full gap-1 hover:opacity-75"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M5 12l6 6M5 12l6-6" /></svg><div><span>Previous Post</span><div class="text-accent/85 text-sm">Raspberry Pi Bare Bones</div></div></a><a href="/posts/Wedding-Invitation-Development-Story/" class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"><div><span>Next Post</span><div class="text-accent/85 text-sm">React를 사용한 나만의 모바일 청첩장 개발 후기</div></div><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M13 18l6-6M13 6l6 6" /></svg></a></div></main><footer class="app-layout mt-auto"><div class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"><div class="flex flex-wrap items-center gap-1"><a href="https://github.com/leekyuhyuk" title="KyuHyuk Blog on Github" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg><span class="sr-only">KyuHyuk Blog on Github</span></a><a href="https://linkedin.com/in/leekyuhyuk" title="KyuHyuk Blog on Linkedin" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 1 0-4 0" /><path d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z" /></svg><span class="sr-only">KyuHyuk Blog on Linkedin</span></a><a href="mailto:lee@kyuhy.uk" title="Send an email to KyuHyuk Blog" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Send an email to KyuHyuk Blog</span></a></div><div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row"><span>Copyright &#169; 2026 KyuHyuk Lee</span><span class="hidden sm:inline">&nbsp;|&nbsp;</span><span>All rights reserved.</span></div></div></footer><script type="module">var e=`theme`,t=`light`,n=`dark`;function r(){return localStorage.getItem(e)||(window.matchMedia(`(prefers-color-scheme: dark)`).matches?n:t)}var i=window.__theme?.value??r();function a(){localStorage.setItem(e,i),o()}function o(){let e=document.firstElementChild;e?.setAttribute(`data-theme`,i),e?.classList.toggle(`dark`,i===n),document.querySelector(`#theme-btn`)?.setAttribute(`aria-label`,i);let t=window.getComputedStyle(document.body).backgroundColor;document.querySelector(`meta[name='theme-color']`)?.setAttribute(`content`,t)}function s(){o(),document.querySelector(`#theme-btn`)?.addEventListener(`click`,()=>{i=i===t?n:t,a()})}s(),document.addEventListener(`astro:after-swap`,s),document.addEventListener(`astro:before-swap`,e=>{let t=document.querySelector(`meta[name='theme-color']`)?.getAttribute(`content`);t&&e.newDocument.querySelector(`meta[name='theme-color']`)?.setAttribute(`content`,t)}),window.matchMedia(`(prefers-color-scheme: dark)`).addEventListener(`change`,({matches:e})=>{i=e?n:t,a()});</script></body></html><script data-astro-rerun>
+  function createProgressBar() {
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+
+    progressContainer.appendChild(progressBar);
+    document.body.appendChild(progressContainer);
+  }
+  createProgressBar();
+
+  function updateScrollProgress() {
+    document.addEventListener("scroll", () => {
+      const winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (document) {
+        const myBar = document.getElementById("myBar");
+        if (myBar) {
+          myBar.style.width = scrolled + "%";
+        }
+      }
+    });
+  }
+  updateScrollProgress();
+
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+
+  function attachCopyButtons() {
+    const copyButtonLabel = "Copy";
+    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+    for (const codeBlock of codeBlocks) {
+      const wrapper = document.createElement("div");
+      wrapper.style.position = "relative";
+
+      const computedStyle = getComputedStyle(codeBlock);
+      const hasFileNameOffset =
+        computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
+
+      const topClass = hasFileNameOffset
+        ? "top-(--file-name-offset)"
+        : "-top-3";
+
+      const copyButton = document.createElement("button");
+      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
+      copyButton.innerHTML = copyButtonLabel;
+      codeBlock.setAttribute("tabindex", "0");
+      codeBlock.appendChild(copyButton);
+
+      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+
+    async function copyCode(block, button) {
+      const code = block.querySelector("code");
+      const text = code?.innerText;
+
+      await navigator.clipboard.writeText(text ?? "");
+
+      button.innerText = "Copied";
+
+      setTimeout(() => {
+        button.innerText = copyButtonLabel;
+      }, 700);
+    }
+  }
+  attachCopyButtons();
+
+  /** Accessible image lightbox for article images. */
+  function initLightbox() {
+    const article = document.getElementById("article");
+    if (!article) return;
+
+    const prefersReducedMotion = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let overlay = null;
+    let lastFocused = null;
+
+    // Defer attribute mutations so they don't push the LCP timestamp.
+    // Event listeners below use delegation and don't need the attributes to exist yet.
+    requestAnimationFrame(() => {
+      const images = Array.from(article.querySelectorAll("img"));
+      for (const image of images) {
+        if (image.closest("a")) continue;
+        image.setAttribute("role", "button");
+        image.setAttribute("tabindex", "0");
+        image.setAttribute("aria-haspopup", "dialog");
+        image.setAttribute(
+          "aria-label",
+          image.alt ? `Zoom image: ${image.alt}` : "Zoom image"
+        );
+      }
+    });
+
+    function open(src, alt, trigger) {
+      if (overlay) return;
+      lastFocused = trigger ?? document.activeElement;
+
+      overlay = document.createElement("div");
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute(
+        "aria-label",
+        alt ? `Image preview: ${alt}` : "Image preview"
+      );
+      overlay.className =
+        "fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/70 backdrop-blur-sm opacity-0 transition-opacity duration-200 motion-reduce:transition-none";
+
+      const closeButton = document.createElement("button");
+      closeButton.type = "button";
+      closeButton.setAttribute("aria-label", "Close image preview");
+      closeButton.className =
+        "absolute end-4 top-4 rounded p-2 text-3xl leading-none text-white";
+      closeButton.innerHTML = "&#10005;";
+      closeButton.addEventListener("click", close);
+
+      const image = document.createElement("img");
+      image.src = src;
+      image.alt = "";
+      image.className =
+        "max-h-[90dvh] max-w-[90dvw] cursor-default object-contain";
+
+      overlay.append(closeButton, image);
+      overlay.addEventListener("click", e => {
+        if (e.target === overlay && currentScale <= 1) close();
+      });
+
+      let currentScale = 1;
+      let translateX = 0;
+      let translateY = 0;
+      let initialDist = 0;
+      let initialScale = 1;
+      let panStartX = 0;
+      let panStartY = 0;
+      let panStartTranslateX = 0;
+      let panStartTranslateY = 0;
+      let lastTapTime = 0;
+
+      function applyTransform() {
+        image.style.transform = `scale(${currentScale}) translate(${translateX}px, ${translateY}px)`;
+      }
+
+      function resetTransform() {
+        currentScale = 1;
+        translateX = 0;
+        translateY = 0;
+        image.style.transform = "";
+      }
+
+      overlay.addEventListener(
+        "touchstart",
+        e => {
+          const t = e.touches;
+          if (t.length === 2) {
+            initialDist = Math.hypot(
+              t[1].clientX - t[0].clientX,
+              t[1].clientY - t[0].clientY
+            );
+            initialScale = currentScale;
+          } else if (t.length === 1) {
+            const now = Date.now();
+            if (now - lastTapTime < 300) {
+              e.preventDefault();
+              if (currentScale > 1) {
+                resetTransform();
+              } else {
+                currentScale = 2;
+                translateX = 0;
+                translateY = 0;
+                applyTransform();
+              }
+              lastTapTime = 0;
+              panStartX = t[0].clientX;
+              panStartY = t[0].clientY;
+              panStartTranslateX = translateX;
+              panStartTranslateY = translateY;
+            } else {
+              lastTapTime = now;
+              if (currentScale > 1) {
+                panStartX = t[0].clientX;
+                panStartY = t[0].clientY;
+                panStartTranslateX = translateX;
+                panStartTranslateY = translateY;
+              }
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      overlay.addEventListener(
+        "touchmove",
+        e => {
+          const t = e.touches;
+          if (t.length === 2) {
+            e.preventDefault();
+            const dist = Math.hypot(
+              t[1].clientX - t[0].clientX,
+              t[1].clientY - t[0].clientY
+            );
+            currentScale = Math.min(
+              4,
+              Math.max(1, initialScale * (dist / initialDist))
+            );
+            applyTransform();
+          } else if (t.length === 1) {
+            if (currentScale > 1) {
+              e.preventDefault();
+              translateX =
+                panStartTranslateX + (t[0].clientX - panStartX) / currentScale;
+              translateY =
+                panStartTranslateY + (t[0].clientY - panStartY) / currentScale;
+              const maxX = Math.max(
+                0,
+                (image.clientWidth - overlay.clientWidth / currentScale) / 2
+              );
+              const maxY = Math.max(
+                0,
+                (image.clientHeight - overlay.clientHeight / currentScale) / 2
+              );
+              translateX = Math.min(maxX, Math.max(-maxX, translateX));
+              translateY = Math.min(maxY, Math.max(-maxY, translateY));
+              applyTransform();
+            } else {
+              e.preventDefault();
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      overlay.addEventListener("touchend", e => {
+        if (e.touches.length === 0 && currentScale <= 1.05) {
+          resetTransform();
+        }
+      });
+
+      overlay.addEventListener("touchcancel", e => {
+        if (e.touches.length === 0 && currentScale <= 1.05) {
+          resetTransform();
+        }
+      });
+
+      document.body.appendChild(overlay);
+      document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", onKeyDown);
+      window.__closeLightbox = close;
+
+      requestAnimationFrame(() => overlay?.classList.add("opacity-100"));
+      closeButton.focus();
+    }
+
+    function close() {
+      if (!overlay) return;
+      const el = overlay;
+      overlay = null;
+      window.__closeLightbox = null;
+
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+      lastFocused?.focus();
+      lastFocused = null;
+
+      if (prefersReducedMotion()) {
+        el.remove();
+        return;
+      }
+      const remove = () => el.remove();
+      el.addEventListener("transitionend", remove, { once: true });
+      setTimeout(remove, 250); // fallback in case transitionend never fires
+      el.classList.remove("opacity-100");
+    }
+
+    function onKeyDown(e) {
+      if (e.key === "Escape") {
+        close();
+      } else if (e.key === "Tab") {
+        trapFocus(e);
+      }
+    }
+
+    // Keep keyboard focus inside the open dialog.
+    function trapFocus(e) {
+      if (!overlay) return;
+      const focusables = overlay.querySelectorAll(
+        'a[href], button, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    function triggerFromEvent(e) {
+      const image = e.target.closest("img");
+      if (!image || !article.contains(image) || image.closest("a")) return null;
+      return image;
+    }
+
+    function activate(image) {
+      open(image.currentSrc || image.src, image.alt, image);
+    }
+
+    article.addEventListener("click", e => {
+      const image = triggerFromEvent(e);
+      if (!image) return;
+      e.preventDefault();
+      activate(image);
+    });
+
+    article.addEventListener("keydown", e => {
+      if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+      const image = triggerFromEvent(e);
+      if (!image) return;
+      e.preventDefault();
+      activate(image);
+    });
+  }
+  initLightbox();
+
+  if (!window.__lightboxSwapBound) {
+    window.__lightboxSwapBound = true;
+    document.addEventListener("astro:before-swap", () =>
+      window.__closeLightbox?.()
+    );
+  }
+
+  document.addEventListener("astro:after-swap", () =>
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  );
+</script>

@@ -1,0 +1,1089 @@
+<!DOCTYPE html><html dir="ltr" lang="en" class="overflow-y-scroll scroll-smooth"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" href="/favicon.ico"><link rel="canonical" href="https://kyuhyuk.kr/posts/avr-atmega328p/uart/"><meta name="generator" content="Astro v7.3.4"><!-- Font --><style>@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/9344e1e6ba3134db.woff") format("woff"), url("/_astro/fonts/4b36ecaec8861e3e.ttf") format("truetype");font-display:swap;font-weight:300;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/8f4ae94aecd98e20.woff") format("woff"), url("/_astro/fonts/82b0269728335a0a.ttf") format("truetype");font-display:swap;font-weight:400;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/20c20d9068c60dd0.woff") format("woff"), url("/_astro/fonts/b576f4f05c9dbc87.ttf") format("truetype");font-display:swap;font-weight:500;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/5a6c2a0b85de9ba1.woff") format("woff"), url("/_astro/fonts/4b0ae898a7afcd37.ttf") format("truetype");font-display:swap;font-weight:600;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/30d0dcc4d81c0020.woff") format("woff"), url("/_astro/fonts/e8acb21fdbc37b03.ttf") format("truetype");font-display:swap;font-weight:700;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/bf976bcffafeb084.woff") format("woff"), url("/_astro/fonts/8436f9847213f651.ttf") format("truetype");font-display:swap;font-weight:300;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/8a34d92a2a36603b.woff") format("woff"), url("/_astro/fonts/ccba4fb3766b1b6e.ttf") format("truetype");font-display:swap;font-weight:400;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/a20ca4cd312f40ca.woff") format("woff"), url("/_astro/fonts/ec093fff40157157.ttf") format("truetype");font-display:swap;font-weight:500;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/b74e6fc4049d0d63.woff") format("woff"), url("/_astro/fonts/dab775c12e1996fc.ttf") format("truetype");font-display:swap;font-weight:600;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/d9c1254858362ad4.woff") format("woff"), url("/_astro/fonts/a5f75c165e55a648.ttf") format("truetype");font-display:swap;font-weight:700;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:300;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:400;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:500;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:600;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:700;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:300;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:400;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:500;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:600;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:700;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}:root{--font-google-sans-code:"Google Sans Code-1a30c214885cb404","Google Sans Code-1a30c214885cb404 fallback: Courier New",monospace;}</style><!-- Primary meta --><title>ATmega328P UART 구현 | KyuHyuk Blog</title><meta name="title" content="ATmega328P UART 구현 | KyuHyuk Blog"><meta name="description" content="ATmega328P UART 구현 — UART 초기화 방법, Baudrate 설정, 문자 및 문자열 전송, 16진수/10진수 출력 함수, 데이터 수신을 설명합니다."><meta name="author" content="KyuHyuk Lee"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:site_name" content="KyuHyuk Blog"><meta property="og:title" content="ATmega328P UART 구현 | KyuHyuk Blog"><meta property="og:description" content="ATmega328P UART 구현 — UART 초기화 방법, Baudrate 설정, 문자 및 문자열 전송, 16진수/10진수 출력 함수, 데이터 수신을 설명합니다."><meta property="og:url" content="https://kyuhyuk.kr/posts/avr-atmega328p/uart/"><meta property="og:image" content="https://kyuhyuk.kr/posts/avr-atmega328p/uart/index.png"><!-- Twitter / X --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://kyuhyuk.kr/posts/avr-atmega328p/uart/"><meta property="twitter:title" content="ATmega328P UART 구현 | KyuHyuk Blog"><meta property="twitter:description" content="ATmega328P UART 구현 — UART 초기화 방법, Baudrate 설정, 문자 및 문자열 전송, 16진수/10진수 출력 함수, 데이터 수신을 설명합니다."><meta property="twitter:image" content="https://kyuhyuk.kr/posts/avr-atmega328p/uart/index.png"><!-- RSS autodiscovery --><link rel="alternate" type="application/rss+xml" title="KyuHyuk Blog" href="https://kyuhyuk.kr/rss.xml/"><!-- Filled at runtime by theme.ts to match the current background colour --><meta name="theme-color" content=""><!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) --><meta property="og:type" content="article"><meta property="article:published_time" content="2022-08-28T10:35:33.000Z"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"ATmega328P UART 구현 | KyuHyuk Blog","image":"https://kyuhyuk.kr/posts/avr-atmega328p/uart/index.png","datePublished":"2022-08-28T10:35:33.000Z","author":[{"@type":"Person","name":"KyuHyuk Lee","url":"https://avatars.githubusercontent.com/u/6347277"}]}</script><!--
+      Inline FOUC-prevention script: sets data-theme on <html> before
+      the browser paints. Runs synchronously, no defer/async.
+    --><script>
+      (function () {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = stored ?? (prefersDark ? "dark" : "light");
+        const root = document.firstElementChild;
+        root?.setAttribute("data-theme", theme);
+        root?.classList.toggle("dark", theme === "dark");
+        // Expose value so theme.ts can skip re-detection.
+        window.__theme = { value: theme };
+      })();
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js"></script><link rel="stylesheet" href="/_astro/Footer.BJLVQ-Bs.css"><style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media (prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*),[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-bztu2lml-1"] { view-transition-name: avr; }@layer astro { ::view-transition-old(avr) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(avr) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(avr) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(avr) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-bztu2lml-2"] { view-transition-name: atmega328p; }@layer astro { ::view-transition-old(atmega328p) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(atmega328p) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(atmega328p) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(atmega328p) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-bztu2lml-3"] { view-transition-name: uart; }@layer astro { ::view-transition-old(uart) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(uart) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(uart) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(uart) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head><body class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"><a id="skip-to-content" href="#main-content" class="bg-background text-accent absolute inset-s-16 -top-full z-50 px-3 py-2 backdrop-blur-lg transition-all focus:top-4">Skip to content</a><header class="app-layout flex flex-col items-center justify-between sm:flex-row"><div class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6"><a href="/" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none">KyuHyuk Blog</a><nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"><button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="menu-items" data-label-open="Open menu" data-label-close="Close menu"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden" viewBox="0 0 24 24" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M18 6 6 18M6 6l12 12" /></svg><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" viewBox="0 0 24 24" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 6h16M7 12h13M10 18h10" /></svg></button><ul id="menu-items" class="[&amp;&gt;li&gt;a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 sm:[&amp;&gt;li]:h-8 [&amp;&gt;li&gt;a]:block [&amp;&gt;li&gt;a]:px-4 [&amp;&gt;li&gt;a]:py-3 [&amp;&gt;li&gt;a]:text-center [&amp;&gt;li&gt;a]:font-medium sm:[&amp;&gt;li&gt;a]:px-2 sm:[&amp;&gt;li&gt;a]:py-1"><li class="col-span-2"><a href="/posts/" class="active-nav">Posts</a></li><li class="col-span-2"><a href="/tags/">Tags</a></li><li class="col-span-2"><a href="/archives/" title="Archives" aria-label="Archives" class="group inline-flex items-center gap-1 hover:text-accent focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M10 12h4" /></svg><span class="sm:sr-only">Archives</span></a></li><li class="col-span-1 flex items-center justify-center"><a href="/search/" title="Search" aria-label="Search" class="group inline-flex items-center gap-1 hover:text-accent focus-outline relative size-8"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-1/2 left-1/2 size-6 -translate-x-1/2 -translate-y-1/2" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6" /></svg><span class="sr-only">Search</span></a></li><li class="col-span-1 flex items-center justify-center"><button id="theme-btn" class="focus-outline hover:[&amp;&gt;svg]:stroke-accent relative size-12 p-4 sm:size-8" title="Toggle theme" aria-label="auto" aria-live="polite"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] translate-[-50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" /></svg><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] translate-[-50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M14.828 14.828a4 4 0 1 0-5.656-5.656 4 4 0 0 0 5.656 5.656M6.343 17.657l-1.414 1.414M6.343 6.343 4.929 4.929M17.657 6.343l1.414-1.414M17.657 17.657l1.414 1.414M4 12H2M12 4V2M20 12h2M12 20v2" /></svg></button></li></ul></nav></div></header><script type="module">function e(){let e=document.querySelector(`#menu-btn`),t=document.querySelector(`#menu-items`),n=document.querySelector(`#menu-icon`),r=document.querySelector(`#close-icon`);if(!e||!t||!n||!r)return;let i=e.dataset.labelOpen??`Open menu`,a=e.dataset.labelClose??`Close menu`;e.addEventListener(`click`,()=>{let o=e.getAttribute(`aria-expanded`)===`true`;e.setAttribute(`aria-expanded`,o?`false`:`true`),e.setAttribute(`aria-label`,o?i:a),t.classList.toggle(`hidden`),t.classList.toggle(`grid`),n.classList.toggle(`hidden`),r.classList.toggle(`hidden`)})}function t(){let e=document.getElementById(`skip-to-content`);e&&e.addEventListener(`click`,e=>{if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0)return;e.preventDefault();let t=document.getElementById(`main-content`);t&&(t.setAttribute(`tabindex`,`-1`),t.addEventListener(`blur`,()=>t.removeAttribute(`tabindex`),{once:!0}),t.focus(),t.scrollIntoView({behavior:`smooth`}))})}e(),document.addEventListener(`astro:after-swap`,e),t(),document.addEventListener(`astro:after-swap`,t);</script><script type="module">function e(){let e=document.querySelector(`#back-button`),t=sessionStorage.getItem(`backUrl`);t&&e&&(e.href=t)}document.addEventListener(`astro:page-load`,e),e();</script><main id="main-content" class="app-layout mt-8" data-pagefind-body><h1 style="view-transition-name:uart" class="text-accent inline-block text-2xl font-bold sm:text-3xl">ATmega328P UART 구현</h1><div class="my-2 flex items-center gap-2"><div class="text-muted-foreground flex items-center gap-x-2"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 min-w-5.5" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005" /></svg><time class="text-sm sm:text-base" datetime="2022-08-28T10:35:33.000Z">28 Aug, 2022</time></div><span aria-hidden="true" class="text-muted-foreground max-sm:hidden hidden">|</span></div><article id="article" style="word-break: keep-all; overflow-wrap: break-word;" class="mt-8 w-full app-prose max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"><p>ATmega328P의 UART(Universal Asynchronous Receiver and Transmitter) 기능을 사용하면 PC에서 마이크로컨트롤러와 쉽게 통신할 수 있습니다.</p>
+<p>이 글에서는 마이크로컨트롤러 프로젝트에서 UART를 활용할 수 있는 몇 가지 기본 기능을 살펴보고 구현해 보겠습니다.</p>
+<h1 id="회로-연결">회로 연결</h1>
+<p>아래와 같이 회로를 구성합니다. Arduino를 연결한 이유는 <code>avrdude</code>를 사용하여 ATmega328P의 Flash에 프로그래밍(Flash Write)하기 위해 연결했습니다.</p>
+<p><img src="/_astro/AVR-ATmega328P-UART_1.CwYiie_W_Z1P3ONo.webp" alt="Connections" loading="lazy" decoding="async" width="1860" height="2700"></p>
+<h1 id="uart-초기화">UART 초기화</h1>
+<p>UART를 초기화하기 위해 구성해야 하는 몇 가지 항목이 있습니다. 가장 먼저 결정해야 할 것은 전송 속도(Buadrate)입니다. UART의 경우 전송 속도는 전송될 초당 비트 수 입니다. 다음과 같이 여러 표준 속도가 있습니다:</p>
+<ul>
+<li>1200</li>
+<li>2400</li>
+<li>4800</li>
+<li>9600</li>
+<li>19200</li>
+<li>38400</li>
+<li>57600</li>
+<li>115200</li>
+</ul>
+<p>속도가 큰 문제가 되지 않는 대부분의 마이크로컨트롤러 프로젝트의 경우에는 <code>9600</code>이 주로 사용됩니다. 초당 1200개의 문자를 전송하는 것과 같습니다. (16MHz 클럭의 ATmega328P는 초당 <code>1Mbps - 125000</code>개의 문자를 전송할 수도 있습니다)</p>
+<h1 id="전송-속도-설정하기">전송 속도 설정하기</h1>
+<p>전송 속도 설정은 <code>UBRR0H</code>와 <code>UBRR0L</code> 레지스터에 기록하여 설정합니다. 이 레지스터에 기록되는 값은 아래 수식의 값입니다.</p>
+<p><img src="/_astro/AVR-ATmega328P-UART_2.DaUCr_zv_2lqeK2.webp" alt="Buadrate Calc" loading="lazy" decoding="async" width="273" height="86"></p>
+<p>위의 수식에서 <code>fOSC</code>는 클럭 속도입니다. 프로젝트에서 16MHz의 외부 발진기를 사용하고 원하는 전송 속도가 9600이라고 가정하면 <code>UBRRn</code>의 값은 <code>(16000000/(16*9600)) - 1 = 103.167</code>이 됩니다. <code>103.167</code>은 정수가 아니므로 반올림해서 <code>103</code>이 됩니다.</p>
+<p>전송 속도 레지스터(<code>UBRR</code>)은 각각 8비트이므로 <code>103</code>을 하위 바이트와 상위 바이트로 분리해야 합니다. <code>255</code>보다 작기 때문에 상위 바이트가 <code>0</code>이고 하위 바이트가 <code>103</code>인 것은 분명하지만, 상위 바이트와 하위 바이트를 구분해서 코드를 작성하는 방법은 아래와 같습니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 하위 바이트를 UBRR0L에 기록</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UBRR0L </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)(</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">103</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 상위 바이트를 UBRR0H에 기록</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UBRR0H </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)(</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">103</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &gt;&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span></code></pre>
+<h1 id="uart-송신기와-수신기-활성화하기">UART 송신기와 수신기 활성화하기</h1>
+<p><code>UCSR</code> 레지스터를 설정하여 송신 및 수신 기능을 활성화해야 합니다. 이 작업을 하지 않으면 마이크로컨트롤러의 UART RX/TX 핀은 표준 I/O핀으로 작동합니다. <code>UCSR0B</code> 레지스터의 <code>RXEN0</code>와 <code>TXEN0</code>의 비트를 <code>1</code>로 설정합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // UART 송신기와 수신기 활성화</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UCSR0B </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">|=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> RXEN0) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> TXEN0)</span></span></code></pre>
+<h1 id="프레임-포맷">프레임 포맷</h1>
+<p>마지막으로 데이터 비트 수, 정지 비트 수 및 패리티 비트 사용을 포함하는 프레임 포맷을 설정해야 하지만, 기본적으로 시스템은 8개의 데이터 비트에 패리티 비트는 없고 1개의 정지 비트(8N1이라고 불립니다)의 값으로 초기화됩니다. 이 설정은 일반적인 설정이며 대부분 터미널의 기본값이므로 여기서는 변경하지 않습니다.</p>
+<h1 id="초기화-함수-작성하기">초기화 함수 작성하기</h1>
+<p>아래와 같이 위의 내용을 바탕으로 UART를 초기화하는 함수를 작성합니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartInit</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> ubrr</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // UBRR에 전송 속도(Buadrate)를 설정</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UBRR0L </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)(ubrr </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UBRR0H </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)(ubrr </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // UART 송신기와 수신기 활성화</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UCSR0B </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">|=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> RXEN0) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> TXEN0);</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>이 초기화 함수는 UART 관련 함수를 사용하기 전에 꼭 호출해야 합니다. 만약 호출하지 않는다면 UART는 작동하지 않습니다.</p>
+<h1 id="단일-문자-전송">단일 문자 전송</h1>
+<p>UART에서 모든 전송 기능은 단일 문자를 UART를 통해 보내는 것으로 시작됩니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPut</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> char</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> data</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 전송 버퍼가 비어 있을 때까지 기다립니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(UCSR0A </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> UDRE0)));</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 데이터를 UDR(전송 레지스터)에 입력</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UDR0 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> data;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>데이터를 전송하려면 전송 버퍼가 비어 있는지 확인해야 합니다. 데이터시트에 따르면 <code>UDREn</code>이 <code>1</code>이면 버퍼가 비어있는 것을 의미하며 데이터를 전송할 준비가 된 것이라고 설명하고 있습니다. <code>UDRE0</code>은 USART 제어 및 상태 레지스터인 <code>UCSR0A</code> 있으므로, <code>UCSR0A</code>를 <code>(1 &lt;&lt; UDRE0)</code>으로 마스킹 해서 값을 얻을 수 있습니다.</p>
+<p><code>UDRE0</code>가 <code>1</code>이 되면 버퍼가 비어있는 것으로 버퍼가 비어있을 때 전송하려는 문자를 <code>UDR0</code> 레지스터에 입력만 하면 나머지는 하드웨어가 알아서 처리하게 됩니다.</p>
+<h1 id="문자열-전송">문자열 전송</h1>
+<p>단일 문자 전송 함수가 있으면 문자열을 보내는 함수를 작성하는 것은 매우 간단합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPuts</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">char</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> s</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 문자열의 끝을 알리는 NULL이 나올때까지 단일 문자를 전송합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">s </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">s</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>위의 함수는 문자열을 입력받아서 <code>NULL</code>이 나올 때까지 각 문자를 하나씩 전송합니다.</p>
+<h1 id="16진수-값-전송">16진수 값 전송</h1>
+<p>터미널에서 읽을 수 있는 형식으로 16진수의 값을 전송하려면 먼저 ACSII로 변환해야 합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutHex8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 입력 값에서 상위 및 하위 니블 추출</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> upperNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">F0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 4</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> lowerNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">0F</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 니블을 ASCII 16진수로 변환</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    upperNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">+=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> upperNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 9</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> ?</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">A</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> -</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> :</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    lowerNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">+=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> lowerNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 9</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> ?</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">A</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> -</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> :</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 문자를 출력</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(upperNibble)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(lowerNibble)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p><code>uartPutHex8()</code>을 사용하면 더 큰 16진수 값을 출력하도록 쉽게 확장할 수 있습니다. 예를 들어 16비트의 값을 16진수의 값으로 전송하는 함수는 다음과 같습니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutHex16</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 상위 8비트를 전송</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPutHex8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">((</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">))</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 하위 8비트를 전송</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPutHex8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">((</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">))</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<h1 id="10진수-값-전송">10진수 값 전송</h1>
+<p>10진수 값을 전송하는 것은 바이트를 상위 및 하위 니블로 분할하고 직접 변환할 수 없기 때문에 위에서 구현한 16진수의 값을 전송하는 것보다 조금 더 까다롭습니다. 특히 ATmega328P에는 하드웨어 분할기가 없기 때문에 나누기에 대한 비용이 많이 듭니다. 대신 나누기 연산을 빼기로 대체하여 속도를 높일 수 있습니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutU8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig2 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 100 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 100</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 100</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 10 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig2</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 첫 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig1)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 두 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">((dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">||</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig2 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)) </span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig2)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 마지막 숫자를 출력</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>위의 <code>uartPutU8()</code>은 부호가 없는 값을 출력합니다. 만약 부호가 있는 값을 출력해야 하면 어떻게 해야 할까요? 방법은 간단합니다. <code>MSB</code>가 1로 설정되어 있나 확인해서 <code>MSB</code>가 1이면 음수 기호를 출력하고 <code>uartPutU8()</code>을 호출합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutS8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">int8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 값이 음수인지 확인합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">80</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 음수 기호를 출력합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">-</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 부호 없는 값을 가져옵니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> ~</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">-</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 부호 없는 값을 출력합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPutU8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">((</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)val)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>이 개념을 더 큰 자료형으로 확장하는 것은 간단합니다. 예를 들어 16비트의 값은 아래와 같이 확장할 수 있습니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutU16</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig2 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig3 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig4 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 10000 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 1000 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig2</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 100 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 100</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 100</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig3</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 10 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig4</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 이전 값이 출력되었는지 저장하는 변수입니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 첫 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) {</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig1)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 두 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">||</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig2 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)) {</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig2)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 세 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">||</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig3 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)) {</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig3)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 네 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">||</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig4 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)) {</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig4)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 마지막 숫자를 출력</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutS16</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">int16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // check for negative number</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">8000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // print minus sign</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">-</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // convert to unsigned magnitude</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> ~</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">-</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // print unsigned magnitude</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPutU16</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">((</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">) val)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<h1 id="uart를-통해-수신하기">UART를 통해 수신하기</h1>
+<p>UART를 통해 단일 문자를 수신하는 건 위에서 구현한 <code>uartPut()</code>와 비슷합니다. 문자를 수신할 때는 <code>RXC0</code> 비트가 Set 될 때까지 <code>UCSR0A</code> 레지스터를 폴링 하면 됩니다. 그리고 <code>UDR0</code>에서 수신한 문자를 반환할 수 있습니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartGet</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 데이터 수신을 기다립니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(UCSR0A </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> RXC0)));</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 데이터를 반환합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    return</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> UDR0;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>캐리지 리턴(<code>\r</code>)로 끝나는 데이터의 전체 라인을 수신하기 위해 <code>uartGetLine()</code>을 구현해 봅시다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartGetLine</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">char</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> buf</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> n</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> bufIdx </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    char</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> c;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 수신된 문자가 캐리지 리턴(\r)이 나올때까지 수신합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    do</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 단일 문자를 수신합니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        c </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartGet</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 수신한 단일 문자를 출력합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(c)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 버퍼에 단일 문자를 저장합니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">        buf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[bufIdx</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">] </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> c;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">((bufIdx </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> n) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&amp;&amp;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (c </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">));</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 문자열 버퍼의 마지막에 NULL을 입력해서 문자열의 끝을 지정합니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">    buf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[bufIdx] </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>앞에서 구현한 함수와 달리 여기서는 실제로 버퍼를 할당하여 문자를 저장하고, 수신 함수에 전달합니다. 예를 들면 아래와 같습니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Buffer를 할당합니다.</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    const</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> bufSize </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 20</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    char</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478"> buf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[bufSize];</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // UART를 통해 데이터의 전체라인을 수신합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartGetLine</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(buf</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> bufSize);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 수신한 데이터를 출력합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPuts</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">You entered: </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPuts</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(buf);</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPut</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span></code></pre>
+<h1 id="atmega328p에서-실행하기">ATmega328P에서 실행하기</h1>
+<p>프로젝트에 아래의 파일을 생성합니다.</p>
+<p><strong>MakeFile :</strong></p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="makefile"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">CC</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB"> =</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> avr-gcc</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">CFLAGS</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB"> =</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> -Wall -Os -mmcu=atmega328p</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">OBJCOPY</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB"> =</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> avr-objcopy</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">OBJ</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB"> =</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> main.o uart.o</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">all</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> atmega328p-uart.hex</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#1976D2;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">%</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">.o</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#82AAFF"> %</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">.c</span></span>
+<span class="line"><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">	$(</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">CC</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> $(</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">CFLAGS</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> -c </span><span style="--shiki-light:#24292EFF;--shiki-dark:#7FDBCA">$&lt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">atmega328p-uart.elf</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> $(</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">OBJ</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)</span></span>
+<span class="line"><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">	$(</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">CC</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> $(</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">CFLAGS</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> -o atmega328p-uart.elf </span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">$(</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">OBJ</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">atmega328p-uart.hex</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> atmega328p-uart.elf</span></span>
+<span class="line"><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">	$(</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">OBJCOPY</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> atmega328p-uart.elf -O ihex atmega328p-uart.hex</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">clean</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">	rm -f *.o *.elf *.hex</span></span></code></pre>
+<p><strong>uart.h :</strong></p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">include</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">stdint.h</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&gt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartInit</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> ubrr</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPut</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> char</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> data</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPuts</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">char</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">s</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutHex8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutHex16</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutU8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutS8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">int8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutU16</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutS16</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">int16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> char</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartGet</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartGetLine</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">char</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">buf</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> n</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span></code></pre>
+<p><strong>uart.c :</strong></p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">include</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">avr/io.h</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&gt;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">include</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">uart.h</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartInit</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> ubrr</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // UBRR에 전송 속도(Buadrate)를 설정</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UBRR0L </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)(ubrr </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UBRR0H </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)(ubrr </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // UART 송신기와 수신기 활성화</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UCSR0B </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">|=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> RXEN0) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">|</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> TXEN0);</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\n\r</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">[INFO] UART initialized!</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\n\r</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPut</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> char</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> data</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 전송 버퍼가 비어 있을 때까지 기다립니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(UCSR0A </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> UDRE0)))</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 데이터를 UDR(전송 레지스터)에 입력</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    UDR0 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> data;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPuts</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">char</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">s</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 문자열의 끝을 알리는 NULL이 나올때까지 단일 문자를 전송합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">s </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">s</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutHex8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 입력 값에서 상위 및 하위 니블 추출</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> upperNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">F0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 4</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> lowerNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">0F</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 니블을 ASCII 16진수로 변환</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    upperNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">+=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> upperNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 9</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> ?</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">A</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> -</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> :</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    lowerNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">+=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> lowerNibble </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 9</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> ?</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">A</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> -</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> :</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 문자를 출력</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(upperNibble)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(lowerNibble)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutHex16</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 상위 8비트를 전송</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPutHex8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">((</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;&gt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">))</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 하위 8비트를 전송</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPutHex8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">((</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">))</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutU8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig2 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 100 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 100</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 100</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 10 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig2</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 첫 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig1)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 두 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> ((dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">||</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig2 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">))</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig2)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 마지막 숫자를 출력</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutS8</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">int8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 값이 음수인지 확인합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">80</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 음수 기호를 출력합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">-</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 부호 없는 값을 가져옵니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> ~</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">-</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 부호 없는 값을 출력합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPutU8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">((</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)val)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutU16</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig2 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig3 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> dig4 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 10000 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 1000 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig2</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 100 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 100</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 100</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig3</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 10 단위의 값을 계산합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&gt;=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">-=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 10</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        dig4</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 이전 값이 출력되었는지 저장하는 변수입니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 첫 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig1)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 두 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">||</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig2 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">))</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig2)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 세 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">||</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig3 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">))</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig3)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 네 번째 숫자를 출력 (0이면 출력하지 않습니다)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">||</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (dig4 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">))</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(dig4)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        prevPrinted </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 마지막 숫자를 출력</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">+</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">0</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartPutS16</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">int16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> val</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // check for negative number</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">8000</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // print minus sign</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">-</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // convert to unsigned magnitude</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> ~</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(val </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">-</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // print unsigned magnitude</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPutU16</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">((</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)val)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> char</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartGet</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 데이터 수신을 기다립니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(UCSR0A </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &lt;&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> RXC0)))</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 데이터를 반환합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    return</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> UDR0;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartGetLine</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">char</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">buf</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> n</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> bufIdx </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    char</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> c;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 수신된 문자가 캐리지 리턴(\r)이 나올때까지 수신합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    do</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 단일 문자를 수신합니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        c </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> uartGet</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 수신한 단일 문자를 출력합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(c)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 버퍼에 단일 문자를 저장합니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">        buf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[bufIdx</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">] </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> c;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    } </span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> ((bufIdx </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> n) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&amp;&amp;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (c </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &#39;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&#39;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">));</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 문자열 버퍼의 마지막에 NULL을 입력해서 문자열의 끝을 지정합니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">    buf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[bufIdx] </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p><strong>main.c :</strong></p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">include</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">avr/interrupt.h</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&gt;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">include</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">uart.h</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">/*</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  CPU의 Frequency를 16MHz로 설정합니다</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">*/</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> F_CPU</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 16000000</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">UL</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">include</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> &lt;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">util/delay.h</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&gt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">int</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> main</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  // Buffer를 할당합니다.</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">  const</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> bufSize </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 20</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">  char</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478"> buf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[bufSize];</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  // UART 전송속도를 설정합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">  const</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> int</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> baudRate </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (F_CPU </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">/</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 16</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> /</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 9600</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">-</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  _delay_ms</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">100</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // VCC 안정화를 위해 100ms 동안 대기합니다</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  cli</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // 모든 인터럽트를 비활성화 합니다</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  // UART를 초기화 합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  uartInit</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(baudRate)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  // UART를 통해 데이터의 전체라인을 수신합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Please enter any text : </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  uartGetLine</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(buf</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> bufSize)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  // 수신한 데이터를 출력합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\n\r</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">You entered : </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(buf)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\n\r</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">  return</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>이제 빌드하고 ATmega328P의 Flash Write 해봅시다.</p>
+<p>브레드보드에 연결된 Arduino에 ArduinoISP 예제를 넣습니다.<br/>
+<img src="/_astro/AVR-ATmega328P-UART_3.D-ogazXl_1T8i2U.webp" alt="ArduinoISP" loading="lazy" decoding="async" width="673" height="921"></p>
+<p>그리고 아래의 명령어를 실행하여 ATmega328P UART 프로젝트를 빌드하고 ATmega328P에 기록합니다.</p>
+<blockquote><p><code>/dev/tty.usbmodem2112201</code> 부분은 Arduino Board를 입력합니다. ArduinoISP가 프로그래밍되어 있는 Arduino Board는 데이터를 받아 브레드보드에 있는 ATmega328P에 기록합니다</p></blockquote>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="sh"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">make</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">avrdude</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -c</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> stk500v1</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -b</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 19200</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -F</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -p</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> m328p</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -P</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /dev/tty.usbmodem2112201</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -Uflash:w:atmega328p-uart.hex:i</span></span></code></pre>
+<p><img src="/_astro/AVR-ATmega328P-UART_4.BXUSjLbK_15qJX6.webp" alt="Build and Flash" loading="lazy" decoding="async" width="1208" height="881"></p>
+<p><code>minicom</code>로 ATmega328P에 연결된 UART에 접속해서 정상적으로 동작하는지 확인해 봅니다.<br/>
+입력한 값이 그대로 출력된다면 정상 작동하는 것입니다.<br/>
+<img src="/_astro/AVR-ATmega328P-UART_5.D2erjnMe_GarH9.webp" alt="minicom" loading="lazy" decoding="async" width="1208" height="881"></p></article><hr class="my-8 border-dashed"><div id="btt-btn-container" class="fixed inset-e-4 bottom-8 z-50 md:sticky md:inset-e-auto md:float-end md:me-1 translate-y-14 opacity-0 transition duration-500"><button data-button="back-to-top" class="group bg-background relative px-2 py-1 size-14 rounded-full shadow-xl md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg"><span id="progress-indicator" class="absolute inset-0 -z-10 block size-14 scale-110 rounded-full bg-transparent md:hidden md:h-8 md:rounded-md"></span><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block rotate-90 md:hidden" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M5 12l6 6M5 12l6-6" /></svg><span class="group-hover:text-accent sr-only text-sm md:not-sr-only"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 5v14M16 9l-4-4M8 9l4-4" /></svg>Back to top</span></button></div><script data-astro-rerun>
+  function backToTop() {
+    const rootElement = document.documentElement;
+    const btnContainer = document.querySelector("#btt-btn-container");
+    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
+    const progressIndicator = document.querySelector("#progress-indicator");
+
+    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
+      return;
+
+    backToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    });
+
+    let lastVisible = null;
+    function handleScroll() {
+      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+      const scrollTop = rootElement.scrollTop;
+      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
+
+      progressIndicator.style.setProperty(
+        "background-image",
+        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
+      );
+
+      const isVisible = scrollTop / scrollTotal > 0.3;
+
+      if (isVisible !== lastVisible) {
+        btnContainer.classList.toggle("opacity-100", isVisible);
+        btnContainer.classList.toggle("translate-y-0", isVisible);
+        btnContainer.classList.toggle("opacity-0", !isVisible);
+        btnContainer.classList.toggle("translate-y-14", !isVisible);
+        lastVisible = isVisible;
+      }
+    }
+
+    let ticking = false;
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+  backToTop();
+</script><ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8"><li><a data-astro-transition-scope="astro-bztu2lml-1" href="/tags/avr/" class="flex items-center gap-0.5 border-foreground border-b-2 border-dashed hover:border-accent hover:text-accent hover:-mt-0.5 focus-visible:text-accent focus-visible:border-none text-sm"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="opacity-80 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>AVR</a></li><li><a data-astro-transition-scope="astro-bztu2lml-2" href="/tags/atmega328p/" class="flex items-center gap-0.5 border-foreground border-b-2 border-dashed hover:border-accent hover:text-accent hover:-mt-0.5 focus-visible:text-accent focus-visible:border-none text-sm"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="opacity-80 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>ATmega328P</a></li><li><a data-astro-transition-scope="astro-bztu2lml-3" href="/tags/uart/" class="flex items-center gap-0.5 border-foreground border-b-2 border-dashed hover:border-accent hover:text-accent hover:-mt-0.5 focus-visible:text-accent focus-visible:border-none text-sm"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="opacity-80 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>UART</a></li></ul><div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start"><span class="italic">Share this post:</span><div class="text-center"><a href="https://wa.me/?text=https://kyuhyuk.kr/posts/avr-atmega328p/uart/" title="Share this post on Whatsapp" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m3 21 1.65-3.8a9 9 0 1 1 3.4 2.9z" /><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0za5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" /></svg><span class="sr-only">Share this post on Whatsapp</span></a><a href="https://www.facebook.com/sharer.php?u=https://kyuhyuk.kr/posts/avr-atmega328p/uart/" title="Share this post on Facebook" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M7 10v4h3v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3V3h-3a5 5 0 0 0-5 5v2z" /></svg><span class="sr-only">Share this post on Facebook</span></a><a href="https://x.com/intent/post?url=https://kyuhyuk.kr/posts/avr-atmega328p/uart/" title="Share this post on X" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m4 4 11.733 16H20L8.267 4zM4 20l6.768-6.768m2.46-2.46L20 4" /></svg><span class="sr-only">Share this post on X</span></a><a href="https://t.me/share/url?url=https://kyuhyuk.kr/posts/avr-atmega328p/uart/" title="Share this post on Telegram" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 10-4 4 6 6 4-16-18 7 4 2 2 6 3-4" /></svg><span class="sr-only">Share this post on Telegram</span></a><a href="https://pinterest.com/pin/create/button/?url=https://kyuhyuk.kr/posts/avr-atmega328p/uart/" title="Share this post on Pinterest" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m8 20 4-9M10.7 14c.437 1.263 1.43 2 2.55 2 2.071 0 3.75-1.554 3.75-4a5 5 0 1 0-9.7 1.7" /><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" /></svg><span class="sr-only">Share this post on Pinterest</span></a><a href="mailto:?subject=See%20this%20post&amp;body=https://kyuhyuk.kr/posts/avr-atmega328p/uart/" title="Share this post via email" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Share this post via email</span></a></div></div><hr class="my-8 border-dashed"><div data-pagefind-ignore class="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2"><a href="/posts/avr-atmega328p/Bit-Manipulation/" class="flex w-full gap-1 hover:opacity-75"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M5 12l6 6M5 12l6-6" /></svg><div><span>Previous Post</span><div class="text-accent/85 text-sm">비트 연산</div></div></a><a href="/posts/avr-atmega328p/spi/" class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"><div><span>Next Post</span><div class="text-accent/85 text-sm">ATmega328P SPI 구현</div></div><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M13 18l6-6M13 6l6 6" /></svg></a></div></main><footer class="app-layout mt-auto"><div class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"><div class="flex flex-wrap items-center gap-1"><a href="https://github.com/leekyuhyuk" title="KyuHyuk Blog on Github" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg><span class="sr-only">KyuHyuk Blog on Github</span></a><a href="https://linkedin.com/in/leekyuhyuk" title="KyuHyuk Blog on Linkedin" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 1 0-4 0" /><path d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z" /></svg><span class="sr-only">KyuHyuk Blog on Linkedin</span></a><a href="mailto:lee@kyuhy.uk" title="Send an email to KyuHyuk Blog" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Send an email to KyuHyuk Blog</span></a></div><div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row"><span>Copyright &#169; 2026 KyuHyuk Lee</span><span class="hidden sm:inline">&nbsp;|&nbsp;</span><span>All rights reserved.</span></div></div></footer><script type="module">var e=`theme`,t=`light`,n=`dark`;function r(){return localStorage.getItem(e)||(window.matchMedia(`(prefers-color-scheme: dark)`).matches?n:t)}var i=window.__theme?.value??r();function a(){localStorage.setItem(e,i),o()}function o(){let e=document.firstElementChild;e?.setAttribute(`data-theme`,i),e?.classList.toggle(`dark`,i===n),document.querySelector(`#theme-btn`)?.setAttribute(`aria-label`,i);let t=window.getComputedStyle(document.body).backgroundColor;document.querySelector(`meta[name='theme-color']`)?.setAttribute(`content`,t)}function s(){o(),document.querySelector(`#theme-btn`)?.addEventListener(`click`,()=>{i=i===t?n:t,a()})}s(),document.addEventListener(`astro:after-swap`,s),document.addEventListener(`astro:before-swap`,e=>{let t=document.querySelector(`meta[name='theme-color']`)?.getAttribute(`content`);t&&e.newDocument.querySelector(`meta[name='theme-color']`)?.setAttribute(`content`,t)}),window.matchMedia(`(prefers-color-scheme: dark)`).addEventListener(`change`,({matches:e})=>{i=e?n:t,a()});</script></body></html><script data-astro-rerun>
+  function createProgressBar() {
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+
+    progressContainer.appendChild(progressBar);
+    document.body.appendChild(progressContainer);
+  }
+  createProgressBar();
+
+  function updateScrollProgress() {
+    document.addEventListener("scroll", () => {
+      const winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (document) {
+        const myBar = document.getElementById("myBar");
+        if (myBar) {
+          myBar.style.width = scrolled + "%";
+        }
+      }
+    });
+  }
+  updateScrollProgress();
+
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+
+  function attachCopyButtons() {
+    const copyButtonLabel = "Copy";
+    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+    for (const codeBlock of codeBlocks) {
+      const wrapper = document.createElement("div");
+      wrapper.style.position = "relative";
+
+      const computedStyle = getComputedStyle(codeBlock);
+      const hasFileNameOffset =
+        computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
+
+      const topClass = hasFileNameOffset
+        ? "top-(--file-name-offset)"
+        : "-top-3";
+
+      const copyButton = document.createElement("button");
+      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
+      copyButton.innerHTML = copyButtonLabel;
+      codeBlock.setAttribute("tabindex", "0");
+      codeBlock.appendChild(copyButton);
+
+      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+
+    async function copyCode(block, button) {
+      const code = block.querySelector("code");
+      const text = code?.innerText;
+
+      await navigator.clipboard.writeText(text ?? "");
+
+      button.innerText = "Copied";
+
+      setTimeout(() => {
+        button.innerText = copyButtonLabel;
+      }, 700);
+    }
+  }
+  attachCopyButtons();
+
+  /** Accessible image lightbox for article images. */
+  function initLightbox() {
+    const article = document.getElementById("article");
+    if (!article) return;
+
+    const prefersReducedMotion = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let overlay = null;
+    let lastFocused = null;
+
+    // Defer attribute mutations so they don't push the LCP timestamp.
+    // Event listeners below use delegation and don't need the attributes to exist yet.
+    requestAnimationFrame(() => {
+      const images = Array.from(article.querySelectorAll("img"));
+      for (const image of images) {
+        if (image.closest("a")) continue;
+        image.setAttribute("role", "button");
+        image.setAttribute("tabindex", "0");
+        image.setAttribute("aria-haspopup", "dialog");
+        image.setAttribute(
+          "aria-label",
+          image.alt ? `Zoom image: ${image.alt}` : "Zoom image"
+        );
+      }
+    });
+
+    function open(src, alt, trigger) {
+      if (overlay) return;
+      lastFocused = trigger ?? document.activeElement;
+
+      overlay = document.createElement("div");
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute(
+        "aria-label",
+        alt ? `Image preview: ${alt}` : "Image preview"
+      );
+      overlay.className =
+        "fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/70 backdrop-blur-sm opacity-0 transition-opacity duration-200 motion-reduce:transition-none";
+
+      const closeButton = document.createElement("button");
+      closeButton.type = "button";
+      closeButton.setAttribute("aria-label", "Close image preview");
+      closeButton.className =
+        "absolute end-4 top-4 rounded p-2 text-3xl leading-none text-white";
+      closeButton.innerHTML = "&#10005;";
+      closeButton.addEventListener("click", close);
+
+      const image = document.createElement("img");
+      image.src = src;
+      image.alt = "";
+      image.className =
+        "max-h-[90dvh] max-w-[90dvw] cursor-default object-contain";
+
+      overlay.append(closeButton, image);
+      overlay.addEventListener("click", e => {
+        if (e.target === overlay && currentScale <= 1) close();
+      });
+
+      let currentScale = 1;
+      let translateX = 0;
+      let translateY = 0;
+      let initialDist = 0;
+      let initialScale = 1;
+      let panStartX = 0;
+      let panStartY = 0;
+      let panStartTranslateX = 0;
+      let panStartTranslateY = 0;
+      let lastTapTime = 0;
+
+      function applyTransform() {
+        image.style.transform = `scale(${currentScale}) translate(${translateX}px, ${translateY}px)`;
+      }
+
+      function resetTransform() {
+        currentScale = 1;
+        translateX = 0;
+        translateY = 0;
+        image.style.transform = "";
+      }
+
+      overlay.addEventListener(
+        "touchstart",
+        e => {
+          const t = e.touches;
+          if (t.length === 2) {
+            initialDist = Math.hypot(
+              t[1].clientX - t[0].clientX,
+              t[1].clientY - t[0].clientY
+            );
+            initialScale = currentScale;
+          } else if (t.length === 1) {
+            const now = Date.now();
+            if (now - lastTapTime < 300) {
+              e.preventDefault();
+              if (currentScale > 1) {
+                resetTransform();
+              } else {
+                currentScale = 2;
+                translateX = 0;
+                translateY = 0;
+                applyTransform();
+              }
+              lastTapTime = 0;
+              panStartX = t[0].clientX;
+              panStartY = t[0].clientY;
+              panStartTranslateX = translateX;
+              panStartTranslateY = translateY;
+            } else {
+              lastTapTime = now;
+              if (currentScale > 1) {
+                panStartX = t[0].clientX;
+                panStartY = t[0].clientY;
+                panStartTranslateX = translateX;
+                panStartTranslateY = translateY;
+              }
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      overlay.addEventListener(
+        "touchmove",
+        e => {
+          const t = e.touches;
+          if (t.length === 2) {
+            e.preventDefault();
+            const dist = Math.hypot(
+              t[1].clientX - t[0].clientX,
+              t[1].clientY - t[0].clientY
+            );
+            currentScale = Math.min(
+              4,
+              Math.max(1, initialScale * (dist / initialDist))
+            );
+            applyTransform();
+          } else if (t.length === 1) {
+            if (currentScale > 1) {
+              e.preventDefault();
+              translateX =
+                panStartTranslateX + (t[0].clientX - panStartX) / currentScale;
+              translateY =
+                panStartTranslateY + (t[0].clientY - panStartY) / currentScale;
+              const maxX = Math.max(
+                0,
+                (image.clientWidth - overlay.clientWidth / currentScale) / 2
+              );
+              const maxY = Math.max(
+                0,
+                (image.clientHeight - overlay.clientHeight / currentScale) / 2
+              );
+              translateX = Math.min(maxX, Math.max(-maxX, translateX));
+              translateY = Math.min(maxY, Math.max(-maxY, translateY));
+              applyTransform();
+            } else {
+              e.preventDefault();
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      overlay.addEventListener("touchend", e => {
+        if (e.touches.length === 0 && currentScale <= 1.05) {
+          resetTransform();
+        }
+      });
+
+      overlay.addEventListener("touchcancel", e => {
+        if (e.touches.length === 0 && currentScale <= 1.05) {
+          resetTransform();
+        }
+      });
+
+      document.body.appendChild(overlay);
+      document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", onKeyDown);
+      window.__closeLightbox = close;
+
+      requestAnimationFrame(() => overlay?.classList.add("opacity-100"));
+      closeButton.focus();
+    }
+
+    function close() {
+      if (!overlay) return;
+      const el = overlay;
+      overlay = null;
+      window.__closeLightbox = null;
+
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+      lastFocused?.focus();
+      lastFocused = null;
+
+      if (prefersReducedMotion()) {
+        el.remove();
+        return;
+      }
+      const remove = () => el.remove();
+      el.addEventListener("transitionend", remove, { once: true });
+      setTimeout(remove, 250); // fallback in case transitionend never fires
+      el.classList.remove("opacity-100");
+    }
+
+    function onKeyDown(e) {
+      if (e.key === "Escape") {
+        close();
+      } else if (e.key === "Tab") {
+        trapFocus(e);
+      }
+    }
+
+    // Keep keyboard focus inside the open dialog.
+    function trapFocus(e) {
+      if (!overlay) return;
+      const focusables = overlay.querySelectorAll(
+        'a[href], button, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    function triggerFromEvent(e) {
+      const image = e.target.closest("img");
+      if (!image || !article.contains(image) || image.closest("a")) return null;
+      return image;
+    }
+
+    function activate(image) {
+      open(image.currentSrc || image.src, image.alt, image);
+    }
+
+    article.addEventListener("click", e => {
+      const image = triggerFromEvent(e);
+      if (!image) return;
+      e.preventDefault();
+      activate(image);
+    });
+
+    article.addEventListener("keydown", e => {
+      if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+      const image = triggerFromEvent(e);
+      if (!image) return;
+      e.preventDefault();
+      activate(image);
+    });
+  }
+  initLightbox();
+
+  if (!window.__lightboxSwapBound) {
+    window.__lightboxSwapBound = true;
+    document.addEventListener("astro:before-swap", () =>
+      window.__closeLightbox?.()
+    );
+  }
+
+  document.addEventListener("astro:after-swap", () =>
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  );
+</script>

@@ -1,0 +1,871 @@
+<!DOCTYPE html><html dir="ltr" lang="en" class="overflow-y-scroll scroll-smooth"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" href="/favicon.ico"><link rel="canonical" href="https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/"><meta name="generator" content="Astro v7.3.4"><!-- Font --><style>@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/9344e1e6ba3134db.woff") format("woff"), url("/_astro/fonts/4b36ecaec8861e3e.ttf") format("truetype");font-display:swap;font-weight:300;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/8f4ae94aecd98e20.woff") format("woff"), url("/_astro/fonts/82b0269728335a0a.ttf") format("truetype");font-display:swap;font-weight:400;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/20c20d9068c60dd0.woff") format("woff"), url("/_astro/fonts/b576f4f05c9dbc87.ttf") format("truetype");font-display:swap;font-weight:500;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/5a6c2a0b85de9ba1.woff") format("woff"), url("/_astro/fonts/4b0ae898a7afcd37.ttf") format("truetype");font-display:swap;font-weight:600;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/30d0dcc4d81c0020.woff") format("woff"), url("/_astro/fonts/e8acb21fdbc37b03.ttf") format("truetype");font-display:swap;font-weight:700;font-style:italic;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/bf976bcffafeb084.woff") format("woff"), url("/_astro/fonts/8436f9847213f651.ttf") format("truetype");font-display:swap;font-weight:300;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/8a34d92a2a36603b.woff") format("woff"), url("/_astro/fonts/ccba4fb3766b1b6e.ttf") format("truetype");font-display:swap;font-weight:400;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/a20ca4cd312f40ca.woff") format("woff"), url("/_astro/fonts/ec093fff40157157.ttf") format("truetype");font-display:swap;font-weight:500;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/b74e6fc4049d0d63.woff") format("woff"), url("/_astro/fonts/dab775c12e1996fc.ttf") format("truetype");font-display:swap;font-weight:600;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404";src:url("/_astro/fonts/d9c1254858362ad4.woff") format("woff"), url("/_astro/fonts/a5f75c165e55a648.ttf") format("truetype");font-display:swap;font-weight:700;font-style:normal;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:300;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:400;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:500;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:600;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:700;font-style:italic;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:300;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:400;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:500;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:600;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}@font-face{font-family:"Google Sans Code-1a30c214885cb404 fallback: Courier New";src:local("Courier New");font-display:swap;font-weight:700;font-style:normal;size-adjust:99.9837%;ascent-override:96.6157%;descent-override:28.6047%;}:root{--font-google-sans-code:"Google Sans Code-1a30c214885cb404","Google Sans Code-1a30c214885cb404 fallback: Courier New",monospace;}</style><!-- Primary meta --><title>ATmega328P SDCard 구현 (4) | KyuHyuk Blog</title><meta name="title" content="ATmega328P SDCard 구현 (4) | KyuHyuk Blog"><meta name="description" content="ATmega328P의 SDCard SPI 초기화 4편 입니다. CMD16(SET_BLOCKLEN), CMD17(READ_SINGLE_BLOCK), CMD24(WRITE_BLOCK)를 사용한 SDCard 데이터 읽기/쓰기 구현, 시작 토큰(0xFE), 데이터 응답 토큰, 에러 토큰과 Timeout 처리에 대해 설명합니다."><meta name="author" content="KyuHyuk Lee"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:site_name" content="KyuHyuk Blog"><meta property="og:title" content="ATmega328P SDCard 구현 (4) | KyuHyuk Blog"><meta property="og:description" content="ATmega328P의 SDCard SPI 초기화 4편 입니다. CMD16(SET_BLOCKLEN), CMD17(READ_SINGLE_BLOCK), CMD24(WRITE_BLOCK)를 사용한 SDCard 데이터 읽기/쓰기 구현, 시작 토큰(0xFE), 데이터 응답 토큰, 에러 토큰과 Timeout 처리에 대해 설명합니다."><meta property="og:url" content="https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/"><meta property="og:image" content="https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/index.png"><!-- Twitter / X --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/"><meta property="twitter:title" content="ATmega328P SDCard 구현 (4) | KyuHyuk Blog"><meta property="twitter:description" content="ATmega328P의 SDCard SPI 초기화 4편 입니다. CMD16(SET_BLOCKLEN), CMD17(READ_SINGLE_BLOCK), CMD24(WRITE_BLOCK)를 사용한 SDCard 데이터 읽기/쓰기 구현, 시작 토큰(0xFE), 데이터 응답 토큰, 에러 토큰과 Timeout 처리에 대해 설명합니다."><meta property="twitter:image" content="https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/index.png"><!-- RSS autodiscovery --><link rel="alternate" type="application/rss+xml" title="KyuHyuk Blog" href="https://kyuhyuk.kr/rss.xml/"><!-- Filled at runtime by theme.ts to match the current background colour --><meta name="theme-color" content=""><!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) --><meta property="og:type" content="article"><meta property="article:published_time" content="2022-09-03T04:32:01.000Z"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"ATmega328P SDCard 구현 (4) | KyuHyuk Blog","image":"https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/index.png","datePublished":"2022-09-03T04:32:01.000Z","author":[{"@type":"Person","name":"KyuHyuk Lee","url":"https://avatars.githubusercontent.com/u/6347277"}]}</script><!--
+      Inline FOUC-prevention script: sets data-theme on <html> before
+      the browser paints. Runs synchronously, no defer/async.
+    --><script>
+      (function () {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = stored ?? (prefersDark ? "dark" : "light");
+        const root = document.firstElementChild;
+        root?.setAttribute("data-theme", theme);
+        root?.classList.toggle("dark", theme === "dark");
+        // Expose value so theme.ts can skip re-detection.
+        window.__theme = { value: theme };
+      })();
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CYDbzu1r.js"></script><link rel="stylesheet" href="/_astro/Footer.BJLVQ-Bs.css"><style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media (prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*),[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-bztu2lml-1"] { view-transition-name: avr; }@layer astro { ::view-transition-old(avr) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(avr) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(avr) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(avr) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-bztu2lml-2"] { view-transition-name: atmega328p; }@layer astro { ::view-transition-old(atmega328p) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(atmega328p) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(atmega328p) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(atmega328p) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-bztu2lml-3"] { view-transition-name: sdcard; }@layer astro { ::view-transition-old(sdcard) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(sdcard) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(sdcard) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(sdcard) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-bztu2lml-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-bztu2lml-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-bztu2lml-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-bztu2lml-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head><body class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"><a id="skip-to-content" href="#main-content" class="bg-background text-accent absolute inset-s-16 -top-full z-50 px-3 py-2 backdrop-blur-lg transition-all focus:top-4">Skip to content</a><header class="app-layout flex flex-col items-center justify-between sm:flex-row"><div class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6"><a href="/" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none">KyuHyuk Blog</a><nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"><button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="menu-items" data-label-open="Open menu" data-label-close="Close menu"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden" viewBox="0 0 24 24" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M18 6 6 18M6 6l12 12" /></svg><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" viewBox="0 0 24 24" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 6h16M7 12h13M10 18h10" /></svg></button><ul id="menu-items" class="[&amp;&gt;li&gt;a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 sm:[&amp;&gt;li]:h-8 [&amp;&gt;li&gt;a]:block [&amp;&gt;li&gt;a]:px-4 [&amp;&gt;li&gt;a]:py-3 [&amp;&gt;li&gt;a]:text-center [&amp;&gt;li&gt;a]:font-medium sm:[&amp;&gt;li&gt;a]:px-2 sm:[&amp;&gt;li&gt;a]:py-1"><li class="col-span-2"><a href="/posts/" class="active-nav">Posts</a></li><li class="col-span-2"><a href="/tags/">Tags</a></li><li class="col-span-2"><a href="/archives/" title="Archives" aria-label="Archives" class="group inline-flex items-center gap-1 hover:text-accent focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M10 12h4" /></svg><span class="sm:sr-only">Archives</span></a></li><li class="col-span-1 flex items-center justify-center"><a href="/search/" title="Search" aria-label="Search" class="group inline-flex items-center gap-1 hover:text-accent focus-outline relative size-8"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-1/2 left-1/2 size-6 -translate-x-1/2 -translate-y-1/2" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6" /></svg><span class="sr-only">Search</span></a></li><li class="col-span-1 flex items-center justify-center"><button id="theme-btn" class="focus-outline hover:[&amp;&gt;svg]:stroke-accent relative size-12 p-4 sm:size-8" title="Toggle theme" aria-label="auto" aria-live="polite"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] translate-[-50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" /></svg><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] translate-[-50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M14.828 14.828a4 4 0 1 0-5.656-5.656 4 4 0 0 0 5.656 5.656M6.343 17.657l-1.414 1.414M6.343 6.343 4.929 4.929M17.657 6.343l1.414-1.414M17.657 17.657l1.414 1.414M4 12H2M12 4V2M20 12h2M12 20v2" /></svg></button></li></ul></nav></div></header><script type="module">function e(){let e=document.querySelector(`#menu-btn`),t=document.querySelector(`#menu-items`),n=document.querySelector(`#menu-icon`),r=document.querySelector(`#close-icon`);if(!e||!t||!n||!r)return;let i=e.dataset.labelOpen??`Open menu`,a=e.dataset.labelClose??`Close menu`;e.addEventListener(`click`,()=>{let o=e.getAttribute(`aria-expanded`)===`true`;e.setAttribute(`aria-expanded`,o?`false`:`true`),e.setAttribute(`aria-label`,o?i:a),t.classList.toggle(`hidden`),t.classList.toggle(`grid`),n.classList.toggle(`hidden`),r.classList.toggle(`hidden`)})}function t(){let e=document.getElementById(`skip-to-content`);e&&e.addEventListener(`click`,e=>{if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0)return;e.preventDefault();let t=document.getElementById(`main-content`);t&&(t.setAttribute(`tabindex`,`-1`),t.addEventListener(`blur`,()=>t.removeAttribute(`tabindex`),{once:!0}),t.focus(),t.scrollIntoView({behavior:`smooth`}))})}e(),document.addEventListener(`astro:after-swap`,e),t(),document.addEventListener(`astro:after-swap`,t);</script><script type="module">function e(){let e=document.querySelector(`#back-button`),t=sessionStorage.getItem(`backUrl`);t&&e&&(e.href=t)}document.addEventListener(`astro:page-load`,e),e();</script><main id="main-content" class="app-layout mt-8" data-pagefind-body><h1 style="view-transition-name:sdcard-4" class="text-accent inline-block text-2xl font-bold sm:text-3xl">ATmega328P SDCard 구현 (4)</h1><div class="my-2 flex items-center gap-2"><div class="text-muted-foreground flex items-center gap-x-2"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 min-w-5.5" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005" /></svg><time class="text-sm sm:text-base" datetime="2022-09-03T04:32:01.000Z">3 Sep, 2022</time></div><span aria-hidden="true" class="text-muted-foreground max-sm:hidden hidden">|</span></div><article id="article" style="word-break: keep-all; overflow-wrap: break-word;" class="mt-8 w-full app-prose max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"><p><a href="/posts/avr-atmega328p/sdcard-3">이전 글</a>에서 SDCard 초기화 과정을 구현했습니다. 이 글에서는 SDCard에 데이터를 읽고 쓰는 방법을 구현합니다.</p>
+<h1 id="cmd16-set_blocklen"><code>CMD16</code> (SET_BLOCKLEN)</h1>
+<p>SDCard의 읽기 및 쓰기 작업은 설정된 길이의 블록으로 수행됩니다. 블록 길이는 <code>CMD16</code>을 사용해서 설정할 수 있습니다. 이 글에서는 블록 길이가 항상 512바이트로 설정되는 SDHC와 SDXC만 고려합니다.</p>
+<h1 id="cmd17-read_single_block"><code>CMD17</code> (READ_SINGLE_BLOCK)</h1>
+<p><code>CMD17</code>(READ_SINGLE_BLOCK)은 단일 블록 읽기 명령입니다. <code>CMD17</code>의 형식은 아래와 같습니다.</p>
+<p><img src="/_astro/AVR-ATmega328P-SDCard-4_1.xtk6oFd7_ZELb8x.webp" alt="CMD17 Format" loading="lazy" decoding="async" width="929" height="107"></p>
+<p>Argument에 SDCard에서 읽을 주소를 지정해야 합니다. SDHC와 SDXC는 블록 주소로 지정됩니다. 예를 들어 주소를 <code>0</code>으로 설정하면 <code>0</code> ~ <code>511</code> 바이트를 읽어 오고, 주소를 <code>1</code>으로 설정하면 <code>512</code> ~ <code>1023</code> 바이트를 읽어 옵니다. 32비트를 사용했을 때 SDCard에서 읽을 수 있는 최대 크기는 <code>(2^32)*512 = 2048MB</code> 또는 <code>2TB</code>입니다.</p>
+<p>단일 블록을 읽어오는 과정은 아래 다이어그램을 참고하세요.</p>
+<p><img src="/_astro/AVR-ATmega328P-SDCard-4_2.4TZSWnni_ZUjRci.webp" alt="Single Block Read Operation" loading="lazy" decoding="async" width="900" height="215"></p>
+<p><code>CMD17</code>이 전송되면 <code>R1</code>으로 응답하고 데이터 블록이 CRC와 함께 옵니다. <code>R1</code> Response를 보내는 것과 첫 번째 데이터 바이트 사이에 시간이 걸릴 수도 있습니다. 데이터가 실제로 시작되는 시점은 단일 데이터 블록일 경우에는 시작 토큰인 <code>0xFE</code>(<code>11111110b</code>)가 먼저 옵니다.</p>
+<p><img src="/_astro/AVR-ATmega328P-SDCard-4_3.DeTONNw6_1q5k1M.webp" alt="Single Block - Start Token" loading="lazy" decoding="async" width="729" height="255"></p>
+<p>시작 토큰과 함께 SDCard는 블록 길이(SDHC와 SDXC는 항상 512바이트) 만큼 데이터를 보냅니다. 그다음에 16비트의 CRC가 옵니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> CMD17</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">                   17</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> CMD17_CRC</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">               0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_MAX_READ_ATTEMPTS</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">    1563</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">/*</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  512바이트 단일 블록을 읽습니다</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  token = 0xFE // 읽기 성공</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  token = 0x0X // 데이터 에러</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  token = 0xFF // 타임아웃</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">*/</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sdReadSingleBlock</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint32_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> addr</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint8_t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">buf</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint8_t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">token</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> res1</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> read;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> readAttempts;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Token을 초기화 합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">    *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // SDCard CS Assert</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    CS_ENABLE</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // CMD17 전송</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    sdCommand</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(CMD17</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> addr</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> CMD17_CRC)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Response를 읽습니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    res1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sdReadRes1</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // SDCard에서 Response를 받은 경우</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(res1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // Response Token을 기다립니다 (Timeout은 100ms 입니다)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">        while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_MAX_READ_ATTEMPTS)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">            if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">((read </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">break</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // Response Token이 0xFE(시작 토큰)인 경우</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">        if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(read </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FE</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">            // 512바이트의 블록을 읽습니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">            for</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&lt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 512</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">buf</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">            // 16비트의 CRC를 읽습니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">            spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">            spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // Token을 SDCard의 Response로 설정합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">        *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> read;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // SDCard CS Deassert</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    CS_DISABLE</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    return</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> res1;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p><code>sdReadSingleBlock()</code>는 32비트의 <code>addr</code>을 Argumemt로 사용하고, 데이터를 저장하기 위해 최소 512바이트의 버퍼(<code>buf</code>)가 필요합니다. 데이터 토큰을 저장하는 데 사용할 8비트 값에 대한 포인터(<code>token</code>)도 함께 전달합니다.</p>
+<p><code>R1</code>을 읽을 후 비어 있지 않은 경우(카드가 명령에 응답한 경우) 토큰을 받거나 Timeout까지 SDCard를 계속 폴링 합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// SDCard에서 Response를 받은 경우</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(res1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // Response Token을 기다립니다 (Timeout은 100ms 입니다)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">        while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_MAX_READ_ATTEMPTS)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">            if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">((read </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">break</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span></code></pre>
+<p><a href="/_astro/Part_1_Physical_Layer_Simplified_Specification_Ver2.00_060925.CCM7u-rQ.pdf">SDCard Physical Specification</a>의 4.6.2.1 섹션을 보면 아래와 같은 내용이 있습니다:</p>
+<blockquote><p>Host는 단일 및 다중 읽기 작업에 대해 최소 100ms의 Timeout을 사용해야 합니다.</p></blockquote>
+<p>우리의 환경은 16MHz의 발진기(Oscillator)를 사용하고 SPI의 클럭을 128로 나누도록 설정했습니다. 따라서 100ms을 만족하기 위해 SPI를 통해 보내야 하는 바이트의 개수를 얻으려면 아래와 같이 계산할 수 있습니다.</p>
+<p><code>(0.1s * 16000000 Hz) / (128 * 8 Bytes) = 1562.5 ≈ 1563</code></p>
+<p>시작 토큰을 받으면 버퍼에 512바이트를 넣고, 16비트 CRC를 읽습니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Response Token이 0xFE(시작 토큰)인 경우</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(read </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FE</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 512바이트의 블록을 읽습니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    for</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&lt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 512</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">buf</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // 16비트의 CRC를 읽습니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>시작 토큰을 받지 못하면 SDCard에서 블록을 읽으려고 시도하지 않습니다. 토큰이 <code>0xFF</code> 이면 SDCard에서 아무것도 수신하지 못한 것입니다. 이럴 경우에는 Timeout이 발생하게 됩니다. 만약 이런 경우가 아니라면 오류 토큰을 수신해야 합니다. 오류 토큰을 수신하는 부분은 나중에 다시 자세하게 설명하겠습니다.</p>
+<h1 id="테스트-해보기">테스트 해보기</h1>
+<p><a href="/posts/avr-atmega328p/sdcard-3">이전 글</a>의 초기화 코드를 사용하여 SDCard에서 맨 처음 블록을 읽어 보겠습니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_R1_NO_ERROR</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">(</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">X</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">   X </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&lt;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">02</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">int</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> main</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  // Response를 담을 배열을 선언합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">  uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478"> res</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">5</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478"> sdBuf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">512</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> token;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  // UART를 초기화 합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">  const</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> unsigned</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> int</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> baudRate </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (F_CPU </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">/</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 16</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> /</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 9600</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">-</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  uartInit</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(baudRate)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  // SPI를 초기화 합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">  spiInit</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  // SDCard를 초기화 합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">  if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sdInit</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> !=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_SUCCESS)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  {</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Error initializaing SD CARD</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">      ;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  }</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">  else</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  {</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">SD Card initialized</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Sector 0을 읽습니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">    res</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">] </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sdReadSingleBlock</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00000000</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> sdBuf</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">token)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Response를 출력합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">SD_R1_NO_ERROR</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">res</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">[</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">0</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">])</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> &amp;&amp;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FE</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">))</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">      for</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&lt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 512</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">      {</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">        if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">%</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 32</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> ==</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">          uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPutHex8</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">sdBuf</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">[i])</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">      }</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">      uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    else</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">      uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Error reading sector</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">  while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> (</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    ;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>UART에 아래와 같이 출력됩니다:<br/>
+<img src="/_astro/AVR-ATmega328P-SDCard-4_4.D0q69J0c_Z1r0L8D.webp" alt="UART - Read Single Block" loading="lazy" decoding="async" width="1208" height="881"></p>
+<p>마지막 2개의 바이트 <code>0x55</code>와 <code>0xAA</code>는 MBR에 있는 Boot Signature 입니다. SDCard를 읽기 전에 PC에서 이미 포맷한 경우에는 2개의 바이트는 동일하게 표시될 것입니다.</p>
+<p>Logic Analyzer로 보면, <code>R1</code>에서 데이터 블록 전송을 하는 부분은 아래와 같이 보일 것입니다.<br/>
+<img src="/_astro/AVR-ATmega328P-SDCard-4_5.CizLsm4Y_1FIKKx.webp" alt="Logic Analyzer - Read Single Block" loading="lazy" decoding="async" width="2132" height="938"></p>
+<p>위의 스크린샷을 보면 시작 토큰을 보내기 전에 5바이트 동안은 SDCard는 IDLE 상태였습니다. (시작 토큰이 없으면 SDCard가 IDLE 상태인지 모두 <code>1</code>인 데이터인지를 구분할 수 없습니다)</p>
+<h1 id="read-errors">Read Errors</h1>
+<p>SDCard가 요청된 데이터를 찾을 수 없는 경우에는 데이터 시작 토큰 대신 데이터 오류 토큰을 보냅니다. 이 과정은 아래 다이어그램에서 볼 수 있습니다.</p>
+<p><img src="/_astro/AVR-ATmega328P-SDCard-4_6.DFTdshQx_26sLB3.webp" alt="Read Operation - Data Error" loading="lazy" decoding="async" width="888" height="210"></p>
+<p>데이터 오류 토큰의 형식은 아래와 같습니다.</p>
+<p><img src="/_astro/AVR-ATmega328P-SDCard-4_7.DjyWuQAk_Z1ydd27.webp" alt="Data Error Token" loading="lazy" decoding="async" width="539" height="261"></p>
+<p>먼저 오류 토큰을 출력하는 <code>sdPrintDataErrToken()</code>을 작성하겠습니다:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_TOKEN_OOR</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">(</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">X</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">     X </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0b</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00001000</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_TOKEN_CECC</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">(</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">X</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    X </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0b</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00000100</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_TOKEN_CC</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">(</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">X</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">      X </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0b</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00000010</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_TOKEN_ERROR</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">(</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">X</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">   X </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0b</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00000001</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">void</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sdPrintDataErrToken</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> token</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">SD_TOKEN_OOR</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(token)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\t</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Data out of range</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">SD_TOKEN_CECC</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(token)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\t</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Card ECC failed</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">SD_TOKEN_CC</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(token)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\t</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">CC Error</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">SD_TOKEN_ERROR</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(token)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\t</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Error</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>SDCard의 범위를 벗어난 메모리 위치에 접근하려고 하면, 아마 데이터 토큰이 아닌 오류 토큰을 받게 될 것입니다. 메모리 주소 <code>0xFFFFFFFF</code>에 접근해 보겠습니다. 2TB의 SDCard가 아니라면 오류가 발생할 것입니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> res</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478"> sdBuf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">512</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> token;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">res </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sdReadSingleBlock</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">ffffffff</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> sdBuf</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &amp;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">token</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uartPuts</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Response 1:</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sdPrintR1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(res);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// 오류 토큰을 수신했을때</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">F0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">))</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Error token:</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    sdPrintDataErrToken</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(token)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">else</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic"> if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    uartPuts</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Timeout</span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\r\n</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">&quot;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>다음은 UART를 통해 출력되는 내용입니다.<br/>
+<img src="/_astro/AVR-ATmega328P-SDCard-4_8.DrYsEVkt_ZT9px5.webp" alt="SanDisk SDCard" loading="lazy" decoding="async" width="1208" height="881"></p>
+<p><code>R1</code>에서 주소 오류가 있다고 출력합니다. 하지만, 오류 토큰은 보이지 않습니다.</p>
+<p>사실 이 동작은 SDCard마다 다르게 응답합니다. 방금 UART로 출력된 내용은 SanDisk SDCard에서 출력되었습니다. 만약 Samsung SDCard에서 동일한 코드를 실행하면 아래와 같이 출력됩니다.<br/>
+<img src="/_astro/AVR-ATmega328P-SDCard-4_9.DEfk9MXC_1h4G6t.webp" alt="Samsung SDCard" loading="lazy" decoding="async" width="1208" height="881"></p>
+<p>혹시 코드가 잘못되었나 확인하기 위해 Logic Analyzer로 확인해 봤지만, 제가 가진 SDCard에서는 오류 토큰을 받은 적이 없으며 ~100ms 후에 Timeout이 되었습니다.<br/>
+<img src="/_astro/AVR-ATmega328P-SDCard-4_10.Ddddeaqe_ZSV9ye.webp" alt="Logic Analyzer - Read Single Block" loading="lazy" decoding="async" width="1930" height="686"></p>
+<h1 id="cmd24-write_block"><code>CMD24</code> (WRITE_BLOCK)</h1>
+<p>읽기와 마찬가지로 쓰기도 512바이트 블록에서 수행됩니다. <code>CMD24</code>를 사용하여 쓰기를 수행합니다. 이 명령의 형식은 아래와 같습니다.</p>
+<p><img src="/_astro/AVR-ATmega328P-SDCard-4_11.DvmJdUSn_Z1VCSpB.webp" alt="CMD24" loading="lazy" decoding="async" width="769" height="88"></p>
+<p>단일 블록에 쓰는 방법은 아래와 같습니다.</p>
+<p><img src="/_astro/AVR-ATmega328P-SDCard-4_12.bfr7XloP_Z2rQED8.webp" alt="Single Block Write Operation" loading="lazy" decoding="async" width="1080" height="295"></p>
+<p><code>CMD24</code>를 보내고 Response(<code>R1</code>)을 기다린 다음, Start Block Token(<code>0xFE</code>)를 보내고 쓸 데이터 512바이트를 보냅니다. 그리고 SDCard에서 새로운 유형의 토큰인 Data Response Token을 기다립니다. Data Response Token의 형식은 아래와 같습니다.</p>
+<p><img src="/_astro/AVR-ATmega328P-SDCard-4_13.D6_dVZ3S_Z26l0zs.webp" alt="Data Response Token" loading="lazy" decoding="async" width="1305" height="275"></p>
+<p>SDCard가 데이터를 수락하면 Token <code>xxx00101b</code>를 받게 됩니다. SDCard는 데이터 쓰기 작업이 완료될 때까지 Busy Token인 <code>0x00</code>을 보냅니다.</p>
+<p>방금 설명한 내용을 바탕으로 <code>sdWriteSingleBlock()</code>를 작성해 보겠습니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> CMD24</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">                   24</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> CMD24_ARG</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">               0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> CMD24_CRC</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">               0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_MAX_WRITE_ATTEMPTS</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">   3907</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_BLOCK_LEN</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">            512</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_START_TOKEN</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">          0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FE</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_ERROR_TOKEN</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">          0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">/*</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  512바이트 단일 블록을 기록합니다</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  token = 0x00 // Busy 타임아웃</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  token = 0x05 // 데이터 수락</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">  token = 0xFF // 응답 타임아웃</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">*/</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint8_t</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sdWriteSingleBlock</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint32_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0"> addr</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint8_t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">buf</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> uint8_t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">token</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> res1;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">    uint8_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> readAttempts</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> read;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Token을 초기화 합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">    *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // SDCard CS Assert</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    CS_ENABLE</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // CMD24 전송</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    sdCommand</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(CMD24</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> addr</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">,</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> CMD24_CRC)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Response를 읽습니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    res1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sdReadRes1</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // Response에 오류가 없는 경우</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(res1 </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_READY)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // Start Token을 전송합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">        spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(SD_START_TOKEN)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // Buffer의 내용을 전송합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">        for</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_BLOCK_LEN; i</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">buf</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">[i])</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // Response를 기다립니다 (Timeout = 250ms)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">        while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_MAX_WRITE_ATTEMPTS)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">            if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">((read </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) { </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; </span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">break</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        // 데이터가 수락되면 실행합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">        if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">((read </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1F</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">05</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        {</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">            // Token을 &#39;데이터 수락&#39;으로 설정</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">            *</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">05</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">            // 쓰기 작업이 끝날때까지 기다립니다 (Timeout = 250ms)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">            readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">            while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> ==</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">                if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_MAX_WRITE_ATTEMPTS) { </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; </span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">break</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; }</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">        }</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    // SDCard CS Deassert</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    CS_DISABLE</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">()</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">    spiTransfer</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">)</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    return</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> res1;</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>읽기 작업과 마찬가지로 타임아웃 값을 설정합니다. <a href="/_astro/Part_1_Physical_Layer_Simplified_Specification_Ver2.00_060925.CCM7u-rQ.pdf">SDCard Physical Specification</a>의 4.6.2.2 섹션을 보면 모든 쓰기 작업에 대해 타임아웃은 250ms로 정의해야 한다고 언급하고 있습니다. <code>(0.25s * 16000000 Hz) / (128 * 8 Bytes) = 3906.25</code>이지만, <code>3907</code>로 250ms보다 조금 크게 설정했습니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">#</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">define</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> SD_MAX_WRITE_ATTEMPTS</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">   3907</span></span></code></pre>
+<p><code>CMD24</code>(쓰기 명령)을 SDCard에 보내고 <code>R1</code> Response에 오류가 없는지 확인합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// CMD24 전송</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sdCommand</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(CMD24</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> addr</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> CMD24_CRC);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Response를 읽습니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">res</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">] </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sdReadRes1</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Response에 오류가 없는 경우</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">res</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">] </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_READY)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    /* ... */</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p><code>R1</code>에 오류가 없으면 Start Token을 보낸 다음 Buffer에서 데이터 전송을 시작합니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Start Token을 전송합니다</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">spiTransfer</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(SD_START_TOKEN);</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Buffer의 내용을 전송합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">for</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&lt;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_BLOCK_LEN; i</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">spiTransfer</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">buf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[i]);</span></span></code></pre>
+<p>Buffer의 내용을 전송하는 작업이 끝나면, SDCard가 Data Response Token을 보낼 때까지 기다립니다. 데이터 수락 토큰은 <code>xxx00101b</code> 입니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Response를 기다립니다 (Timeout = 250ms)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_MAX_WRITE_ATTEMPTS)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">((read </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> spiTransfer</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">!=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) { </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; </span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">break</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; }</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// 데이터가 수락되면 실행합니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">((read </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&amp;</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">1F</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">05</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">{</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">    /* ... */</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">}</span></span></code></pre>
+<p>마지막으로 SDCard가 데이터를 쓰는 것을 완료할 때까지 기다립니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// 쓰기 작업이 끝날때까지 기다립니다 (Timeout = 250ms)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">while</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">spiTransfer</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">FF</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">    if</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">readAttempts </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">==</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> SD_MAX_WRITE_ATTEMPTS) { </span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">token </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; </span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">break</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; }</span></span></code></pre>
+<p>이제 간단한 데이터를 한번 기록해 봅시다. <code>0x55</code>로 만 이루어진 버퍼를 SDCard의 <code>0x00000100</code>에 써보겠습니다.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627;overflow-x:auto;--file-name-offset:-0.75rem" tabindex="0" data-language="c"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// 0x55로 버퍼를 채웁니다</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">for</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">uint16_t</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 0</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&lt;</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 512</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">; i</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">++</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">) </span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478">buf</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">[i] </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95"> 0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">55</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// 주소 0x100 (256)에 0x55를 기록합니다</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">res </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sdWriteSingleBlock</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#D32F2F;--shiki-dark:#FFEB95">0x</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">00000100</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> buf</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &amp;</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D7DBE0">token</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">);</span></span></code></pre>
+<p>위의 코드를 실행해 보면 아래와 같이 <code>0x00</code>으로 채워져있던 <code>0x00000100</code>에 <code>0x55</code>가 기록된 것을 볼 수 있습니다.<br/>
+<img src="/_astro/AVR-ATmega328P-SDCard-4_14.BFEphc2Z_Z1pOcjl.webp" alt="sdWriteSingleBlock UART" loading="lazy" decoding="async" width="1208" height="1111"></p>
+<p>Logic Analyzer로 확인해 보면 <code>R1</code>으로 응답한 뒤 바로 시작 토큰을 보내고, 기록할 데이터 전송을 시작합니다.<br/>
+<img src="/_astro/AVR-ATmega328P-SDCard-4_15.B5M0npHl_ZByRV2.webp" alt="Logic Analyzer" loading="lazy" decoding="async" width="2584" height="686"></p>
+<p>전송이 끝날 때, SDCard는 응답 토큰 <code>0xE5</code>(<code>11100101b</code>)를 보냅니다. 데이터 수락 토큰은 <code>xxx00101b</code> 형식이므로 데이터를 성공적으로 보낸 것을 확인할 수 있습니다. 그 이후에 SDCard는 Busy 상태인 것을 나타내기 위해 <code>0x00</code>을 보냅니다.<br/>
+<img src="/_astro/AVR-ATmega328P-SDCard-4_16.Ck6MTe70_2wTmTP.webp" alt="Logic Analyzer" loading="lazy" decoding="async" width="1465" height="686"></p>
+<p>참고로 <code>sdWriteSingleBlock()</code>을 호출한 후 확인해야 하는 4가지 경우가 있습니다. 이 부분은 각자 구현해 보면 좋을 거 같습니다.</p>
+<ul>
+<li><code>R1 != 0x00</code> → 블록 쓰기 오류 (자세한 내용은 <code>R1</code>을 분석해야 합니다)</li>
+<li><code>R1 == 0x00</code> &amp;&amp; <code>token == 0x05</code> → 성공</li>
+<li><code>R1 == 0x00</code> &amp;&amp; <code>token == 0x00</code> → 타임아웃</li>
+<li><code>R1 == 0x00</code> &amp;&amp; <code>token == 0xFF</code> → <code>R1</code> 이후 응답 없음</li>
+</ul></article><hr class="my-8 border-dashed"><div id="btt-btn-container" class="fixed inset-e-4 bottom-8 z-50 md:sticky md:inset-e-auto md:float-end md:me-1 translate-y-14 opacity-0 transition duration-500"><button data-button="back-to-top" class="group bg-background relative px-2 py-1 size-14 rounded-full shadow-xl md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg"><span id="progress-indicator" class="absolute inset-0 -z-10 block size-14 scale-110 rounded-full bg-transparent md:hidden md:h-8 md:rounded-md"></span><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block rotate-90 md:hidden" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M5 12l6 6M5 12l6-6" /></svg><span class="group-hover:text-accent sr-only text-sm md:not-sr-only"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 5v14M16 9l-4-4M8 9l4-4" /></svg>Back to top</span></button></div><script data-astro-rerun>
+  function backToTop() {
+    const rootElement = document.documentElement;
+    const btnContainer = document.querySelector("#btt-btn-container");
+    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
+    const progressIndicator = document.querySelector("#progress-indicator");
+
+    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
+      return;
+
+    backToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    });
+
+    let lastVisible = null;
+    function handleScroll() {
+      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+      const scrollTop = rootElement.scrollTop;
+      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
+
+      progressIndicator.style.setProperty(
+        "background-image",
+        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
+      );
+
+      const isVisible = scrollTop / scrollTotal > 0.3;
+
+      if (isVisible !== lastVisible) {
+        btnContainer.classList.toggle("opacity-100", isVisible);
+        btnContainer.classList.toggle("translate-y-0", isVisible);
+        btnContainer.classList.toggle("opacity-0", !isVisible);
+        btnContainer.classList.toggle("translate-y-14", !isVisible);
+        lastVisible = isVisible;
+      }
+    }
+
+    let ticking = false;
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+  backToTop();
+</script><ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8"><li><a data-astro-transition-scope="astro-bztu2lml-1" href="/tags/avr/" class="flex items-center gap-0.5 border-foreground border-b-2 border-dashed hover:border-accent hover:text-accent hover:-mt-0.5 focus-visible:text-accent focus-visible:border-none text-sm"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="opacity-80 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>AVR</a></li><li><a data-astro-transition-scope="astro-bztu2lml-2" href="/tags/atmega328p/" class="flex items-center gap-0.5 border-foreground border-b-2 border-dashed hover:border-accent hover:text-accent hover:-mt-0.5 focus-visible:text-accent focus-visible:border-none text-sm"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="opacity-80 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>ATmega328P</a></li><li><a data-astro-transition-scope="astro-bztu2lml-3" href="/tags/sdcard/" class="flex items-center gap-0.5 border-foreground border-b-2 border-dashed hover:border-accent hover:text-accent hover:-mt-0.5 focus-visible:text-accent focus-visible:border-none text-sm"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="opacity-80 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>SDCard</a></li></ul><div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start"><span class="italic">Share this post:</span><div class="text-center"><a href="https://wa.me/?text=https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/" title="Share this post on Whatsapp" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m3 21 1.65-3.8a9 9 0 1 1 3.4 2.9z" /><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0za5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" /></svg><span class="sr-only">Share this post on Whatsapp</span></a><a href="https://www.facebook.com/sharer.php?u=https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/" title="Share this post on Facebook" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M7 10v4h3v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3V3h-3a5 5 0 0 0-5 5v2z" /></svg><span class="sr-only">Share this post on Facebook</span></a><a href="https://x.com/intent/post?url=https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/" title="Share this post on X" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m4 4 11.733 16H20L8.267 4zM4 20l6.768-6.768m2.46-2.46L20 4" /></svg><span class="sr-only">Share this post on X</span></a><a href="https://t.me/share/url?url=https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/" title="Share this post on Telegram" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 10-4 4 6 6 4-16-18 7 4 2 2 6 3-4" /></svg><span class="sr-only">Share this post on Telegram</span></a><a href="https://pinterest.com/pin/create/button/?url=https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/" title="Share this post on Pinterest" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m8 20 4-9M10.7 14c.437 1.263 1.43 2 2.55 2 2.071 0 3.75-1.554 3.75-4a5 5 0 1 0-9.7 1.7" /><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" /></svg><span class="sr-only">Share this post on Pinterest</span></a><a href="mailto:?subject=See%20this%20post&amp;body=https://kyuhyuk.kr/posts/avr-atmega328p/sdcard-4/" title="Share this post via email" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Share this post via email</span></a></div></div><hr class="my-8 border-dashed"><div data-pagefind-ignore class="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2"><a href="/posts/avr-atmega328p/sdcard-3/" class="flex w-full gap-1 hover:opacity-75"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M5 12l6 6M5 12l6-6" /></svg><div><span>Previous Post</span><div class="text-accent/85 text-sm">ATmega328P SDCard 구현 (3)</div></div></a><a href="/posts/plant/lemon/Growing-Lemon-Tree/" class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"><div><span>Next Post</span><div class="text-accent/85 text-sm">레몬 키우기 (22년 9월 1일 ~ 22년 9월 24일)</div></div><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 12h14M13 18l6-6M13 6l6 6" /></svg></a></div></main><footer class="app-layout mt-auto"><div class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"><div class="flex flex-wrap items-center gap-1"><a href="https://github.com/leekyuhyuk" title="KyuHyuk Blog on Github" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg><span class="sr-only">KyuHyuk Blog on Github</span></a><a href="https://linkedin.com/in/leekyuhyuk" title="KyuHyuk Blog on Linkedin" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 1 0-4 0" /><path d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z" /></svg><span class="sr-only">KyuHyuk Blog on Linkedin</span></a><a href="mailto:lee@kyuhy.uk" title="Send an email to KyuHyuk Blog" class="group inline-flex items-center gap-1 hover:text-accent p-2 hover:rotate-6 sm:p-1"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Send an email to KyuHyuk Blog</span></a></div><div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row"><span>Copyright &#169; 2026 KyuHyuk Lee</span><span class="hidden sm:inline">&nbsp;|&nbsp;</span><span>All rights reserved.</span></div></div></footer><script type="module">var e=`theme`,t=`light`,n=`dark`;function r(){return localStorage.getItem(e)||(window.matchMedia(`(prefers-color-scheme: dark)`).matches?n:t)}var i=window.__theme?.value??r();function a(){localStorage.setItem(e,i),o()}function o(){let e=document.firstElementChild;e?.setAttribute(`data-theme`,i),e?.classList.toggle(`dark`,i===n),document.querySelector(`#theme-btn`)?.setAttribute(`aria-label`,i);let t=window.getComputedStyle(document.body).backgroundColor;document.querySelector(`meta[name='theme-color']`)?.setAttribute(`content`,t)}function s(){o(),document.querySelector(`#theme-btn`)?.addEventListener(`click`,()=>{i=i===t?n:t,a()})}s(),document.addEventListener(`astro:after-swap`,s),document.addEventListener(`astro:before-swap`,e=>{let t=document.querySelector(`meta[name='theme-color']`)?.getAttribute(`content`);t&&e.newDocument.querySelector(`meta[name='theme-color']`)?.setAttribute(`content`,t)}),window.matchMedia(`(prefers-color-scheme: dark)`).addEventListener(`change`,({matches:e})=>{i=e?n:t,a()});</script></body></html><script data-astro-rerun>
+  function createProgressBar() {
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+
+    progressContainer.appendChild(progressBar);
+    document.body.appendChild(progressContainer);
+  }
+  createProgressBar();
+
+  function updateScrollProgress() {
+    document.addEventListener("scroll", () => {
+      const winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (document) {
+        const myBar = document.getElementById("myBar");
+        if (myBar) {
+          myBar.style.width = scrolled + "%";
+        }
+      }
+    });
+  }
+  updateScrollProgress();
+
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+
+  function attachCopyButtons() {
+    const copyButtonLabel = "Copy";
+    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+    for (const codeBlock of codeBlocks) {
+      const wrapper = document.createElement("div");
+      wrapper.style.position = "relative";
+
+      const computedStyle = getComputedStyle(codeBlock);
+      const hasFileNameOffset =
+        computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
+
+      const topClass = hasFileNameOffset
+        ? "top-(--file-name-offset)"
+        : "-top-3";
+
+      const copyButton = document.createElement("button");
+      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
+      copyButton.innerHTML = copyButtonLabel;
+      codeBlock.setAttribute("tabindex", "0");
+      codeBlock.appendChild(copyButton);
+
+      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+
+    async function copyCode(block, button) {
+      const code = block.querySelector("code");
+      const text = code?.innerText;
+
+      await navigator.clipboard.writeText(text ?? "");
+
+      button.innerText = "Copied";
+
+      setTimeout(() => {
+        button.innerText = copyButtonLabel;
+      }, 700);
+    }
+  }
+  attachCopyButtons();
+
+  /** Accessible image lightbox for article images. */
+  function initLightbox() {
+    const article = document.getElementById("article");
+    if (!article) return;
+
+    const prefersReducedMotion = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let overlay = null;
+    let lastFocused = null;
+
+    // Defer attribute mutations so they don't push the LCP timestamp.
+    // Event listeners below use delegation and don't need the attributes to exist yet.
+    requestAnimationFrame(() => {
+      const images = Array.from(article.querySelectorAll("img"));
+      for (const image of images) {
+        if (image.closest("a")) continue;
+        image.setAttribute("role", "button");
+        image.setAttribute("tabindex", "0");
+        image.setAttribute("aria-haspopup", "dialog");
+        image.setAttribute(
+          "aria-label",
+          image.alt ? `Zoom image: ${image.alt}` : "Zoom image"
+        );
+      }
+    });
+
+    function open(src, alt, trigger) {
+      if (overlay) return;
+      lastFocused = trigger ?? document.activeElement;
+
+      overlay = document.createElement("div");
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute(
+        "aria-label",
+        alt ? `Image preview: ${alt}` : "Image preview"
+      );
+      overlay.className =
+        "fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/70 backdrop-blur-sm opacity-0 transition-opacity duration-200 motion-reduce:transition-none";
+
+      const closeButton = document.createElement("button");
+      closeButton.type = "button";
+      closeButton.setAttribute("aria-label", "Close image preview");
+      closeButton.className =
+        "absolute end-4 top-4 rounded p-2 text-3xl leading-none text-white";
+      closeButton.innerHTML = "&#10005;";
+      closeButton.addEventListener("click", close);
+
+      const image = document.createElement("img");
+      image.src = src;
+      image.alt = "";
+      image.className =
+        "max-h-[90dvh] max-w-[90dvw] cursor-default object-contain";
+
+      overlay.append(closeButton, image);
+      overlay.addEventListener("click", e => {
+        if (e.target === overlay && currentScale <= 1) close();
+      });
+
+      let currentScale = 1;
+      let translateX = 0;
+      let translateY = 0;
+      let initialDist = 0;
+      let initialScale = 1;
+      let panStartX = 0;
+      let panStartY = 0;
+      let panStartTranslateX = 0;
+      let panStartTranslateY = 0;
+      let lastTapTime = 0;
+
+      function applyTransform() {
+        image.style.transform = `scale(${currentScale}) translate(${translateX}px, ${translateY}px)`;
+      }
+
+      function resetTransform() {
+        currentScale = 1;
+        translateX = 0;
+        translateY = 0;
+        image.style.transform = "";
+      }
+
+      overlay.addEventListener(
+        "touchstart",
+        e => {
+          const t = e.touches;
+          if (t.length === 2) {
+            initialDist = Math.hypot(
+              t[1].clientX - t[0].clientX,
+              t[1].clientY - t[0].clientY
+            );
+            initialScale = currentScale;
+          } else if (t.length === 1) {
+            const now = Date.now();
+            if (now - lastTapTime < 300) {
+              e.preventDefault();
+              if (currentScale > 1) {
+                resetTransform();
+              } else {
+                currentScale = 2;
+                translateX = 0;
+                translateY = 0;
+                applyTransform();
+              }
+              lastTapTime = 0;
+              panStartX = t[0].clientX;
+              panStartY = t[0].clientY;
+              panStartTranslateX = translateX;
+              panStartTranslateY = translateY;
+            } else {
+              lastTapTime = now;
+              if (currentScale > 1) {
+                panStartX = t[0].clientX;
+                panStartY = t[0].clientY;
+                panStartTranslateX = translateX;
+                panStartTranslateY = translateY;
+              }
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      overlay.addEventListener(
+        "touchmove",
+        e => {
+          const t = e.touches;
+          if (t.length === 2) {
+            e.preventDefault();
+            const dist = Math.hypot(
+              t[1].clientX - t[0].clientX,
+              t[1].clientY - t[0].clientY
+            );
+            currentScale = Math.min(
+              4,
+              Math.max(1, initialScale * (dist / initialDist))
+            );
+            applyTransform();
+          } else if (t.length === 1) {
+            if (currentScale > 1) {
+              e.preventDefault();
+              translateX =
+                panStartTranslateX + (t[0].clientX - panStartX) / currentScale;
+              translateY =
+                panStartTranslateY + (t[0].clientY - panStartY) / currentScale;
+              const maxX = Math.max(
+                0,
+                (image.clientWidth - overlay.clientWidth / currentScale) / 2
+              );
+              const maxY = Math.max(
+                0,
+                (image.clientHeight - overlay.clientHeight / currentScale) / 2
+              );
+              translateX = Math.min(maxX, Math.max(-maxX, translateX));
+              translateY = Math.min(maxY, Math.max(-maxY, translateY));
+              applyTransform();
+            } else {
+              e.preventDefault();
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      overlay.addEventListener("touchend", e => {
+        if (e.touches.length === 0 && currentScale <= 1.05) {
+          resetTransform();
+        }
+      });
+
+      overlay.addEventListener("touchcancel", e => {
+        if (e.touches.length === 0 && currentScale <= 1.05) {
+          resetTransform();
+        }
+      });
+
+      document.body.appendChild(overlay);
+      document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", onKeyDown);
+      window.__closeLightbox = close;
+
+      requestAnimationFrame(() => overlay?.classList.add("opacity-100"));
+      closeButton.focus();
+    }
+
+    function close() {
+      if (!overlay) return;
+      const el = overlay;
+      overlay = null;
+      window.__closeLightbox = null;
+
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+      lastFocused?.focus();
+      lastFocused = null;
+
+      if (prefersReducedMotion()) {
+        el.remove();
+        return;
+      }
+      const remove = () => el.remove();
+      el.addEventListener("transitionend", remove, { once: true });
+      setTimeout(remove, 250); // fallback in case transitionend never fires
+      el.classList.remove("opacity-100");
+    }
+
+    function onKeyDown(e) {
+      if (e.key === "Escape") {
+        close();
+      } else if (e.key === "Tab") {
+        trapFocus(e);
+      }
+    }
+
+    // Keep keyboard focus inside the open dialog.
+    function trapFocus(e) {
+      if (!overlay) return;
+      const focusables = overlay.querySelectorAll(
+        'a[href], button, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    function triggerFromEvent(e) {
+      const image = e.target.closest("img");
+      if (!image || !article.contains(image) || image.closest("a")) return null;
+      return image;
+    }
+
+    function activate(image) {
+      open(image.currentSrc || image.src, image.alt, image);
+    }
+
+    article.addEventListener("click", e => {
+      const image = triggerFromEvent(e);
+      if (!image) return;
+      e.preventDefault();
+      activate(image);
+    });
+
+    article.addEventListener("keydown", e => {
+      if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+      const image = triggerFromEvent(e);
+      if (!image) return;
+      e.preventDefault();
+      activate(image);
+    });
+  }
+  initLightbox();
+
+  if (!window.__lightboxSwapBound) {
+    window.__lightboxSwapBound = true;
+    document.addEventListener("astro:before-swap", () =>
+      window.__closeLightbox?.()
+    );
+  }
+
+  document.addEventListener("astro:after-swap", () =>
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  );
+</script>
